@@ -9,19 +9,42 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 — iskelet.** Bitiş kriteri: panel boş aday listesini çiziyor, `/stats` sahte veri dönüyor.
+**Faz 1 — iskelet.** (SPEC §8)
+
+Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
+
+- [ ] `docker compose up` ile postgres + redis + api ayağa kalkıyor, `GET /health` 200 dönüyor
+- [ ] `GET /stats` ve `GET /businesses` sahte veriyle 200 dönüyor ve `docs/openapi.yaml` ile birebir uyuşuyor
+- [ ] Panel üst şeridi `/stats` verisini, tablo `/businesses` boş listesini gerçek istekle çiziyor
+- [ ] CI yeşil: ruff, mypy, pytest
 
 ## Açık
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-1 | backend | Repo iskeleti, docker-compose (postgres 16 + redis), FastAPI app, sağlık ucu | — |
+| BE-3 | backend | **Sözleşme önce:** `docs/openapi.yaml` v0 — `/health`, `/stats`, `/businesses` şemaları | — |
+| BE-1 | backend | Repo iskeleti, docker-compose (postgres 16 + redis), FastAPI app, `/health` | — |
 | BE-2 | backend | SQLAlchemy modelleri ve ilk Alembic migration (SPEC §3) | BE-1 |
-| BE-3 | backend | `docs/openapi.yaml` v0: `/stats` ve `/businesses`, sahte veri döner | BE-2 |
+| BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
 | FE-1 | frontend | Next.js iskeleti, tasarım token'ları, `docs/DESIGN.md` yazımı | — |
 | FE-2 | frontend | Panel kabuğu: üst şerit + aday tablosu + filtre, mock veriyle | FE-1 |
-| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı | BE-3, FE-2 |
+| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
 | SEC-1 | güvenlik | ruff + mypy + pytest kurulumu, CI workflow, `.env.example` denetimi | BE-1 |
+
+### Sıralama notu
+
+BE-3 artık BE-2'yi beklemez. `CLAUDE.md` §3 gereği sözleşme koddan önce gelir; ayrıca
+frontend'in BE-1..BE-2 zincirinin tamamını beklemesi paralelliği gereksiz yere öldürüyordu.
+
+### Araç konfigürasyonu sahipliği (çakışma önleme)
+
+Aynı dosyaya iki ajan yazmasın diye kesin ayrım:
+
+- `pyproject.toml` → **backend**. İçinde `[tool.ruff]`, `[tool.mypy]`, `[tool.pytest.ini_options]`
+  bölümü **bulunmaz**.
+- `ruff.toml`, `mypy.ini`, `pytest.ini` → **güvenlik & test**. Lint/tip/test ayarları burada durur.
+- `.env.example` → yazan **backend**, denetleyen **güvenlik & test** (bulgu `docs/REVIEW.md`'ye
+  yazılır, dosya düzeltilmez).
 
 ## Devam eden
 
