@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* Ham renk yok — her değer token'dan gelir. Bkz. web/styles/tokens.css */
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-kagit);
+    color: var(--color-murekkep);
+    font-family: var(--font-arayuz);
+    font-size: var(--text-govde);
+    line-height: var(--text-govde--line-height);
+  }
+
+  /* Bu uygulamada hiçbir sayı orantılı figürle dizilmez. Mono yüzün tabular
+   * figürleri sütun hizasını korur; sayılar satırdan satıra kaymaz. */
+  .sayi {
+    font-family: var(--font-sayi);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* Klavye odağı daima görünür. Fare tıklamasında halka çıkmaz. */
+  :focus-visible {
+    outline: 2px solid var(--color-odak);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Tek hareket: tarama bittiğinde listeye düşen satır. */
+  @keyframes satir-girdi {
+    from {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .satir-girdi {
+    animation: satir-girdi var(--sure-satir-girdi) var(--egri-satir-girdi) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

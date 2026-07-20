@@ -1,0 +1,84 @@
+/* Radar — tasarım token'ları.
+ *
+ * Bu dosya projedeki TEK ham renk kaynağıdır. `app/` ve `components/` altında
+ * çıplak hex bulunmaz; oradaki her renk bir token'a referans verir.
+ * Gerekçeler: docs/DESIGN.md
+ *
+ * Tüm renkler CSS değişkeni olarak durur ki koyu tema sonradan tek dosyalık iş olsun.
+ */
+
+@theme {
+  /* ---- Yüzey ve metin ---------------------------------------------------- */
+  --color-kagit: #fbfbf9; /* zemin */
+  --color-murekkep: #17191b; /* ana metin — kağıt üstünde 17.01:1 */
+  --color-kursun: #6e7377; /* ikincil metin — 4.63:1, AA geçer; 13px altında kullanma */
+  --color-cizgi: #e4e5e2; /* saç teli ayraç — 1.22:1, ayraç bilgi taşımaz */
+
+  /* ---- Sinyal ------------------------------------------------------------
+   * Patina buton, link, logo veya vurgu için KULLANILMAZ. Renkli olan tek şey skordur.
+   * Oksit yalnızca kritik bulguda görünür (SPEC §5).
+   */
+  --color-patina: #1f6f63; /* 5.77:1 */
+  --color-oksit: #a6402e; /* 5.97:1 */
+
+  /* ---- Triyaj skoru bandı (SPEC §1 eşikleri: 40 / 70) --------------------
+   * Tek hue, üç ölçülmüş durak. Koyuluk adaylıkla birlikte artar; göz listede
+   * aşağı doğru nitelikli satırlara çekilir. Renk bandın İKİNCİL kodlamasıdır —
+   * birincil kodlama raydaki konum, üçüncül kodlama çentik yüksekliğidir.
+   */
+  --color-skor-elendi: #6e9a92; /* < 40  · kağıda 3.03:1 */
+  --color-skor-izlemede: #3f857a; /* 40–69 · kağıda 4.18:1 */
+  --color-skor-nitelikli: #1f6f63; /* ≥ 70  · kağıda 5.77:1 */
+
+  /* ---- Kohort rayı ------------------------------------------------------- */
+  --color-ray-yol: #e4e5e2; /* 0–100 taşıyıcı */
+  --color-ray-kohort: #bcc0bb; /* taranmış kohortun soluk çentikleri — küme halinde okunur */
+
+  /* ---- Odak --------------------------------------------------------------
+   * Vurgu rengi yasak, gölge yok. Odak halkası mürekkeple çizilir; kağıt renginde
+   * bir ofset onu satır kenarlığından ayırır.
+   */
+  --color-odak: #17191b;
+
+  /* ---- Tipografi ---------------------------------------------------------
+   * İki rol, katı kural: bu uygulamada hiçbir sayı sans yüzle dizilmez.
+   * Takipçi, skor, yüzde, tarih, para — hepsi --font-sayi.
+   */
+  --font-arayuz: var(--font-arayuz-src), ui-sans-serif, system-ui, sans-serif;
+  --font-sayi: var(--font-sayi-src), ui-monospace, "SFMono-Regular", monospace;
+
+  --text-mikro: 11px; /* sütun başlıkları, versal, geniş harf aralığı */
+  --text-mikro--line-height: 16px;
+  --text-mikro--letter-spacing: 0.08em;
+  --text-kucuk: 12px;
+  --text-kucuk--line-height: 16px;
+  --text-govde: 13px; /* tablo gövdesi */
+  --text-govde--line-height: 20px;
+  --text-orta: 15px;
+  --text-orta--line-height: 20px;
+  --text-buyuk: 20px;
+  --text-buyuk--line-height: 24px;
+  --text-rakam: 28px; /* üst şerit rakamları */
+  --text-rakam--line-height: 32px;
+
+  /* ---- Yarıçap -----------------------------------------------------------
+   * Minimum. Varsayılan 0; yalnızca ray uçları 1px yumuşar ki çentiklerden ayrışsın.
+   */
+  --radius-yok: 0px;
+  --radius-ray: 1px;
+
+  /* ---- Ölçü --------------------------------------------------------------
+   * Boşluk ritmi 4px tabanlıdır (Tailwind varsayılanı). Yalnızca
+   * 1 · 2 · 3 · 4 · 6 · 8 · 12 · 16 adımları kullanılır; ara değer üretilmez.
+   */
+  --olcu-sol-ray: 208px; /* sol gezinme */
+  --olcu-satir: 44px; /* tablo satır yüksekliği — yoğun ama tıklanabilir */
+  --olcu-ray-genislik: 132px; /* kohort rayı taşıyıcısı */
+  --olcu-ray-yukseklik: 20px;
+
+  /* ---- Hareket -----------------------------------------------------------
+   * Neredeyse yok. Tek geçiş: tarama bittiğinde listeye düşen satır.
+   */
+  --sure-satir-girdi: 260ms;
+  --egri-satir-girdi: cubic-bezier(0.2, 0, 0.2, 1);
+}
