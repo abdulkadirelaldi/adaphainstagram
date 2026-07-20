@@ -13,7 +13,9 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 
-- [ ] `docker compose up` ile postgres + redis + api ayağa kalkıyor, `GET /health` 200 dönüyor
+- [x] Servisler ayağa kalkıyor, `GET /health` 200 dönüyor — yerel postgres@16 + redis ile
+      doğrulandı (sağlıklı yol + iki arıza yolu), CI'da servis konteyneriyle tekrarlanıyor.
+      **`docker compose` bu makinede doğrulanmadı**, bkz. `## Bloke` → Docker kararı.
 - [ ] `GET /stats` ve `GET /businesses` sahte veriyle 200 dönüyor ve `docs/openapi.yaml` ile birebir uyuşuyor
 - [ ] Panel üst şeridi `/stats` verisini, tablo `/businesses` boş listesini gerçek istekle çiziyor
 - [ ] CI yeşil: ruff, mypy, pytest
@@ -22,10 +24,12 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
+| BE-5 | backend | SEC-1-B1 + SEC-1-B2 düzeltmesi — `ruff check .` ve `mypy` yeşile dönsün | — |
 | BE-2 | backend | SQLAlchemy modelleri ve ilk Alembic migration (SPEC §3) | BE-1 |
 | BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
 | FE-2 | frontend | Panel kabuğu: üst şerit + aday tablosu + filtre, mock veriyle | FE-1 |
 | FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
+| SEC-2 | güvenlik | `.gitignore` sahiplendi: `.env.local` + `.env.*.local` eklensin (SEC-1-B3) | — |
 
 ### Sıralama notu
 
@@ -41,6 +45,8 @@ Aynı dosyaya iki ajan yazmasın diye kesin ayrım:
 - `ruff.toml`, `mypy.ini`, `pytest.ini` → **güvenlik & test**. Lint/tip/test ayarları burada durur.
 - `.env.example` → yazan **backend**, denetleyen **güvenlik & test** (bulgu `docs/REVIEW.md`'ye
   yazılır, dosya düzeltilmez).
+- `.gitignore` → **güvenlik & test** (SEC-1-B3 ile karara bağlandı). Repo hijyeni onun alanı;
+  diğer ajanlar bir yol eklenmesi gerektiğinde `## Bloke`'ya yazar, kendisi eklemez.
 
 ## Devam eden
 
@@ -49,6 +55,16 @@ _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)
 ## Bloke
 
 _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
+
+### Karara bağlananlar (orkestra şefi, dalga 1 sonu)
+
+- **Docker** → *yerel servislerle kabul edildi.* Faz 1 çıkış kriteri yeniden yazıldı: doğrulama
+  yerel postgres@16 + redis ve CI servis konteyneri üzerinden yapılır. `docker-compose.yml` ve
+  `Dockerfile` repoda kalır ama **doğrulanmamış** sayılır; gerçek `docker compose up` doğrulaması
+  Faz 6 (sertleştirme) kapsamına alındı. Faz atlanmadı — kriter makine kısıtına göre dürüstçe
+  daraltıldı, gevşetilmedi.
+- **SEC-1-B1 + SEC-1-B2** → `BE-5` görevi açıldı, backend'e verildi.
+- **SEC-1-B3** → `.gitignore` sahipliği **güvenlik & test**'e atandı, `SEC-2` görevi açıldı.
 
 - **Docker bu geliştirme makinesinde kurulu değil** (backend, BE-1 sırasında fark edildi).
   `/usr/local/bin/docker` var ama kaldırılmış `Docker.app`'e işaret eden kopuk bir symlink.
