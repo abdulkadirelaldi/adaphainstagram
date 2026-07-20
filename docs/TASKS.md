@@ -22,7 +22,6 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-3 | backend | **Sözleşme önce:** `docs/openapi.yaml` v0 — `/health`, `/stats`, `/businesses` şemaları | — |
 | BE-1 | backend | Repo iskeleti, docker-compose (postgres 16 + redis), FastAPI app, `/health` | — |
 | BE-2 | backend | SQLAlchemy modelleri ve ilk Alembic migration (SPEC §3) | BE-1 |
 | BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
@@ -57,3 +56,5 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **BE-3** · `docs/openapi.yaml` v0 yazıldı: `/health`, `/stats`, `/businesses`; 8 adlandırılmış şema, inline gövde yok, redocly lint 0 hata. FE-3 tip üretimi için hazır. Faz 1'de auth yok, `security: []` ile açıkça beyan edildi.

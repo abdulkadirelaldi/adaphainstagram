@@ -1,0 +1,298 @@
+openapi: 3.1.0
+
+info:
+  title: Radar API
+  version: 0.1.0
+  description: |
+    Kıyı Medya aday tarama ve denetim sistemi.
+
+    Faz 1 (iskelet) kapsamı: `/health`, `/stats`, `/businesses`. Kalan uçlar
+    (`/discovery/run`, `/businesses/{id}/audit`, `/audits/{id}`, `/outreach/{id}`,
+    `/jobs/{id}`) sonraki fazlarda bu dosyaya eklenir — SPEC §7 ve §8.
+
+    Bu API yalnızca oturum açmadan erişilebilen halka açık veriyi döndürür. Erişim,
+    gösterim, kaydetme, profil ziyareti ve demografi verisi sistemde **yoktur** ve
+    hiçbir şemada yer almaz (CLAUDE.md kural 7).
+
+servers:
+  - url: http://localhost:8000
+    description: Yerel geliştirme
+
+# Faz 1'de kimlik doğrulama yoktur: servis yalnızca yerel ağda çalışır ve SPEC §8
+# Faz 1 kapsamı auth içermez. Boş dizi bunu "tanımlanmamış" değil "bilinçli olarak
+# yok" diye beyan eder. Kimlik doğrulama Faz 6 (sertleştirme) konusudur.
+security: []
+
+tags:
+  - name: system
+    description: Servis sağlığı
+  - name: dashboard
+    description: Panel verileri
+
+paths:
+  /health:
+    get:
+      tags: [system]
+      summary: Servis sağlığı
+      description: |
+        Postgres ve Redis bağlantılarını gerçekten yoklar. Bağımlılıklardan biri
+        erişilemezse 503 döner ve ilgili alan `ok` olmaz.
+      operationId: getHealth
+      responses:
+        '200':
+          description: Tüm bağımlılıklar sağlıklı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: En az bir bağımlılık erişilemez durumda
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+
+  /stats:
+    get:
+      tags: [dashboard]
+      summary: Panel üst şeridi
+      operationId: getStats
+      responses:
+        '200':
+          description: Toplam sayaçlar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stats'
+
+  /businesses:
+    get:
+      tags: [dashboard]
+      summary: Aday listesi
+      description: |
+        Sayfalanmış işletme listesi. Her kayıt en son triyaj skorunu ve durumunu taşır;
+        henüz taranmamış işletmelerde `score` ve `status` `null` olur.
+      operationId: listBusinesses
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Triyaj durumuna göre filtre. Verilmezse tüm durumlar döner.
+          schema:
+            $ref: '#/components/schemas/TriageStatus'
+        - name: category
+          in: query
+          required: false
+          description: İşletme kategorisine göre birebir filtre.
+          schema:
+            type: string
+            minLength: 1
+        - name: min_score
+          in: query
+          required: false
+          description: Bu değerin altındaki triyaj skoruna sahip kayıtlar elenir. Skoru olmayan kayıtlar da elenir.
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 100
+        - name: limit
+          in: query
+          required: false
+          description: Sayfa başına kayıt sayısı.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          description: Atlanacak kayıt sayısı.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Filtreye uyan işletmeler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessList'
+        '422':
+          description: Geçersiz sorgu parametresi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+components:
+  schemas:
+
+    Health:
+      type: object
+      title: Health
+      description: Servis ve bağımlılık durumu.
+      additionalProperties: false
+      required: [status, db, redis]
+      properties:
+        status:
+          $ref: '#/components/schemas/ComponentStatus'
+        db:
+          $ref: '#/components/schemas/ComponentStatus'
+        redis:
+          $ref: '#/components/schemas/ComponentStatus'
+
+    ComponentStatus:
+      type: string
+      title: ComponentStatus
+      description: Tek bir bileşenin sağlık durumu.
+      enum: [ok, error]
+
+    Stats:
+      type: object
+      title: Stats
+      description: Panel üst şeridindeki toplam sayaçlar.
+      additionalProperties: false
+      required: [scanned, qualified, reports, monthly_cost_usd]
+      properties:
+        scanned:
+          type: integer
+          minimum: 0
+          description: Triyajı yapılmış işletme sayısı.
+        qualified:
+          type: integer
+          minimum: 0
+          description: Triyaj durumu `qualified` olan işletme sayısı.
+        reports:
+          type: integer
+          minimum: 0
+          description: Üretilmiş denetim raporu sayısı.
+        monthly_cost_usd:
+          type: number
+          format: double
+          minimum: 0
+          description: |
+            İçinde bulunulan takvim ayındaki gerçekleşen LLM maliyeti (USD).
+            `audits.llm_cost_usd` alanlarının toplamıdır.
+
+    TriageStatus:
+      type: string
+      title: TriageStatus
+      description: Triyaj sonucu (SPEC §3).
+      enum: [qualified, watch, rejected]
+
+    Business:
+      type: object
+      title: Business
+      description: |
+        `businesses` tablosundan türer (SPEC §3); üzerine en son triyaj skorunu taşıyan
+        `score` ve `status` alanları eklenir.
+      additionalProperties: false
+      required:
+        - id
+        - place_id
+        - name
+        - category
+        - address
+        - phone
+        - website
+        - ig_handle
+        - rating_count
+        - discovered_at
+        - score
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Birincil anahtar.
+        place_id:
+          type: string
+          description: Google Places yer kimliği.
+        name:
+          type: string
+          description: İşletme adı.
+        category:
+          type: [string, 'null']
+          description: Places kategorisi. Eşlenemediyse null.
+        address:
+          type: [string, 'null']
+          description: Açık adres. Places döndürmediyse null.
+        phone:
+          type: [string, 'null']
+          description: Telefon numarası. Bilinmiyorsa null.
+        website:
+          type: [string, 'null']
+          format: uri
+          description: Web sitesi. Yoksa null.
+        ig_handle:
+          type: [string, 'null']
+          description: Instagram kullanıcı adı, `@` işareti olmadan. Henüz eşlenmediyse null.
+        rating_count:
+          type: [integer, 'null']
+          minimum: 0
+          description: Places değerlendirme sayısı. Bilinmiyorsa null.
+        discovered_at:
+          type: string
+          format: date-time
+          description: Kaydın keşfedildiği an (UTC).
+        score:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          maximum: 100
+          description: En son birleşik triyaj skoru (SPEC §4). Henüz taranmadıysa null.
+        status:
+          oneOf:
+            - $ref: '#/components/schemas/TriageStatus'
+            - type: 'null'
+          description: En son triyaj durumu. Henüz taranmadıysa null.
+
+    BusinessList:
+      type: object
+      title: BusinessList
+      description: Sayfalanmış işletme listesi.
+      additionalProperties: false
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          description: Bu sayfadaki kayıtlar.
+          items:
+            $ref: '#/components/schemas/Business'
+        total:
+          type: integer
+          minimum: 0
+          description: Sayfalama uygulanmadan önce filtreye uyan toplam kayıt sayısı.
+
+    ValidationError:
+      type: object
+      title: ValidationError
+      description: FastAPI sorgu/gövde doğrulama hatası.
+      additionalProperties: false
+      required: [detail]
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationErrorItem'
+
+    ValidationErrorItem:
+      type: object
+      title: ValidationErrorItem
+      additionalProperties: false
+      required: [loc, msg, type]
+      properties:
+        loc:
+          type: array
+          description: Hatalı alanın konumu, ör. `["query", "min_score"]`.
+          items:
+            type: [string, integer]
+        msg:
+          type: string
+          description: İnsan okunur hata mesajı.
+        type:
+          type: string
+          description: Pydantic hata tipi.
