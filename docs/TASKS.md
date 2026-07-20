@@ -22,7 +22,6 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-1 | backend | Repo iskeleti, docker-compose (postgres 16 + redis), FastAPI app, `/health` | — |
 | BE-2 | backend | SQLAlchemy modelleri ve ilk Alembic migration (SPEC §3) | BE-1 |
 | BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
 | FE-1 | frontend | Next.js iskeleti, tasarım token'ları, `docs/DESIGN.md` yazımı | — |
@@ -53,8 +52,19 @@ _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)
 
 _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
+- **Docker bu geliştirme makinesinde kurulu değil** (backend, BE-1 sırasında fark edildi).
+  `/usr/local/bin/docker` var ama kaldırılmış `Docker.app`'e işaret eden kopuk bir symlink.
+  Sonucu: `docker-compose.yml` ve `Dockerfile` yazıldı fakat **hiç çalıştırılamadı** —
+  Faz 1 çıkış kriterlerinden "`docker compose up` ile üç servis healthy" kutusu bu makinede
+  doğrulanamaz. `/health` bunun yerine brew ile kurulu yerel postgres@16 + redis'e karşı
+  doğrulandı (sağlıklı yol, iki ayrı arıza yolu ve toparlanma — hepsi geçti). Compose
+  dosyasında yazım hatası kalmış olabilir; ilk `docker compose up` deneyen ajan bunu
+  hesaba katsın. Karar orkestra şefinin: Docker Desktop kurulacak mı, yoksa Faz 1 çıkış
+  kriteri yerel servislerle mi kabul edilecek?
+
 ## Biten
 
 _(tek satır sonuç notuyla)_
 
+- **BE-1** · FastAPI iskeleti, `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.env.example`. `/health` postgres'e `SELECT 1` ve redis'e `PING` atıyor; sağlıklı yol 200, her iki arıza yolu 503 olarak yerel servislerle doğrulandı. `docker compose` doğrulanamadı — bkz. `## Bloke`. BE-2 hazır.
 - **BE-3** · `docs/openapi.yaml` v0 yazıldı: `/health`, `/stats`, `/businesses`; 8 adlandırılmış şema, inline gövde yok, redocly lint 0 hata. FE-3 tip üretimi için hazır. Faz 1'de auth yok, `security: []` ile açıkça beyan edildi.
