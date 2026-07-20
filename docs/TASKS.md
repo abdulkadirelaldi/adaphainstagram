@@ -26,7 +26,6 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 | BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
 | FE-2 | frontend | Panel kabuğu: üst şerit + aday tablosu + filtre, mock veriyle | FE-1 |
 | FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
-| SEC-1 | güvenlik | ruff + mypy + pytest kurulumu, CI workflow, `.env.example` denetimi | BE-1 |
 
 ### Sıralama notu
 
@@ -61,10 +60,15 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
   hesaba katsın. Karar orkestra şefinin: Docker Desktop kurulacak mı, yoksa Faz 1 çıkış
   kriteri yerel servislerle mi kabul edilecek?
 
+- **SEC-1-B1** · `orta` · **backend** — `api/routes/health.py:22` ve `:34` ruff `ASYNC109`: async fonksiyon `timeout` parametresi alıyor. Davranış doğru, üslup uyarısı. Ya `timeout` kaldırılıp çağıran `asyncio.timeout()` ile sarmalı, ya da kuralın muaf tutulması istenmeli. Çözülmeden `ruff check .` yeşile dönmez. Detay: `docs/REVIEW.md`.
+- **SEC-1-B2** · `orta` · **backend** — `api/config.py:47` mypy `unused-ignore`: `# type: ignore[call-arg]` gereksiz, `pydantic.mypy` eklentisi zaten biliyor. Yorumun silinmesi yeterli. Çözülmeden `mypy` yeşile dönmez. Detay: `docs/REVIEW.md`.
+- **SEC-1-B3** · `orta` · **sahibi atanmalı** — `.gitignore:1-5` içinde `.env.local` ve `.env.*.local` yok. `web/` Next.js projesi ve Next bu dosyayı standart kullanıyor; frontend yerel anahtar koyduğunda dosya izlenmeye açık. `.gitignore` sahipliği "Araç konfigürasyonu sahipliği" tablosunda tanımsız — orkestra şefi sahip atamalı.
+
 ## Biten
 
 _(tek satır sonuç notuyla)_
 
 - **BE-1** · FastAPI iskeleti, `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.env.example`. `/health` postgres'e `SELECT 1` ve redis'e `PING` atıyor; sağlıklı yol 200, her iki arıza yolu 503 olarak yerel servislerle doğrulandı. `docker compose` doğrulanamadı — bkz. `## Bloke`. BE-2 hazır.
 - **BE-3** · `docs/openapi.yaml` v0 yazıldı: `/health`, `/stats`, `/businesses`; 8 adlandırılmış şema, inline gövde yok, redocly lint 0 hata. FE-3 tip üretimi için hazır. Faz 1'de auth yok, `security: []` ile açıkça beyan edildi.
+- **SEC-1** · `ruff.toml` + `mypy.ini` (strict) + `pytest.ini` + `.github/workflows/ci.yml` (3 paralel job, postgres 16 + redis 7 servis konteyneri). 11 test geçiyor: `/health` sağlıklı/db-arızalı/redis-arızalı/ikisi-de-arızalı yolları sahte bağımlılıklarla, artı ağ muhafızı. Kural 6 artık makine tarafından uygulanıyor — `tests/conftest.py` dış soket çağrısını düşürüyor, `tests/test_network_guard.py` bunun regresyon testi. Dört gizlilik denetim maddesi de PASS (`.env.example` temiz, `.env` izlenmemiş, gömülü sır yok, yasak metrik yok). `ruff` ve `mypy` **kırmızı** — 3 bulgu `api/` içinde, sahibine bırakıldı (SEC-1-B1/B2, bkz. `## Bloke`). SQLAlchemy mypy eklentisi bilinçli açılmadı (2.0'da kaldırıldı) — gerekçe `docs/REVIEW.md`.
 - **FE-1** · Next 15.5 + React 19 + Tailwind v4 + TanStack Query iskeleti, token'lar `web/styles/tokens.css`'te tek kaynakta; `docs/DESIGN.md` yazıldı. İleri taşınan eksen: patina düz değerden 40/70 eşiklerine bağlı üç duraklı skalaya dönüştü — komşu duraklar 1.38:1 ölçüldüğü için bant ayrıca ray konumu ve çentik yüksekliğiyle kodlanıyor, rakam okunabilirlik için daima mürekkep. build + `tsc --noEmit` + lint sıfır hata, `/` 200 dönüyor. FE-2 hazır.

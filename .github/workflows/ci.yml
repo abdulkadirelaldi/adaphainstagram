@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+# Aynı dal üzerinde yeni push gelirse önceki koşuyu iptal et — dört ajan sık commit
+# atıyor, kuyruğun şişmesine gerek yok.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  # Araç sürümleri sabitlenmiş: CI ile yerel makinede aynı sonucu almak için.
+  # pyproject.toml backend'in ve geliştirme bağımlılığı bölümü yok (docs/TASKS.md
+  # "Araç konfigürasyonu sahipliği"), bu yüzden araçlar burada açıkça kurulur.
+  RUFF_VERSION: "0.12.0"
+  MYPY_VERSION: "2.3.0"
+  PYTEST_VERSION: "9.1.1"
+  PYTEST_ASYNCIO_VERSION: "1.4.0"
+
+jobs:
+  # Üç job paralel koşar — biri kırmızıya dönünce diğerlerinin sonucunu da görmek
+  # istiyoruz, `needs` zinciri kurulmadı.
+  ruff:
+    name: ruff (lint + format)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: ruff kurulumu
+        run: pip install "ruff==${RUFF_VERSION}"
+
+      - name: Lint
+        run: ruff check . --output-format=github
+
+      - name: Biçim kontrolü
+        run: ruff format --check .
+
+  mypy:
+    name: mypy (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Bağımlılıklar ve mypy
+        run: |
+          pip install -e .
+          pip install "mypy==${MYPY_VERSION}" \
+                      "pytest==${PYTEST_VERSION}" \
+                      "pytest-asyncio==${PYTEST_ASYNCIO_VERSION}"
+
+      - name: Tip kontrolü
+        run: mypy
+
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+
+    # Postgres ve Redis servis konteyneri olarak kalkar. Faz 1 testleri bunlara
+    # BAĞLANMAZ (CLAUDE.md kural 6 — tests/conftest.py içindeki ağ muhafızı dış
+    # çağrıyı zaten düşürür); burada duruyorlar ki migration ve depo katmanı
+    # testleri geldiğinde workflow değişmesin.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: radar
+          POSTGRES_PASSWORD: radar
+          POSTGRES_DB: radar_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U radar"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://radar:radar@localhost:5432/radar_test
+      REDIS_URL: redis://localhost:6379/0
+      APP_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Bağımlılıklar ve pytest
+        run: |
+          pip install -e .
+          pip install "pytest==${PYTEST_VERSION}" \
+                      "pytest-asyncio==${PYTEST_ASYNCIO_VERSION}"
+
+      - name: Testler
+        run: pytest
+
+  # Faz 1'de e2e testi yok; Playwright job'ı Faz 6'da (SPEC §8 "sertleştirme")
+  # bu dosyaya eklenecek. Boş bir job bırakmak yerine not olarak duruyor.
