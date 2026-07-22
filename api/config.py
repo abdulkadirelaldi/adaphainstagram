@@ -44,4 +44,6 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Ayarları bir kez okur ve önbelleğe alır."""
-    return Settings()  # type: ignore[call-arg]  # alanlar ortamdan doldurulur
+    # Alanlar ortamdan doldurulur; pydantic.mypy eklentisi bunu bildiği için
+    # call-arg bastırması gerekmiyor.
+    return Settings()

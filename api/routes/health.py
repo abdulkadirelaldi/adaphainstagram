@@ -6,6 +6,7 @@ biri erişilemezse yanıt 503 olur ve ilgili alan `error` döner.
 
 import asyncio
 import logging
+from collections.abc import Awaitable
 
 from fastapi import APIRouter, Request, Response, status
 from redis.asyncio import Redis
@@ -19,26 +20,19 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["system"])
 
 
-async def _check_db(engine: AsyncEngine, timeout: float) -> ComponentStatus:
-    try:
-        async with asyncio.timeout(timeout):
-            async with engine.connect() as conn:
-                await conn.execute(text("SELECT 1"))
-    except Exception:
-        # Sağlık ucu asla patlamaz: arıza yanıtın kendisidir, 500 değil.
-        logger.warning("sağlık yoklaması başarısız: postgres", exc_info=True)
-        return ComponentStatus.ERROR
-    return ComponentStatus.OK
+async def _probe_db(engine: AsyncEngine) -> None:
+    """Postgres'e tek bir `SELECT 1` atar; başarısızsa yükseltir.
+
+    Zaman aşımı bilinçli olarak burada yok — iptal kapsamını çağıran `get_health`
+    yönetir (ruff ASYNC109). Bu fonksiyon yalnızca yoklamayı yapar.
+    """
+    async with engine.connect() as conn:
+        await conn.execute(text("SELECT 1"))
 
 
-async def _check_redis(redis: Redis, timeout: float) -> ComponentStatus:
-    try:
-        async with asyncio.timeout(timeout):
-            await redis.ping()
-    except Exception:
-        logger.warning("sağlık yoklaması başarısız: redis", exc_info=True)
-        return ComponentStatus.ERROR
-    return ComponentStatus.OK
+async def _probe_redis(redis: Redis) -> None:
+    """Redis'e `PING` atar; başarısızsa yükseltir."""
+    await redis.ping()
 
 
 @router.get(
@@ -55,12 +49,30 @@ async def _check_redis(redis: Redis, timeout: float) -> ComponentStatus:
     },
 )
 async def get_health(request: Request, response: Response) -> Health:
-    timeout = request.app.state.settings.health_timeout_seconds
+    limit = request.app.state.settings.health_timeout_seconds
 
-    # İki yoklama paralel: biri zaman aşımına uğrarsa diğerini bekletmesin.
+    async def bounded(probe: Awaitable[None]) -> ComponentStatus:
+        """Bir yoklamayı zaman aşımıyla sarar; her arıza -> error.
+
+        Zaman aşımı sınırı `limit` üzerinden closure ile alınır, parametre olarak
+        değil: async imzada `timeout` parametresi ruff ASYNC109 üretiyordu. İptal
+        kapsamı böylece çağıranda kalıyor. Asılı kalan bir bağımlılık yanıtı süresiz
+        bekletmez; `limit` dolunca `error` raporlanır.
+        """
+        try:
+            async with asyncio.timeout(limit):
+                await probe
+        except Exception:
+            # Sağlık ucu asla patlamaz: arıza yanıtın kendisidir, 500 değil.
+            logger.warning("sağlık yoklaması başarısız", exc_info=True)
+            return ComponentStatus.ERROR
+        return ComponentStatus.OK
+
+    # İki yoklama paralel ve her biri kendi zaman aşımıyla sarılı: biri asılırsa
+    # veya arızalıysa diğerinin sonucunu kirletmez.
     db_status, redis_status = await asyncio.gather(
-        _check_db(request.app.state.engine, timeout),
-        _check_redis(request.app.state.redis, timeout),
+        bounded(_probe_db(request.app.state.engine)),
+        bounded(_probe_redis(request.app.state.redis)),
     )
 
     overall = (
