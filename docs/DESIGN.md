@@ -91,6 +91,11 @@ alet hissini veren tek disiplin budur.
 Ölçek: `mikro` 11 · `küçük` 12 · `gövde` 13 · `orta` 15 · `büyük` 20 · `rakam` 28.
 Altı boy yeter; ara boy üretilmez.
 
+*Bağlama notu:* font aileleri (`--font-arayuz`, `--font-sayi`) `@theme`'de değil `:root`'ta
+durur (Tailwind v4 kullanılmayan `@theme` değişkenini tree-shake ediyordu) ve `next/font`
+değişkenleri `<html>`'e verilir; body'de olsalardı `:root` token'ları onları çözemez, tüm
+sayılar sessizce sans yüze düşerdi. Bu bir kez kırıldı, ölçülüp düzeltildi.
+
 **Boşluk.** 4px taban. Yalnızca `1 · 2 · 3 · 4 · 6 · 8 · 12 · 16` adımları kullanılır.
 Minimal yön hatasız aralık ister — ara değer üretmek ritmi bozar.
 
@@ -147,6 +152,14 @@ Kurallar:
 Eşikler tek yerde durur: `web/lib/skor.ts` (`ESIK_IZLEMEDE = 40`, `ESIK_NITELIKLI = 70`,
 `ASGARI_KOHORT = 5`). Bileşenlerde sabit sayı yazılmaz.
 
+**Bant `score`'dan değil `status`'tan gelir.** Sözleşmede (`openapi.yaml`) `score` ve `status`
+ayrı alanlardır. SPEC §4 gereği kohort 5 hesabın altındaysa potansiyel hesaplanmaz ve hesap
+skoru ne olursa olsun `watch` olur — yani mutlak skor eşiği (`skorBandi`) yanıltıcı olabilir.
+Bu yüzden hücrenin rengi ve çentik yüksekliği **daima `status`'tan** türetilir; `score` yalnızca
+raydaki konumu belirler. `status` yokken (henüz durum atanmamış) `skorBandi` yalnızca yedektir.
+Skor null ama status varsa (kohort<5) rakam yerine yarım tire durur, yanında status etiketi
+(“İzlemede”) sözle söylenir — ray konumu olmadığından tek işaret budur.
+
 ---
 
 ## 6. Yerleşim
@@ -161,11 +174,31 @@ konmaz.** Bölümler inşa edildikçe eklenir.
 satır, dikey çizgilerle ayrılmış. Rakam iri mono, etiket `mikro` versal kurşun. Şerit veri
 yokken de **yerini korur** — yükleme bittiğinde düzen zıplamaz.
 
-**Tablo.** Sütunlar: İşletme · Kategori · Takipçi · Son gönderi · Triyaj skoru. Genişlikler
-sabit; veri gelince başlık kaymaz. Satır 44px — yoğun ama tıklanabilir.
+**Tablo.** Sütunlar: İşletme (ad + `@handle`) · Kategori · Değerlendirme · Keşfedildi · Triyaj
+skoru. Genişlikler sabit (`colgroup`); veri gelince başlık kaymaz. Satır 44px — yoğun ama
+rahat. Değerlendirme sağa dayalı mono (Places yorum sayısı, `rating_count`); Keşfedildi mono
+tarih.
+
+Bu sütunların **hepsi `openapi.yaml` `Business` şemasının gerçek alanlarıdır.** FE-1'de
+konmuş "Takipçi" ve "Son gönderi" sütunları sözleşmeye aykırıydı: takipçi `snapshots`,
+gönderi tarihi `posts` tablosunda; `Business`'ta ikisi de yok. FE-2'de sözleşmeye uyduruldu.
 
 **Ölçmediğimiz hiçbir şey sütun olamaz.** Erişim, gösterim, kaydetme, profil ziyareti,
-demografi bu sistemde yok ve arayüze giremez (CLAUDE.md kural 7).
+demografi bu sistemde yok ve arayüze giremez (CLAUDE.md kural 7). Takipçi/gösterim gibi
+metrikler mock veriye bile eklenmez.
+
+**Filtreler.** `status` · `category` · `min_score` — adları ve değer kümeleri `openapi.yaml`
+`/businesses` query parametreleriyle birebir. **Filtre durumu URL query string'inde yaşar**
+(tek gerçek kaynak): sayfa yenilenince kaybolmaz, paylaşılabilir, geri tuşuyla gezinilir.
+Bileşen yerel filtre state'i tutmaz; `router.replace` ile URL'i yazar (geçmişi kirletmez).
+Filtre değişince sayfa başa döner (`offset` sıfırlanır). Şeridin sağında canlı “N aday” sayacı
+ve filtre varsa “Filtreleri temizle”.
+
+**Sayfalama.** `limit` / `offset`, yanıttaki `total` ile. Tek sayfa varsa hiç çizilmez.
+“ilk–son / toplam” mono; Önceki/Sonraki uçlarda pasifleşir.
+
+İki skorun ters yönü metinle uyarılır: filtre etiketi “En düşük **triyaj** skoru” — hangi skor
+olduğu ve yönü (yüksek = iyi aday) baştan bellidir.
 
 ### Gazete tuzağı
 
@@ -179,10 +212,19 @@ editöryel ölçü yok, süs kural yok. Çizgi bir şey ayırmıyorsa silinir.
 
 ## 7. Durumlar
 
-**Boş.** Özür dilemez, davet eder. Dönen çark ya da illüstrasyon yok.
-> Liste henüz boş.
-> Keşif çalıştığında Samsun'daki işletmeler taranır ve skorlarıyla buraya düşer. Nitelikli
-> olanlar rayın sağ ucunda toplanır.
+Tablo üç durumu birinci sınıf çizer; hiçbiri baştan savma değildir. Durum tek bir tipli
+birleşimle (`yukleniyor | hata | hazir`) verilir. FE-2'de mock senkron olduğundan durum daima
+`hazir`; yükleniyor ve hata FE-3'te TanStack Query'nin `isLoading` / `isError` bayraklarına
+bağlanır — o bağlantı dışında hiçbir şey değişmez.
+
+**Boş.** Özür dilemez, davet eder. Dönen çark ya da illüstrasyon yok. Filtre boş sonuç
+verdiğinde:
+> Bu filtreye uyan aday yok.
+> Filtreleri gevşetin ya da temizleyin. Keşif çalıştığında Samsun'daki işletmeler taranır ve
+> skorlarıyla buraya düşer; nitelikli olanlar rayın sağ ucunda toplanır.
+
+Faz 1'in çıkış kriteri budur: mock kaynağı boş diziye çevrildiğinde (`MOCK_ISLETMELER = []`)
+panel çökmez, bu durumu çizer.
 
 **Yükleniyor.** Dönen çark yok. Tablo başlığını ve satır yerlerini korur, skor hücrelerinde
 çentiksiz boş raylar durur. Alet yüklenirken de aletin biçimindedir.
@@ -190,7 +232,9 @@ editöryel ölçü yok, süs kural yok. Çizgi bir şey ayırmıyorsa silinir.
 **Veri yok ≠ sıfır.** Bilinmeyen değer daima yarım tire (`—`), asla `0`. `web/lib/bicim.ts`
 bunu tek yerden garanti eder.
 
-**Hata.** Ne olduğunu ve ne yapılacağını söyler. Hata kodu tek başına gösterilmez.
+**Hata.** Ne olduğunu ve ne yapılacağını söyler (“Liste yüklenemedi. Sunucuya ulaşılamadı.
+Bağlantıyı kontrol edip yeniden deneyin.”). Hata kodu tek başına gösterilmez; bir yeniden-dene
+eylemi verilebilir.
 
 ---
 

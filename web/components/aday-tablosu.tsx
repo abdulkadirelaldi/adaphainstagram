@@ -1,42 +1,53 @@
 import { RayAnahtari } from "@/components/ray-anahtari";
+import { SkorHucresi } from "@/components/skor-hucresi";
+import { sayi, tarih, YOK } from "@/lib/bicim";
+import { kategoriKohortu, type Isletme } from "@/lib/mock-veri";
 
 /**
- * Aday tablosu kabuğu — tam genişlik, kenarlıklı yoğun satırlar.
+ * Aday tablosu — tam genişlik, kenarlıklı yoğun satırlar.
  *
- * FE-1'de veri yok: başlık çizilir, gövde boş durum ya da yükleniyor
- * satırlarıyla dolar. Sütun genişlikleri sabittir; veri geldiğinde başlık
- * kaymaz.
+ * Sütunların hepsi `docs/openapi.yaml` `Business` şemasının gerçek alanlarıdır.
+ * Takipçi, gösterim, erişim, son gönderi tarihi Business'ta YOKTUR (snapshots /
+ * posts tablolarında) ve buraya girmez (CLAUDE.md kural 7 + sözleşme sınırı).
  *
- * Ölçmediğimiz hiçbir şey burada sütun olamaz — erişim, gösterim, kaydetme,
- * profil ziyareti, demografi (CLAUDE.md kural 7).
+ * Üç durum: yükleniyor (skeleton), hata, hazır. Hazırken liste boşsa boş durum
+ * çizilir — Faz 1'in çıkış kriteri budur, baştan savma değil birinci sınıf tasarlı.
  */
+
+type Durum =
+  | { tip: "yukleniyor" }
+  | { tip: "hata"; mesaj?: string; yeniden?: () => void }
+  | { tip: "hazir"; kayitlar: readonly Isletme[] };
 
 const SUTUNLAR = [
   { anahtar: "isletme", etiket: "İşletme", genislik: "auto" },
-  { anahtar: "kategori", etiket: "Kategori", genislik: "180px" },
-  { anahtar: "takipci", etiket: "Takipçi", genislik: "112px" },
-  { anahtar: "gonderi", etiket: "Son gönderi", genislik: "128px" },
+  { anahtar: "kategori", etiket: "Kategori", genislik: "168px" },
+  { anahtar: "rating", etiket: "Değerlendirme", genislik: "132px" },
+  { anahtar: "kesif", etiket: "Keşfedildi", genislik: "120px" },
   { anahtar: "skor", etiket: "Triyaj skoru", genislik: "212px" },
 ] as const;
 
-export function AdayTablosu({
-  durum = "bos",
-}: {
-  durum?: "bos" | "yukleniyor";
-}) {
+export function AdayTablosu({ durum }: { durum: Durum }) {
   return (
     <table className="w-full border-collapse text-govde">
       <caption className="sr-only">
         Taranan işletmeler ve triyaj skorları. Skor yükseldikçe aday güçlenir.
       </caption>
+      <colgroup>
+        {SUTUNLAR.map((s) => (
+          <col key={s.anahtar} style={{ width: s.genislik }} />
+        ))}
+      </colgroup>
       <thead>
         <tr className="border-b border-cizgi">
           {SUTUNLAR.map((sutun) => (
             <th
               key={sutun.anahtar}
               scope="col"
-              className="px-6 py-3 text-left align-bottom text-mikro font-medium text-kursun uppercase"
-              style={{ width: sutun.genislik }}
+              className={
+                "px-6 py-3 align-bottom text-mikro font-medium text-kursun uppercase " +
+                (sutun.anahtar === "rating" ? "text-right" : "text-left")
+              }
             >
               {sutun.anahtar === "skor" ? (
                 <div className="flex flex-col gap-2">
@@ -51,17 +62,54 @@ export function AdayTablosu({
         </tr>
       </thead>
       <tbody>
-        {durum === "yukleniyor" ? (
-          <YukleniyorSatirlari />
-        ) : (
+        {durum.tip === "yukleniyor" && <YukleniyorSatirlari />}
+        {durum.tip === "hata" && (
           <tr>
             <td colSpan={SUTUNLAR.length} className="px-6 py-16">
-              <BosDurum />
+              <HataDurumu mesaj={durum.mesaj} yeniden={durum.yeniden} />
             </td>
           </tr>
         )}
+        {durum.tip === "hazir" &&
+          (durum.kayitlar.length === 0 ? (
+            <tr>
+              <td colSpan={SUTUNLAR.length} className="px-6 py-16">
+                <BosDurum />
+              </td>
+            </tr>
+          ) : (
+            durum.kayitlar.map((k) => <Satir key={k.id} isletme={k} />)
+          ))}
       </tbody>
     </table>
+  );
+}
+
+function Satir({ isletme }: { isletme: Isletme }) {
+  const kohort = kategoriKohortu(isletme.category);
+  return (
+    <tr className="border-b border-cizgi align-middle" style={{ height: "var(--olcu-satir)" }}>
+      <td className="px-6">
+        <div className="flex flex-col">
+          <span className="truncate">{isletme.name}</span>
+          {isletme.ig_handle ? (
+            <span className="sayi text-kucuk text-kursun">@{isletme.ig_handle}</span>
+          ) : (
+            <span className="text-kucuk text-kursun">handle eşlenmedi</span>
+          )}
+        </div>
+      </td>
+      <td className="px-6 text-kursun">{isletme.category ?? YOK}</td>
+      <td className="sayi px-6 text-right tabular-nums">
+        {sayi(isletme.rating_count)}
+      </td>
+      <td className="sayi px-6 tabular-nums text-kursun">
+        {tarih(isletme.discovered_at)}
+      </td>
+      <td className="px-6">
+        <SkorHucresi skor={isletme.score} status={isletme.status} kohort={kohort} />
+      </td>
+    </tr>
   );
 }
 
@@ -73,8 +121,8 @@ function YukleniyorSatirlari() {
   return (
     <>
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <tr key={i} className="border-b border-cizgi">
-          <td colSpan={4} className="px-6" style={{ height: "var(--olcu-satir)" }}>
+        <tr key={i} className="border-b border-cizgi" style={{ height: "var(--olcu-satir)" }}>
+          <td colSpan={4} className="px-6">
             <span className="sr-only">Yükleniyor</span>
           </td>
           <td className="px-6">
@@ -108,11 +156,39 @@ function YukleniyorSatirlari() {
 function BosDurum() {
   return (
     <div className="flex max-w-md flex-col gap-2">
-      <p className="text-orta">Liste henüz boş.</p>
+      <p className="text-orta">Bu filtreye uyan aday yok.</p>
       <p className="text-kursun">
-        Keşif çalıştığında Samsun&apos;daki işletmeler taranır ve skorlarıyla
-        buraya düşer. Nitelikli olanlar rayın sağ ucunda toplanır.
+        Filtreleri gevşetin ya da temizleyin. Keşif çalıştığında Samsun&apos;daki
+        işletmeler taranır ve skorlarıyla buraya düşer; nitelikli olanlar rayın sağ
+        ucunda toplanır.
       </p>
+    </div>
+  );
+}
+
+/** Hata ne olduğunu ve ne yapılacağını söyler; kod tek başına gösterilmez. */
+function HataDurumu({
+  mesaj,
+  yeniden,
+}: {
+  mesaj?: string;
+  yeniden?: () => void;
+}) {
+  return (
+    <div className="flex max-w-md flex-col gap-2">
+      <p className="text-orta">Liste yüklenemedi.</p>
+      <p className="text-kursun">
+        {mesaj ?? "Sunucuya ulaşılamadı. Bağlantıyı kontrol edip yeniden deneyin."}
+      </p>
+      {yeniden && (
+        <button
+          type="button"
+          onClick={yeniden}
+          className="mt-2 self-start border border-cizgi px-3 py-1 text-govde"
+        >
+          Yeniden dene
+        </button>
+      )}
     </div>
   );
 }

@@ -26,8 +26,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="tr">
-      <body className={`${arayuz.variable} ${sayi.variable}`}>
+    // next/font değişkenleri <html>'de: token'lar (:root) `var(--font-*-src)`'yi
+    // ancak aynı scope'ta çözebilir; body'de olsalar :root'ta geçersizleşirlerdi.
+    <html lang="tr" className={`${arayuz.variable} ${sayi.variable}`}>
+      <body>
         <SorguSaglayici>
           <Kabuk>{children}</Kabuk>
         </SorguSaglayici>

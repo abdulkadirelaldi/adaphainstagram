@@ -43,10 +43,13 @@
   /* ---- Tipografi ---------------------------------------------------------
    * İki rol, katı kural: bu uygulamada hiçbir sayı sans yüzle dizilmez.
    * Takipçi, skor, yüzde, tarih, para — hepsi --font-sayi.
+   *
+   * Font AİLELERİ @theme'de değil aşağıdaki :root'ta durur: Tailwind v4 yalnızca
+   * bir utility olarak kullanılan @theme değişkenini emit eder; bu aileleri
+   * `.sayi`/body içinde doğrudan var() ile tükettiğimiz için @theme'de tanımlanınca
+   * tree-shake ediliyorlardı. Boyutlar (--text-*) utility olarak kullanıldığından
+   * @theme'de kalır.
    */
-  --font-arayuz: var(--font-arayuz-src), ui-sans-serif, system-ui, sans-serif;
-  --font-sayi: var(--font-sayi-src), ui-monospace, "SFMono-Regular", monospace;
-
   --text-mikro: 11px; /* sütun başlıkları, versal, geniş harf aralığı */
   --text-mikro--line-height: 16px;
   --text-mikro--letter-spacing: 0.08em;
@@ -81,4 +84,12 @@
    */
   --sure-satir-girdi: 260ms;
   --egri-satir-girdi: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Font aileleri — next/font (`--font-*-src`) body className'inde tanımlıdır ve
+ * buradaki referanslar tüketildikleri elemanda (body / .sayi) çözülür. @theme
+ * dışında tutulur ki Tailwind tree-shake etmesin. */
+:root {
+  --font-arayuz: var(--font-arayuz-src), ui-sans-serif, system-ui, sans-serif;
+  --font-sayi: var(--font-sayi-src), ui-monospace, "SFMono-Regular", monospace;
 }
