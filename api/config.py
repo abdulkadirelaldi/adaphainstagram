@@ -29,6 +29,13 @@ class Settings(BaseSettings):
         description="Redis bağlantı adresi. Hem cache hem arq kuyruğu bunu kullanır.",
     )
 
+    # Dış kaynak kimlik bilgileri (SPEC §2). Opsiyonel: yalnızca ilgili adaptör canlı
+    # çağrı yaparken gerekir. Testler client enjekte ettiği için bunları okumaz; bu
+    # yüzden zorunlu değiller (uygulama/testler anahtarsız da kurulur).
+    google_places_api_key: str | None = Field(
+        default=None, description="Google Places API (New) anahtarı."
+    )
+
     db_pool_size: int = Field(default=5, ge=1)
     health_timeout_seconds: float = Field(
         default=3.0,

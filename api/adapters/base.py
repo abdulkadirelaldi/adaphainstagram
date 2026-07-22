@@ -19,7 +19,7 @@ doğrulama patlar. Fazlalık `raw` alanına gömülür, normalize yüzeye çıkm
 """
 
 from collections.abc import Callable
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Protocol, TypeVar, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -27,6 +27,33 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class UnknownSourceError(KeyError):
     """Kayıtta olmayan bir kaynak adı istendi."""
+
+
+class ProfileUnavailableError(Exception):
+    """Bir profil kaynağı verilen handle için veri döndüremedi.
+
+    Fallback tetikleyicisi (SPEC §2): Business Discovery bunu yükseltirse profil
+    servisi Apify'a düşer. Ağ/HTTP hatasından ayrıdır — bu "kaynak bu hesabı
+    veremiyor" demektir (ör. işletme hesabı değil, BD boş döndü).
+    """
+
+
+def parse_ig_timestamp(value: str) -> datetime:
+    """Instagram/Apify zaman damgasını tz-aware `datetime`'a çevirir.
+
+    Iki biçimi de karşılar: IG Graph `2026-06-18T09:12:00+0000` (iki nokta yok) ve
+    Apify `2026-06-20T06:30:00.000Z`. Sonuç daima tz-aware (SPEC §3, UTC).
+    """
+    text = value.strip()
+    if text.endswith("Z"):
+        text = f"{text[:-1]}+00:00"
+    # `+0000` gibi iki noktasız ofseti `+00:00`'a normalize et.
+    if len(text) >= 5 and text[-5] in "+-" and text[-3] != ":":
+        text = f"{text[:-2]}:{text[-2:]}"
+    parsed = datetime.fromisoformat(text)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
 
 
 # --- Normalize çıktı şemaları (SPEC §3 tablolarına düşürülebilir) ---------------
