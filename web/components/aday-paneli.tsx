@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { AdayTablosu } from "@/components/aday-tablosu";
 import { Filtreler } from "@/components/filtreler";
+import { KesifCubugu } from "@/components/kesif-cubugu";
 import { Sayfalama } from "@/components/sayfalama";
 import { UstSerit } from "@/components/ust-serit";
 import { useBusinesses, useKohortKaynagi, useStats } from "@/lib/api/sorgular";
@@ -47,6 +48,7 @@ export function AdayPaneli() {
 
   return (
     <div className="flex flex-col">
+      <KesifCubugu />
       <UstSerit istatistik={stats.data} />
       <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
       <AdayTablosu durum={durum} kohortKaynagi={kohortKaynagi} />

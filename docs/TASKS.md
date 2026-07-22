@@ -53,7 +53,6 @@ Bitiş kriteri kutusu:
 | BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 ✅, SEC-4 ✅ |
 | BE-9 | backend | arq worker + 7 günlük Redis cache + `POST /discovery/run` job, tek komutla 20 işletme | BE-7, BE-8 |
 | SEC-5 | güvenlik | Adaptör entegrasyon testleri + 7 gün cache denetimi + gizlilik denetimi | BE-9 |
-| FE-4 | frontend | Keşif tetikleme + `/jobs/{id}` yoklama UI'ı; tablo artık gerçek DB verisini gösteriyor | BE-6 ✅ (sözleşme), canlı: BE-9 |
 
 ### Sıralama notu (Faz 2)
 
@@ -84,6 +83,8 @@ Aynı dosyaya iki ajan yazmasın diye kesin ayrım:
 ## Devam eden
 
 _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)_
+
+- **FE-4** · frontend · Keşif tetikleme + `/jobs/{id}` yoklama UI'ı. **UI tamam, canlı doğrulama BE-9 bekliyor.** `gen:api` ile iki yeni uç tipi üretildi; `runDiscovery` (mutation) + `useJob` (poll) hook'ları; keşif çubuğu (sorgu/bölge/en-fazla + Tara) üst şeridin üstünde. Durum makinesi dört `JobState` değerini de görünür kılıyor (queued/running+ilerleme/done+sonuç/error+tekrar-dene). **Poll `done`/`error`'da duruyor** (süresiz istek yok); iş bitince liste+üst şerit+kohort invalidate ile tazeleniyor. `NEXT_PUBLIC_API_URL` kullanılıyor, sabit kod yok; hata rengi oksit değil mürekkep (DESIGN §1). `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik grep boş. **Route-mock ile headless kanıtlandı:** Tara→job_id→queued→running(4/9 progress)→done("N işletme")→**poll durdu (4→4)**→tablo tazelendi(businesses 2→4); error dalı ("Apify kotası doldu"+tekrar dene) + error'da poll durdu(1→1). Gerçek `job_id`/durum-geçişi/DB-tazeleme BE-9 ayağa kalkınca doğrulanacak.
 
 ## Bloke
 

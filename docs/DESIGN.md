@@ -179,6 +179,13 @@ Gölge yok. Ayrım tek saç teli çizgiyle yapılır.
 **Sol ray (208px).** Ürün adı + bölümler. Faz 1'de tek gerçek bölüm var; **ölü bağlantı
 konmaz.** Bölümler inşa edildikçe eklenir.
 
+**Keşif çubuğu (en üst).** Üst şeridin de üstünde ince bir eylem satırı: keşif sorgusu +
+bölge (varsayılan Samsun) + en fazla (opsiyonel) + **Tara** düğmesi. Kart değil, alttan tek saç
+teli çizgiyle ayrılır; filtre şeridiyle aynı alan/tipografi dilini paylaşır. Tarama sürerken
+form kilitlenir ve çubuğun sağ ucunda durum belirir (bkz. §7 job yoklama). Buton metni akış
+boyunca tek fiili korur: **Tara → Taranıyor → Tarama bitti.** İş bir eylemi tetikler ama sonucu
+insan okur; çubuk kendini kutlamaz.
+
 **Üst şerit.** SPEC §7 `/stats`: taranan · nitelikli · rapor · aylık maliyet. Dört ölçü, tek
 satır, dikey çizgilerle ayrılmış. Rakam iri mono, etiket `mikro` versal kurşun. Şerit veri
 yokken de **yerini korur** — yükleme bittiğinde düzen zıplamaz.
@@ -245,6 +252,35 @@ bunu tek yerden garanti eder.
 **Hata.** Ne olduğunu ve ne yapılacağını söyler (“Liste yüklenemedi. Sunucuya ulaşılamadı.
 Bağlantıyı kontrol edip yeniden deneyin.”). Hata kodu tek başına gösterilmez; bir yeniden-dene
 eylemi verilebilir.
+
+### Job yoklama durum makinesi (keşif işi)
+
+Keşif taraması uzun bir iştir; uç anında `job_id` döner (senkron scraping yok, SPEC §7) ve
+arayüz `GET /jobs/{id}`'i yoklar. `JobState` enum'unun **her değerinin görünür bir karşılığı
+var** — kullanıcı işin nerede olduğunu tahmin etmez:
+
+| durum | görünen | poll |
+|---|---|---|
+| `queued` | “Kuyrukta…” | sürer |
+| `running` | “Taranıyor” + ilerleme çubuğu (`processed/total`) | sürer |
+| `done` | “Tarama bitti · N işletme, M snapshot” + Kapat | **durur** |
+| `error` | “Tarama başarısız. {mesaj}” + Tekrar dene | **durur** |
+
+**Poll disiplini.** Yoklama aralığı yalnızca `queued`/`running` iken çalışır; `done` ya da
+`error`'a düşünce **durur** — süresiz istek yok. Bu, maliyet disiplininin arayüz tarafındaki
+karşılığıdır (`CLAUDE.md`): boşa dönen bir poll bile israftır.
+
+**İş bitince tablo tazelenir.** `done` olduğunda aday listesi, üst şerit ve kohort kaynağı
+sorguları geçersizleştirilir; tablo yeni DB verisini kendiliğinden çeker. Kullanıcı elle
+yenilemez.
+
+**İlerleme dürüsttür.** `total` bilinmiyorsa (null) sahte bir yüzde çizilmez — yalnızca işlenen
+sayı gösterilir. Ölçmediğini iddia etme kuralının (CLAUDE.md kural 7) ilerleme çubuğundaki
+karşılığı budur.
+
+**Hata rengi yok.** Keşif/yoklama hataları mürekkeple yazılır, oksitle değil — oksit yalnızca
+kritik denetim bulgusuna ayrılmıştır (§1). Operasyon hatası bir bulgu değildir; renkli olan tek
+şey skordur.
 
 ---
 

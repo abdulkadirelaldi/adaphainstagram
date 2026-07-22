@@ -63,6 +63,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/discovery/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Keşif taraması başlat
+         * @description Bir bölge ve sorgu için Google Places keşfini kuyruğa alır. Senkron scraping
+         *     yoktur (SPEC §7): uç anında bir `job_id` döner, ilerleme `GET /jobs/{id}` ile
+         *     yoklanır. Yalnızca oturum açmadan erişilebilen halka açık veri toplanır.
+         */
+        post: operations["runDiscovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Kuyruk işinin durumu
+         * @description Kuyruğa alınmış bir işin durumunu döndürür. Arayüz bu ucu yoklayarak keşif/
+         *     scraping ilerlemesini izler (FE-4).
+         */
+        get: operations["getJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -158,6 +201,78 @@ export interface components {
             items: components["schemas"]["Business"][];
             /** @description Sayfalama uygulanmadan önce filtreye uyan toplam kayıt sayısı. */
             total: number;
+        };
+        /**
+         * DiscoveryRequest
+         * @description Keşif taramasının parametreleri.
+         */
+        DiscoveryRequest: {
+            /** @description Places arama sorgusu, ör. "kuyumcu" veya "diş kliniği". */
+            query: string;
+            /**
+             * @description Aramanın yapılacağı bölge. Varsayılan Samsun (SPEC §1).
+             * @default Samsun
+             */
+            region: string;
+            /** @description En fazla kaç işletme keşfedilsin. Verilmezse adaptör varsayılanı. */
+            limit?: number | null;
+        };
+        /**
+         * JobAccepted
+         * @description Kuyruğa alınan işin kimliği. Uç bunu anında döner (senkron iş yok).
+         */
+        JobAccepted: {
+            /** @description İşi `GET /jobs/{id}` ile yoklamak için kimlik. */
+            job_id: string;
+        };
+        /**
+         * JobState
+         * @description Bir kuyruk işinin yaşam döngüsü durumu.
+         * @enum {string}
+         */
+        JobState: "queued" | "running" | "done" | "error";
+        /**
+         * JobProgress
+         * @description İşin ilerleme sayaçları.
+         */
+        JobProgress: {
+            /** @description Şimdiye kadar işlenen öğe sayısı. */
+            processed: number;
+            /** @description Beklenen toplam öğe sayısı. Henüz bilinmiyorsa null. */
+            total: number | null;
+        };
+        /**
+         * JobResult
+         * @description İş tamamlandığında yazılanların özeti.
+         */
+        JobResult: {
+            /** @description Yazılan/güncellenen işletme kaydı sayısı. */
+            businesses: number;
+            /** @description Alınan snapshot sayısı. */
+            snapshots: number;
+        };
+        /**
+         * JobStatus
+         * @description Kuyruk işinin güncel durumu.
+         */
+        JobStatus: {
+            /** @description İş kimliği. */
+            job_id: string;
+            status: components["schemas"]["JobState"];
+            /** @description İlerleme sayaçları. İş henüz başlamadıysa null. */
+            progress: components["schemas"]["JobProgress"] | null;
+            /** @description Sonuç özeti. Yalnızca `status` `done` olduğunda dolar, aksi halde null. */
+            result: components["schemas"]["JobResult"] | null;
+            /** @description Hata mesajı. Yalnızca `status` `error` olduğunda dolar, aksi halde null. */
+            error: string | null;
+        };
+        /**
+         * ErrorMessage
+         * @description Basit hata gövdesi (ör. 404).
+         */
+        ErrorMessage: {
+            /** @description İnsan okunur hata açıklaması. */
+            detail: string;
         };
         /**
          * ValidationError
@@ -269,6 +384,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+        };
+    };
+    runDiscovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiscoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description İş kuyruğa alındı */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobAccepted"];
+                };
+            };
+            /** @description Geçersiz istek gövdesi */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
+                };
+            };
+        };
+    };
+    getJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description `POST /discovery/run` ucunun döndürdüğü iş kimliği. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description İşin güncel durumu */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobStatus"];
+                };
+            };
+            /** @description Böyle bir iş yok (bilinmeyen veya süresi dolmuş `job_id`) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
                 };
             };
         };

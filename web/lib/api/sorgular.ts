@@ -1,9 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   getBusinesses,
+  getJob,
   getStats,
+  runDiscovery,
   type IsletmeSorgusu,
 } from "@/lib/api/istemci";
+import type { KesifIstegi } from "@/lib/api/tipler";
 
 /** openapi `limit` üst sınırı — kohort kaynağı bu kadar kaydı kapsar. */
 const KOHORT_LIMITI = 200;
@@ -43,4 +51,47 @@ export function useKohortKaynagi() {
       getBusinesses({ limit: KOHORT_LIMITI, offset: 0 }, signal),
     staleTime: 30_000,
   });
+}
+
+/** İş bittiğinde tazelenecek liste sorguları. */
+const VERI_ANAHTARLARI = [["businesses"], ["stats"], ["kohort-kaynagi"]] as const;
+
+/** Keşif taramasını başlatır (mutation). Başarıda `job_id` döner. */
+export function useRunDiscovery() {
+  return useMutation({
+    mutationFn: (govde: KesifIstegi) => runDiscovery(govde),
+  });
+}
+
+/** İşin durumunu yoklama aralığı — poll bitince duracak sınır. */
+const POLL_MS = 1500;
+
+/**
+ * `job_id` verildiğinde `/jobs/{id}`'i yoklar. İş `done` ya da `error` olunca
+ * `refetchInterval` false döner ve **poll durur** — süresiz istek yok. İş `done`
+ * olduğunda liste sorguları tazelenir, tablo/üst şerit yeni DB verisini çeker.
+ */
+export function useJob(jobId: string | null) {
+  const qc = useQueryClient();
+  const sorgu = useQuery({
+    queryKey: ["job", jobId],
+    queryFn: ({ signal }) => getJob(jobId as string, signal),
+    enabled: jobId !== null,
+    // done/error → false: poll durur, süresiz istek yok.
+    refetchInterval: (q) => {
+      const hal = q.state.data?.status;
+      return hal === "done" || hal === "error" ? false : POLL_MS;
+    },
+  });
+
+  // İş bittiğinde liste sorgularını bir kez tazele; tablo yeni DB verisini çeker.
+  const bitti = sorgu.data?.status === "done";
+  useEffect(() => {
+    if (!bitti) return;
+    for (const anahtar of VERI_ANAHTARLARI) {
+      void qc.invalidateQueries({ queryKey: anahtar });
+    }
+  }, [bitti, qc]);
+
+  return sorgu;
 }

@@ -1,4 +1,10 @@
-import type { IsletmeListesi, Istatistik } from "@/lib/api/tipler";
+import type {
+  IsDurumu,
+  IsKabul,
+  IsletmeListesi,
+  Istatistik,
+  KesifIstegi,
+} from "@/lib/api/tipler";
 
 /**
  * REST istemcisi. Taban URL ortam değişkeninden okunur; sabit kodlama yok.
@@ -27,12 +33,21 @@ export class ApiHatasi extends Error {
   }
 }
 
-async function getir<T>(yol: string, imza?: AbortSignal): Promise<T> {
+type Secenekler = { imza?: AbortSignal; metod?: string; govde?: unknown };
+
+async function istek<T>(yol: string, s: Secenekler = {}): Promise<T> {
   let yanit: Response;
   try {
     yanit = await fetch(`${TABAN}${yol}`, {
-      headers: { accept: "application/json" },
-      signal: imza,
+      method: s.metod ?? "GET",
+      headers: {
+        accept: "application/json",
+        ...(s.govde !== undefined
+          ? { "content-type": "application/json" }
+          : {}),
+      },
+      body: s.govde !== undefined ? JSON.stringify(s.govde) : undefined,
+      signal: s.imza,
     });
   } catch {
     // Ağ/CORS/DNS — sunucuya hiç ulaşılamadı.
@@ -55,12 +70,25 @@ function sorguDizesi(sorgu: IsletmeSorgusu): string {
 }
 
 export function getStats(imza?: AbortSignal): Promise<Istatistik> {
-  return getir<Istatistik>("/stats", imza);
+  return istek<Istatistik>("/stats", { imza });
 }
 
 export function getBusinesses(
   sorgu: IsletmeSorgusu,
   imza?: AbortSignal,
 ): Promise<IsletmeListesi> {
-  return getir<IsletmeListesi>(`/businesses?${sorguDizesi(sorgu)}`, imza);
+  return istek<IsletmeListesi>(`/businesses?${sorguDizesi(sorgu)}`, { imza });
+}
+
+/** Keşif taramasını kuyruğa alır; anında `job_id` döner (senkron scraping yok). */
+export function runDiscovery(
+  govde: KesifIstegi,
+  imza?: AbortSignal,
+): Promise<IsKabul> {
+  return istek<IsKabul>("/discovery/run", { metod: "POST", govde, imza });
+}
+
+/** Kuyruk işinin güncel durumu. Bilinmeyen/süresi dolmuş id → 404 (ApiHatasi 404). */
+export function getJob(id: string, imza?: AbortSignal): Promise<IsDurumu> {
+  return istek<IsDurumu>(`/jobs/${encodeURIComponent(id)}`, { imza });
 }
