@@ -1,5 +1,37 @@
+# Kök .gitignore — sahibi: güvenlik & test ajanı (docs/TASKS.md "Araç konfig. sahipliği").
+# web/ alt ağacının kendi .gitignore'u var (Next.js üretir); burası tüm repoyu kapsar.
+# Bir yol eklenmesi gerekiyorsa diğer ajanlar docs/TASKS.md "## Bloke"ye yazar, kendileri eklemez.
+
+# --- Ortam değişkenleri / sırlar (CLAUDE.md kural 4) ---
+# .env yalnızca yerelde durur, asla izlenmez. .local türevleri Next.js ve genel
+# geliştirme aracının standardıdır; bunlar sızıntının en olası yoludur.
 .env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- Python ---
 __pycache__/
+.venv/
+# Araç cache'leri kendi .gitignore'unu yazar ama açık olması zararsız:
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Test kapsama çıktıları (pytest-cov)
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Node / Next.js (kök seviyede; web/ kendi içinde ayrıca kapsar) ---
 node_modules/
 .next/
-.venv/
+
+# --- Playwright e2e (Faz 6, SPEC §8) ---
+test-results/
+playwright-report/
+playwright/.cache/
+
+# --- İşletim sistemi ---
+.DS_Store

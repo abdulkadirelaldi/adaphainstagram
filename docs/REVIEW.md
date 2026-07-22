@@ -96,18 +96,38 @@ ortamdan doldurulduğunu zaten biliyor, dolayısıyla `call-arg` bastırması ge
 
 Bu bulgu çözülmeden `mypy` yeşile dönmez.
 
-#### SEC-1-B3 · `orta` · sahibi: **belirsiz — orkestra şefi ataması gerekiyor**
+#### SEC-1-B3 · `orta` · sahibi: **güvenlik & test** · **PASS → SEC-2 ile kapatıldı**
 
-`.gitignore:1-5` — `.env` var ama `.env.local` ve `.env.*.local` yok.
+**Bulgu (SEC-1'de):** `.gitignore` yalnızca `.env` biliyordu; `.env.local` ve `.env.*.local`
+yoktu. `web/` Next.js projesi ve Next bu dosyaları standart kullanıyor; kökte veya `api/`
+içinde bir `.env.local` izlenmeye açıktı — sır sızıntısının en olası yolu.
 
-`web/` Next.js projesi ve Next `.env.local` dosyasını standart olarak kullanır. Frontend
-ajanı yerel bir anahtar koyduğunda dosya **izlenmeye açık** olur ve commit'lenebilir.
-Sır sızıntısının en olası yolu şu an burası.
+**Sahiplik (SEC-2'de):** Orkestra şefi `.gitignore` sahipliğini güvenlik & test'e verdi
+(`docs/TASKS.md` "Araç konfigürasyonu sahipliği", 5. madde).
 
-Ayrıca Faz 6'da Playwright gelince `test-results/` ve `playwright-report/` de eklenmeli.
+**Çözüm (SEC-2, 2026-07-22):** Kök `.gitignore` bir kere doğru kuruldu. Eklenenler ve
+gerekçeleri:
+- `.env.local`, `.env.*.local` — asıl bulgu; Next.js + genel geliştirme standardı.
+- `*.pem`, `*.key` — özel anahtar/sertifika sızıntısı (CLAUDE.md kural 4).
+- `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/` — kendi `.gitignore`'unu yazıyorlar,
+  açık olması zararsız ve niyeti belgeler.
+- `.coverage`, `.coverage.*`, `htmlcov/`, `coverage.xml` — pytest-cov çıktısı.
+- `test-results/`, `playwright-report/`, `playwright/.cache/` — Playwright e2e (Faz 6).
+- `.DS_Store` — macOS (geliştirme darwin üzerinde).
 
-`.gitignore` sahipliği `docs/TASKS.md` "Araç konfigürasyonu sahipliği" tablosunda tanımsız.
-Bu ajan dosyayı düzeltmedi; sahibi atanmalı.
+**Kanıt:**
+- `git check-ignore -v .env .env.local .env.production.local` → üçü de eşleşiyor
+  (`.gitignore:8`, `:9`, `:10`).
+- `git status --porcelain -uall | grep .env` → boş; izlenmeye aday `.env*` yok.
+- Regresyon testi: `tests/test_gitignore.py`, 11 parametre + `.env.example` ters-yön
+  koruması. `git check-ignore`'a soruyor, desen eşleşmesini elle taklit etmiyor.
+- Testin gerçekten ölçtüğü doğrulandı: `.gitignore`'dan `.env.local` satırı geçici
+  silinince test **kırmızı** (`1 failed`), geri konunca **yeşil** (`11 passed`).
+  `.gitignore` bit-bit aynı geri yüklendi (`diff` boş).
+
+**Not — kapsam:** `web/.gitignore` (Next.js üretti) `web/` alt ağacında `.env*`,
+`.DS_Store`, `*.pem`, coverage'ı zaten kapsıyor. Kök `.gitignore` tüm repoyu kapsadığı
+için `web/` dışındaki (kök, `api/`) env dosyaları da artık korunuyor.
 
 #### İncelenip elenen — bulgu değil
 
@@ -130,11 +150,22 @@ Gerekçe: `sqlalchemy.ext.mypy.plugin` SQLAlchemy 2.0'da kullanımdan kaldırıl
 `Mapped[]` ile PEP 484 yerel tiplemesi kullanır ve eski eklenti açıldığında yanlış
 pozitif üretir. Doğru kurulum eklentisiz olandır. `mypy.ini:39-43` bunu not ediyor.
 
-### Açık kalan
+### Açık kalan (SEC-1 anında)
 
-Bu görevin çıktısı **commit edilmedi.** Sebep: BE-1 (`api/`, `pyproject.toml`,
-`docker-compose.yml`) çalışma ağacında duruyor ama henüz commit'lenmemiş. Testler ve
-mypy konfigürasyonu `api/` dizinine bağlı; BE-1'den önce commit'lenirse CI ana dalda
-`api/` bulunamadığı için kırmızı doğar.
+~~Bu görevin çıktısı commit edilmedi.~~ **Güncelleme:** BE-1 (`c42d8ff`) indi, SEC-1
+(`09958c4`) commit'lendi. SEC-1-B1/B2 backend tarafından BE-5 (`4d819b7`) ile kapatıldı;
+`ruff`/`mypy` artık yeşil.
 
-Sıra: **BE-1 commit'lenir → SEC-1 commit'lenir.**
+---
+
+## SEC-2 · Faz 1 — `.gitignore` sahipliği
+
+**Tarih:** 2026-07-22
+**Denetlenen ağaç:** `58a0599` (FE-2) + çalışma ağacındaki `.gitignore` + `tests/`
+
+**Sonuç:** SEC-1-B3 kapatıldı (yukarıda PASS'a çevrildi). Kök `.gitignore` bir kere
+doğru kuruldu, `tests/test_gitignore.py` regresyon testi bulgunun sessizce dönmesini
+engelliyor. Test suite 11 → 22 test.
+
+Bu turda yeni gizlilik/sır bulgusu yok: `git status` içinde izlenmeye aday `.env*`
+dosyası yok, `web/.gitignore` alt ağacı ayrıca kapsıyor.
