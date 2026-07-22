@@ -49,18 +49,23 @@ Bitiş kriteri kutusu:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-7 | backend | Google Places adaptörü + işletme kaydı yazımı, fixture'la test edilebilir | BE-6 ✅ |
-| BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 ✅ |
+| SEC-4 | güvenlik | `tests/fixtures/` Places+IG+Apify örnek JSON'ları + normalize şema kontrat testleri | BE-6 ✅ |
+| BE-7 | backend | Google Places adaptörü + işletme kaydı yazımı, SEC-4 fixture'ıyla doğrulanır | BE-6 ✅, SEC-4 (fixture) |
+| BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 ✅, SEC-4 (fixture) |
 | BE-9 | backend | arq worker + 7 günlük Redis cache + `POST /discovery/run` job, tek komutla 20 işletme | BE-7, BE-8 |
-| SEC-4 | güvenlik | `tests/fixtures/` Places+IG+Apify örnek JSON'ları; adaptör kontrat testleri; cache/gizlilik denetimi | BE-6 ✅ |
+| SEC-5 | güvenlik | Adaptör entegrasyon testleri + 7 gün cache denetimi + gizlilik denetimi | BE-9 |
 | FE-4 | frontend | Keşif tetikleme + `/jobs/{id}` yoklama UI'ı; tablo artık gerçek DB verisini gösteriyor | BE-6 ✅ (sözleşme), canlı: BE-9 |
 
-### Sıralama notu
+### Sıralama notu (Faz 2)
 
-Faz 2 backend-yoğun ve büyük ölçüde seri: BE-6 (protokol+sözleşme) her şeyi bloke eder,
-BE-7/BE-8 paralel gider, BE-9 ikisini birleştirir. SEC-4 ve FE-4 sözleşme (BE-6) donunca
-paralel başlar; canlı doğrulamaları BE-9'u bekler. Fixture'lar adaptör normalize şemasına
-bağlı olduğu için SEC-4 BE-6'sız başlayamaz.
+**Fixture bağımlılığı düzeltmesi:** `tests/fixtures/` güvenlik sahipliğinde ama BE-7/BE-8
+adaptörleri fixture'la doğrulanacak — bu yüzden **SEC-4 (fixture) BE-7/BE-8'den önce gelir**.
+Backend adaptör gövdesini SEC-4'ün yazdığı dış-API yanıt örneklerine göre yazar. Kontrat
+testlerinin adaptör-entegrasyon kısmı (adaptör fixture'ı gerçekten normalize ediyor mu, cache
+7 günü tutuyor mu) BE-9'dan sonra `SEC-5`'te tamamlanır — o an gerçek gövde ve worker var.
+
+Sıra: BE-6 (dondu) → **SEC-4 fixture ‖ FE-4 sözleşme UI** (paralel) → BE-7 ‖ BE-8 (fixture
+gelince) → BE-9 (birleştirme + canlı uç) → SEC-5 + FE-4 canlı doğrulama.
 
 BE-3 artık BE-2'yi beklemez. `CLAUDE.md` §3 gereği sözleşme koddan önce gelir; ayrıca
 frontend'in BE-1..BE-2 zincirinin tamamını beklemesi paralelliği gereksiz yere öldürüyordu.
