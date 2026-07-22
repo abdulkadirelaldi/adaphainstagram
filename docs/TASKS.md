@@ -24,8 +24,9 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu | BE-2, BE-3 |
-| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
+| BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu + CORS | BE-2, BE-3 |
+| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı, mock sökümü | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
+| SEC-3 | güvenlik | `ruff.toml` exclude yolu düzeltilsin (BE-2-B1); UP042/ruff-pin kararı uygulansın | — |
 
 ### Sıralama notu
 
@@ -61,6 +62,10 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
   daraltıldı, gevşetilmedi.
 - **SEC-1-B1 + SEC-1-B2** → `BE-5` görevi açıldı, backend'e verildi.
 - **SEC-1-B3** → `.gitignore` sahipliği **güvenlik & test**'e atandı, `SEC-2` görevi açıldı.
+- **BE-2-B1 + UP042** → ikisi de `ruff.toml` sahibinin (güvenlik & test) alanında; `SEC-3`
+  görevine toplandı. UP042 kararı: ruff pin **yükseltilmiyor** — CI 0.12.0'da sabit kalır,
+  `schemas.py` `StrEnum` düzeltmesi ruff bir üst pine çıktığında yapılır. Şimdi sadece
+  BE-2-B1 (exclude yolu) kritik, çünkü her yeni migration'da tekrar eder.
 
 - **Docker bu geliştirme makinesinde kurulu değil** (backend, BE-1 sırasında fark edildi).
   `/usr/local/bin/docker` var ama kaldırılmış `Docker.app`'e işaret eden kopuk bir symlink.
