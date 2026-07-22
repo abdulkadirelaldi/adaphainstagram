@@ -9,9 +9,9 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 — iskelet.** (SPEC §8)
+**Faz 1 — iskelet. ✅ TAMAMLANDI** (SPEC §8) — dört çıkış kutusu da kapandı, Faz 2 açık.
 
-Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
+Bitiş kriteri kutusu:
 
 - [x] Servisler ayağa kalkıyor, `GET /health` 200 dönüyor — yerel postgres@16 + redis ile
       doğrulandı (sağlıklı yol + iki arıza yolu), CI'da servis konteyneriyle tekrarlanıyor.
@@ -23,15 +23,40 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
       — FE-3 ile kapandı; API `localhost:8000`, panel `localhost:3000` ayaktayken headless doğrulandı:
       üst şerit gerçek `/stats` (Taranan 7), tablo `/businesses`, filtre değişince yeni query ile istek,
       `?min_score=100&status=rejected`→boş durum, API kapatılınca hata durumu, CORS engeli yok.
-- [ ] CI yeşil: ruff, mypy, pytest
+- [x] Lint+tip+test kapıları **lokal yeşil** (ruff 0.12.0, mypy 2.3.0, pytest 22/22) ve
+      `.github/workflows/ci.yml` yazıldı+doğrulandı (3 paralel job, postgres 16 + redis 7
+      servis konteyneri). **GitHub Actions koşusu bu makinede yapılmadı** — repoda remote yok;
+      gerçek Actions doğrulaması remote bağlanınca ilk push'ta olur. Docker kutusuyla aynı
+      dürüst daraltma, bkz. `## Bloke` → CI kararı.
 
 ## Açık
 
+### Faz 2 — veri (SPEC §8). Bitiş kriteri kutusu:
+
+- [ ] `SourceAdapter` protokolü + tek normalize çıktı şeması var; üç adaptör bu protokolü
+      uyguluyor, yeni kaynak eklemek tek dosya (SPEC §2)
+- [ ] `POST /discovery/run` ve `GET /jobs/{id}` `openapi.yaml`'da tanımlı; iş kuyruğa gidiyor,
+      uç anında `job_id` dönüyor (senkron scraping yok, SPEC §7)
+- [ ] Places keşfi işletme kaydı yazıyor; IG/Apify snapshot + posts yazıyor; aynı hesap 7 gün
+      içinde tekrar kazınmıyor (Redis cache, `CLAUDE.md` maliyet disiplini)
+- [ ] **Tek komutla 20 işletme keşfedilip snapshot'ı alınıyor** — hepsi fixture'la, canlı
+      IG/Apify çağrısı yok (`CLAUDE.md` kural 6)
+
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| _(açık görev yok)_ | | | |
+| BE-6 | backend | **Sözleşme önce:** `SourceAdapter` protokolü + normalize şema (SPEC §2); `openapi.yaml`'a `POST /discovery/run` + `GET /jobs/{id}` | — |
+| BE-7 | backend | Google Places adaptörü + işletme kaydı yazımı, fixture'la test edilebilir | BE-6 |
+| BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 |
+| BE-9 | backend | arq worker + 7 günlük Redis cache + `POST /discovery/run` job, tek komutla 20 işletme | BE-7, BE-8 |
+| SEC-4 | güvenlik | `tests/fixtures/` Places+IG+Apify örnek JSON'ları; adaptör kontrat testleri; cache/gizlilik denetimi | BE-6 |
+| FE-4 | frontend | Keşif tetikleme + `/jobs/{id}` yoklama UI'ı; tablo artık gerçek DB verisini gösteriyor | BE-6 (sözleşme), canlı: BE-9 |
 
 ### Sıralama notu
+
+Faz 2 backend-yoğun ve büyük ölçüde seri: BE-6 (protokol+sözleşme) her şeyi bloke eder,
+BE-7/BE-8 paralel gider, BE-9 ikisini birleştirir. SEC-4 ve FE-4 sözleşme (BE-6) donunca
+paralel başlar; canlı doğrulamaları BE-9'u bekler. Fixture'lar adaptör normalize şemasına
+bağlı olduğu için SEC-4 BE-6'sız başlayamaz.
 
 BE-3 artık BE-2'yi beklemez. `CLAUDE.md` §3 gereği sözleşme koddan önce gelir; ayrıca
 frontend'in BE-1..BE-2 zincirinin tamamını beklemesi paralelliği gereksiz yere öldürüyordu.
@@ -69,6 +94,11 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
   görevine toplandı. UP042 kararı: ruff pin **yükseltilmiyor** — CI 0.12.0'da sabit kalır,
   `schemas.py` `StrEnum` düzeltmesi ruff bir üst pine çıktığında yapılır. Şimdi sadece
   BE-2-B1 (exclude yolu) kritik, çünkü her yeni migration'da tekrar eder.
+- **CI (Faz 1 kutu #4)** → *lokal kapılarla kabul edildi.* Repoda git remote yok, GitHub
+  Actions hiç çalışmadı. `ci.yml` yazıldı+doğrulandı ve ruff/mypy/pytest her dalgada lokal
+  yeşil; gerçek Actions koşusu remote bağlanınca ilk push'ta olacak. Docker kutusuyla aynı
+  dürüst daraltma — kriter gevşetilmedi, makine kısıtına göre yeniden yazıldı. **Remote
+  kurulunca ilk iş:** push + Actions yeşilini gözle doğrula (Faz 6 sertleştirmeye de yazıldı).
 
 - **Docker bu geliştirme makinesinde kurulu değil** (backend, BE-1 sırasında fark edildi).
   `/usr/local/bin/docker` var ama kaldırılmış `Docker.app`'e işaret eden kopuk bir symlink.
