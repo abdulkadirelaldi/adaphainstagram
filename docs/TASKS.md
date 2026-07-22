@@ -33,10 +33,15 @@ Bitiş kriteri kutusu:
 
 ### Faz 2 — veri (SPEC §8). Bitiş kriteri kutusu:
 
-- [ ] `SourceAdapter` protokolü + tek normalize çıktı şeması var; üç adaptör bu protokolü
+- [x] `SourceAdapter` protokolü + tek normalize çıktı şeması var; üç adaptör bu protokolü
       uyguluyor, yeni kaynak eklemek tek dosya (SPEC §2)
-- [ ] `POST /discovery/run` ve `GET /jobs/{id}` `openapi.yaml`'da tanımlı; iş kuyruğa gidiyor,
+      — BE-6 ile kapandı. İki protokol seçildi (`DiscoverySource`/`ProfileSource`); üç iskelet
+      adaptör uyumu mypy'de kanıtlandı, kayıt (registry) tek-dosya desenini koruyor. Gerçek
+      HTTP gövdeleri BE-7/BE-8.
+- [x] `POST /discovery/run` ve `GET /jobs/{id}` `openapi.yaml`'da tanımlı; iş kuyruğa gidiyor,
       uç anında `job_id` dönüyor (senkron scraping yok, SPEC §7)
+      — **sözleşme** BE-6 ile kapandı (iki uç + adlandırılmış şemalar, redocly temiz). Kuyruk
+      yürütücüsü (arq, gerçek `job_id` üretimi) **BE-9**'da; uç henüz FastAPI'de canlı değil.
 - [ ] Places keşfi işletme kaydı yazıyor; IG/Apify snapshot + posts yazıyor; aynı hesap 7 gün
       içinde tekrar kazınmıyor (Redis cache, `CLAUDE.md` maliyet disiplini)
 - [ ] **Tek komutla 20 işletme keşfedilip snapshot'ı alınıyor** — hepsi fixture'la, canlı
@@ -44,12 +49,11 @@ Bitiş kriteri kutusu:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-6 | backend | **Sözleşme önce:** `SourceAdapter` protokolü + normalize şema (SPEC §2); `openapi.yaml`'a `POST /discovery/run` + `GET /jobs/{id}` | — |
-| BE-7 | backend | Google Places adaptörü + işletme kaydı yazımı, fixture'la test edilebilir | BE-6 |
-| BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 |
+| BE-7 | backend | Google Places adaptörü + işletme kaydı yazımı, fixture'la test edilebilir | BE-6 ✅ |
+| BE-8 | backend | IG Business Discovery + Apify adaptörleri, snapshot + posts yazımı | BE-6 ✅ |
 | BE-9 | backend | arq worker + 7 günlük Redis cache + `POST /discovery/run` job, tek komutla 20 işletme | BE-7, BE-8 |
-| SEC-4 | güvenlik | `tests/fixtures/` Places+IG+Apify örnek JSON'ları; adaptör kontrat testleri; cache/gizlilik denetimi | BE-6 |
-| FE-4 | frontend | Keşif tetikleme + `/jobs/{id}` yoklama UI'ı; tablo artık gerçek DB verisini gösteriyor | BE-6 (sözleşme), canlı: BE-9 |
+| SEC-4 | güvenlik | `tests/fixtures/` Places+IG+Apify örnek JSON'ları; adaptör kontrat testleri; cache/gizlilik denetimi | BE-6 ✅ |
+| FE-4 | frontend | Keşif tetikleme + `/jobs/{id}` yoklama UI'ı; tablo artık gerçek DB verisini gösteriyor | BE-6 ✅ (sözleşme), canlı: BE-9 |
 
 ### Sıralama notu
 
@@ -122,6 +126,8 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **BE-6** · Adaptör soyutlaması + sözleşme. **İki protokol seçildi** (`DiscoverySource`→`NormalizedBusiness`, `ProfileSource`→`NormalizedProfile`), tek protokol değil: Places keşif yapar (place_id/kategori, follower/post yok), IG+Apify profil çeker (snapshot+posts, place_id yok). Tek şemaya zorlamak alanların yarısı daima null olan sahte-birleşik bir model doğururdu; iki protokol her normalize şemayı dürüst tutuyor ve ikisi de aynı registry desenini paylaşıyor (yeni kaynak = tek dosya + dekoratör, dağınık `if source==` yok). Normalize şemalar `extra="forbid"` — yasak metrik (kural 7) taşıma girişimi doğrulamada patlar, fazlalık `raw`'a gömülür. `openapi.yaml`: `POST /discovery/run` (→`JobAccepted`, 202) + `GET /jobs/{id}` (→`JobStatus`, `JobState` enum queued/running/done/error), hepsi adlandırılmış şema, redocly temiz. Üç iskelet adaptör `NotImplementedError` (gövdeler BE-7/BE-8). Doğrulandı: normalize modeller örnekleniyor, `extra="forbid"` yasak alanı reddediyor, registry bilinen addan örnek veriyor + bilinmeyen adda `UnknownSourceError`, mypy protokol uyumunu zorluyor (bozuk imzalı bir adaptör mypy'yi patlattı, örnekle gösterildi). ruff 0.12.0 + mypy 2.3.0 + pytest 22/22 yeşil. **openapi.yaml YAML tuzağı:** backtick ile başlayan bir `description` değeri parse'ı bozuyordu — çift tırnakla sarıldı.
 
 - **SEC-3** · İki ruff bloğu kapatıldı. **BE-2-B1:** `ruff.toml` exclude yolu `migrations/versions` → `api/migrations/versions` (gerçek yol); ölçüldü — `versions/`'a konan kasıtlı-hatalı dummy `ruff check .`'te atlandı, `env.py`'ye enjekte edilen geçici hata raporlandı (lint kapsamında), ikisi de doğru; `env.py` bit-bit geri yüklendi, dummy silindi. **UP042:** karar gereği ertelendi — pin 0.12.0'da sabit, `ignore`'a eklenmedi (susturulmadı). `ruff check .` + `pytest` (22/22) yeşil. Detay: `docs/REVIEW.md` SEC-3.
 - **BE-4** · `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir + CORS. `openapi.yaml` Faz 1 için eksiksizdi, **dokunulmadı** (sözleşme commit'i gerekmedi). Yanıt modelleri `response_model=` ile bağlı; üretilen `/openapi.json` sözleşmeyle uyuşuyor (12 `required` alan, `additionalProperties:false`, `TriageStatus` enum, yasak alan yok). Query paramları gerçekten uygulanıyor (saf `select_businesses`): `status=qualified`→[1,2], `status=rejected`→[5,6], `category=kafe`→[5,7], `min_score=70`→[1,2], `min_score=60&status=watch`→[4]; `limit`/`offset` sayfalıyor, `total` filtrelenmiş gerçek toplam; `?min_score=100&status=rejected`→`items:[]` (boş durum). Geçersiz param→422. **CORS:** açık origin listesi ayrı `CorsSettings` (pydantic-settings) ile `.env`'den, varsayılan `http://localhost:3000`, `["*"]` değil; izinli origin echo ediliyor, izinsiz edilmiyor, preflight 200. **Mimari not:** CORS'u ana `Settings`'e koymak `create_app()`'i her kurulumda db/redis config'i istemeye zorluyordu ve hermetik testleri (env'siz) kırıyordu — ayrı zorunlu-alansız `CorsSettings`'e taşındı, `Settings` fail-fast'i korundu. ruff 0.12.0 + mypy 2.3.0 + pytest(22/22, env'siz de) yeşil. FE-3 canlı doğrulama yapabilir.

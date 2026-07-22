@@ -28,6 +28,10 @@ tags:
     description: Servis sağlığı
   - name: dashboard
     description: Panel verileri
+  - name: discovery
+    description: Keşif taraması
+  - name: jobs
+    description: Kuyruk işleri
 
 paths:
   /health:
@@ -126,6 +130,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
+
+  /discovery/run:
+    post:
+      tags: [discovery]
+      summary: Keşif taraması başlat
+      description: |
+        Bir bölge ve sorgu için Google Places keşfini kuyruğa alır. Senkron scraping
+        yoktur (SPEC §7): uç anında bir `job_id` döner, ilerleme `GET /jobs/{id}` ile
+        yoklanır. Yalnızca oturum açmadan erişilebilen halka açık veri toplanır.
+      operationId: runDiscovery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryRequest'
+      responses:
+        '202':
+          description: İş kuyruğa alındı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobAccepted'
+        '422':
+          description: Geçersiz istek gövdesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /jobs/{id}:
+    get:
+      tags: [jobs]
+      summary: Kuyruk işinin durumu
+      description: |
+        Kuyruğa alınmış bir işin durumunu döndürür. Arayüz bu ucu yoklayarak keşif/
+        scraping ilerlemesini izler (FE-4).
+      operationId: getJob
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "`POST /discovery/run` ucunun döndürdüğü iş kimliği."
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        '200':
+          description: İşin güncel durumu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobStatus'
+        '404':
+          description: Böyle bir iş yok (bilinmeyen veya süresi dolmuş `job_id`)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
 
 components:
   schemas:
@@ -266,6 +329,116 @@ components:
           type: integer
           minimum: 0
           description: Sayfalama uygulanmadan önce filtreye uyan toplam kayıt sayısı.
+
+    DiscoveryRequest:
+      type: object
+      title: DiscoveryRequest
+      description: Keşif taramasının parametreleri.
+      additionalProperties: false
+      required: [query]
+      properties:
+        query:
+          type: string
+          minLength: 1
+          description: Places arama sorgusu, ör. "kuyumcu" veya "diş kliniği".
+        region:
+          type: string
+          minLength: 1
+          default: Samsun
+          description: Aramanın yapılacağı bölge. Varsayılan Samsun (SPEC §1).
+        limit:
+          type: [integer, 'null']
+          minimum: 1
+          maximum: 200
+          description: En fazla kaç işletme keşfedilsin. Verilmezse adaptör varsayılanı.
+
+    JobAccepted:
+      type: object
+      title: JobAccepted
+      description: Kuyruğa alınan işin kimliği. Uç bunu anında döner (senkron iş yok).
+      additionalProperties: false
+      required: [job_id]
+      properties:
+        job_id:
+          type: string
+          minLength: 1
+          description: İşi `GET /jobs/{id}` ile yoklamak için kimlik.
+
+    JobState:
+      type: string
+      title: JobState
+      description: Bir kuyruk işinin yaşam döngüsü durumu.
+      enum: [queued, running, done, error]
+
+    JobProgress:
+      type: object
+      title: JobProgress
+      description: İşin ilerleme sayaçları.
+      additionalProperties: false
+      required: [processed, total]
+      properties:
+        processed:
+          type: integer
+          minimum: 0
+          description: Şimdiye kadar işlenen öğe sayısı.
+        total:
+          type: [integer, 'null']
+          minimum: 0
+          description: Beklenen toplam öğe sayısı. Henüz bilinmiyorsa null.
+
+    JobResult:
+      type: object
+      title: JobResult
+      description: İş tamamlandığında yazılanların özeti.
+      additionalProperties: false
+      required: [businesses, snapshots]
+      properties:
+        businesses:
+          type: integer
+          minimum: 0
+          description: Yazılan/güncellenen işletme kaydı sayısı.
+        snapshots:
+          type: integer
+          minimum: 0
+          description: Alınan snapshot sayısı.
+
+    JobStatus:
+      type: object
+      title: JobStatus
+      description: Kuyruk işinin güncel durumu.
+      additionalProperties: false
+      required: [job_id, status, progress, result, error]
+      properties:
+        job_id:
+          type: string
+          minLength: 1
+          description: İş kimliği.
+        status:
+          $ref: '#/components/schemas/JobState'
+        progress:
+          oneOf:
+            - $ref: '#/components/schemas/JobProgress'
+            - type: 'null'
+          description: İlerleme sayaçları. İş henüz başlamadıysa null.
+        result:
+          oneOf:
+            - $ref: '#/components/schemas/JobResult'
+            - type: 'null'
+          description: Sonuç özeti. Yalnızca `status` `done` olduğunda dolar, aksi halde null.
+        error:
+          type: [string, 'null']
+          description: Hata mesajı. Yalnızca `status` `error` olduğunda dolar, aksi halde null.
+
+    ErrorMessage:
+      type: object
+      title: ErrorMessage
+      description: Basit hata gövdesi (ör. 404).
+      additionalProperties: false
+      required: [detail]
+      properties:
+        detail:
+          type: string
+          description: İnsan okunur hata açıklaması.
 
     ValidationError:
       type: object
