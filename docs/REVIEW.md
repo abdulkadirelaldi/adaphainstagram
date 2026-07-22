@@ -214,3 +214,70 @@ sürüme çıkınca, tek satırlık değişiklikle yapılacak.
 **Uygulama (SEC-3):** UP042 `ruff.toml` `ignore`/`extend-ignore` listesine **eklenmedi.**
 Bu bilinçli: kural susturulmadı, yalnızca ertelendi — pin çıktığında gerçekten düzeltilecek
 bir bulgu olarak kalmalı, kalıcı olarak bastırılmamalı. `api/schemas.py` sahibi backend.
+
+---
+
+## SEC-4 · Faz 2 — fixture'lar + normalize kontrat testleri
+
+**Tarih:** 2026-07-22
+**Denetlenen ağaç:** `5b7062f` (BE-6) + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict), pytest — 52 test (30 yeni)
+
+BE-7/BE-8'i bloke eden fixture'lar yazıldı ve BE-6 normalize şemalarının kontratı test
+edildi. Adaptör gövdesi henüz yok; adaptör-entegrasyon testi SEC-5'te (BE-9 sonrası).
+
+### Üretilenler
+
+| Dosya | Ne |
+|---|---|
+| `tests/fixtures/places_response.json` | Google Places (New) `searchText` ham yanıtı, 4 işletme; `Sahil Kahve Evi` telefonsuz+websitesiz (None yolu), `Karadeniz Oto Galeri` websitesiz |
+| `tests/fixtures/ig_business_discovery.json` | IG Graph BD ham yanıtı; 3 gönderi `like_count`+`comments_count` taşıyor; **temiz kaynak** (yasak alan yok) |
+| `tests/fixtures/apify_profile.json` | Apify Scraper ham çıktısı; **yasak alanlar bilerek var** (kural 7) |
+| `tests/fixtures/README.md` | Üç kaynak için ham→normalize alan eşlemesi; hangi alan `raw`'da kalıyor |
+| `tests/test_normalize_contract.py` | 22 şema kontrat testi |
+| `tests/test_fixtures_valid.py` | 8 fixture geçerlilik testi |
+
+### Kabul kriterleri
+
+| Kriter | Durum | Kanıt |
+|---|---|---|
+| 3 JSON + README, hepsi geçerli JSON | **PASS** | `test_fixture_gecerli_json` (parametreli) yeşil |
+| `pytest` yeşil (forbid reddi, ge=0 reddi, fixture yükleme) | **PASS** | 52 passed |
+| Yasak-alan testi gerçekten ölçüyor | **PASS** | Aşağıda "Karşı-kanıt" |
+| Ağ kapalıyken pytest yeşil | **PASS** | `conftest.py` ağ muhafızı altında 30 yeni test geçti; dış çağrı olsa kırmızı olurdu |
+| `ruff check .` + `mypy` temiz | **PASS** | `All checks passed!` / `Success: no issues found in 29 source files` |
+
+### Yasak-alan reddi kural 7'nin makine hali — karşı-kanıt
+
+`extra="forbid"`'in gerçekten devrede olduğu iki yönlü kanıtlandı (base.py'ye dokunmadan):
+- **Gerçek durum:** `NormalizedProfile.model_validate({"source":"apify","raw":{},"impressions":15234})`
+  → `ValidationError`, kod `extra_forbidden`. Yasak metrik reddedildi.
+- **Karşı-kanıt:** `extra="allow"`'a çevrilmiş bir alt sınıfla aynı çağrı → `impressions=15234`
+  **sızdı**. Testimiz bu durumda `ValidationError` beklediğinden **kırmızıya dönerdi**. Yani
+  test bir davranışı gerçekten ölçüyor, tavsiye yazmıyor.
+
+`test_yasak_alan_adlari_fixturede_gercekten_var` listeyi fixture'a bağlıyor: Apify fixture'ından
+bir yasak alan düşerse test uyarır, kontrat hayali değil gerçek ham veriyi kovalar.
+
+### Denetim — bu turda yeni gizlilik/sır bulgusu yok
+
+- **Sır sızıntısı:** Fixture'larda gerçek anahtar deseni (`sk-ant-`, `AIza`, `apify_api_`,
+  `AKIA`, `ghp_`) taraması **boş**. Tüm veri uydurma Samsun örneği, `example.com`/`example`
+  alan adları, sahte `place_id`/IG `id`'leri.
+- **Yasak veri (kural 7):** Apify fixture'ı yasak alanları **bilerek** taşıyor (görev şartı) —
+  ama bunlar ham `raw` katmanında; normalize şema `extra="forbid"` ile yüzeye çıkışı reddediyor
+  ve `test_raw_serbest_dict_kabul_eder` yasak metriğin `raw`'da yaşayıp normalize alanlarda
+  görünmediğini doğruluyor. BD fixture'ı ise `test_ig_business_discovery_yasak_alan_icermiyor`
+  ile temiz kaynak varsayımını koruyor.
+- **Ağ çağrısı:** Yeni testlerin hiçbiri dış çağrı yapmıyor; `conftest.py` muhafızı devrede.
+
+### Backend'e not
+
+**SEC-4 fixture'lar hazır — BE-7/BE-8 başlayabilir.** Ham→normalize eşlemesi
+`tests/fixtures/README.md`'de. Adaptör gövdesini yazarken:
+- Ham dict'i `Normalized*.model_validate(...)` ile doğrula (kontrat testi bu yolu izliyor).
+- Apify'ın yasak alanlarını (`impressions`, `reach`, `saves`, `profileVisits`,
+  `followerDemographics`; gönderide `impressions`/`reach`/`saved`) normalize alana **taşıma**;
+  bütün ham nesneyi `raw`'a göm. `extra="forbid"` zaten reddeder ama yükü sen düşürmelisin.
+- Alan adı farklarına dikkat: BD `comments_count`→`comment_count`, Apify `type`→`media_type`,
+  `videoViewCount`→`view_count`.

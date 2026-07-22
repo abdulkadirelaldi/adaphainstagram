@@ -1,0 +1,48 @@
+{
+  "places": [
+    {
+      "id": "ChIJradar0000kuyumcu0001",
+      "displayName": { "text": "Elmas Kuyumculuk", "languageCode": "tr" },
+      "primaryType": "jewelry_store",
+      "types": ["jewelry_store", "store", "point_of_interest", "establishment"],
+      "formattedAddress": "Kale Mah. Bankalar Cad. No:14, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 431 20 14",
+      "internationalPhoneNumber": "+90 362 431 20 14",
+      "websiteUri": "https://elmaskuyumculuk.example.com",
+      "rating": 4.6,
+      "userRatingCount": 214
+    },
+    {
+      "id": "ChIJradar0000klinik0002",
+      "displayName": { "text": "Atakum Ağız ve Diş Sağlığı Kliniği", "languageCode": "tr" },
+      "primaryType": "dental_clinic",
+      "types": ["dental_clinic", "doctor", "health", "point_of_interest"],
+      "formattedAddress": "Denizevleri Mah. Atatürk Bulvarı No:212, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 512 88 40",
+      "internationalPhoneNumber": "+90 362 512 88 40",
+      "websiteUri": "https://atakumdisklinigi.example.com",
+      "rating": 4.8,
+      "userRatingCount": 486
+    },
+    {
+      "id": "ChIJradar0000kafe0003",
+      "displayName": { "text": "Sahil Kahve Evi", "languageCode": "tr" },
+      "primaryType": "cafe",
+      "types": ["cafe", "food", "point_of_interest", "establishment"],
+      "formattedAddress": "Kışla Mah. Sahil Yolu No:3, İlkadım/Samsun",
+      "rating": 4.3,
+      "userRatingCount": 57
+    },
+    {
+      "id": "ChIJradar0000oto0004",
+      "displayName": { "text": "Karadeniz Oto Galeri", "languageCode": "tr" },
+      "primaryType": "car_dealer",
+      "types": ["car_dealer", "store", "point_of_interest", "establishment"],
+      "formattedAddress": "Çarşamba Yolu 9. km, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 266 17 05",
+      "internationalPhoneNumber": "+90 362 266 17 05",
+      "rating": 4.1,
+      "userRatingCount": 33
+    }
+  ]
+}

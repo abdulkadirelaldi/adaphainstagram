@@ -1,0 +1,47 @@
+{
+  "business_discovery": {
+    "username": "atakumdisklinigi",
+    "name": "Atakum Diş Kliniği",
+    "followers_count": 4820,
+    "follows_count": 312,
+    "media_count": 287,
+    "biography": "Atakum'da ağız ve diş sağlığı. Randevu için DM.",
+    "website": "https://atakumdisklinigi.example.com",
+    "media": {
+      "data": [
+        {
+          "id": "17920000000111001",
+          "media_type": "IMAGE",
+          "caption": "Gülüş tasarımı öncesi ve sonrası. Randevu için bize ulaşın.",
+          "like_count": 142,
+          "comments_count": 11,
+          "timestamp": "2026-06-18T09:12:00+0000",
+          "permalink": "https://www.instagram.com/p/Radar111001/",
+          "media_url": "https://scontent.example.com/111001.jpg"
+        },
+        {
+          "id": "17920000000111002",
+          "media_type": "VIDEO",
+          "caption": "İmplant tedavisi nasıl uygulanır? #dişhekimi",
+          "like_count": 208,
+          "comments_count": 24,
+          "timestamp": "2026-06-11T14:40:00+0000",
+          "permalink": "https://www.instagram.com/reel/Radar111002/",
+          "media_url": "https://scontent.example.com/111002.mp4",
+          "thumbnail_url": "https://scontent.example.com/111002_thumb.jpg"
+        },
+        {
+          "id": "17920000000111003",
+          "media_type": "CAROUSEL_ALBUM",
+          "caption": "Klinik ekibimizle tanışın.",
+          "like_count": 97,
+          "comments_count": 4,
+          "timestamp": "2026-05-29T07:05:00+0000",
+          "permalink": "https://www.instagram.com/p/Radar111003/",
+          "media_url": "https://scontent.example.com/111003.jpg"
+        }
+      ]
+    }
+  },
+  "id": "17841400000000000"
+}
