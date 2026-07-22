@@ -169,3 +169,48 @@ engelliyor. Test suite 11 → 22 test.
 
 Bu turda yeni gizlilik/sır bulgusu yok: `git status` içinde izlenmeye aday `.env*`
 dosyası yok, `web/.gitignore` alt ağacı ayrıca kapsıyor.
+
+---
+
+## SEC-3 · Faz 1 — ruff konfig temizliği
+
+**Tarih:** 2026-07-22
+**Denetlenen ağaç:** `f98eb99` (FE-3) + çalışma ağacındaki `ruff.toml`
+**Araç:** ruff 0.12.0 (CI ile aynı pin, yerelde de aynı)
+
+İki ruff bloğu kapatıldı: BE-2-B1 (exclude yolu) düzeltildi, UP042 kararı belgelendi.
+
+#### BE-2-B1 · `düşük` · sahibi: **güvenlik & test** · **PASS → SEC-3 ile kapatıldı**
+
+**Bulgu (BE-2'de):** `ruff.toml` `extend-exclude` içindeki `migrations/versions` yolu
+hiçbir şeye uymuyordu; gerçek migration dizini `api/migrations/versions`. Autogenerate
+edilen her migration lint gürültüsü yapardı.
+
+**Çözüm (SEC-3):** `ruff.toml:12-19` — exclude `api/migrations/versions` yapıldı. Yalnızca
+Alembic'in ürettiği `versions/` dizini dışlanır; `env.py` ve `script.py.mako` gibi elle
+yazılan altyapı bilinçli olarak lint kapsamında kalır.
+
+**Kanıt — ikisi de ölçüldü:**
+- `versions/` **atlanıyor:** `api/migrations/versions/zzz_dummy_lint_probe.py` içine kasıtlı
+  E401/F401/E702 hataları olan geçici dosya kondu; `ruff check .` (CI'ın kullandığı dizin
+  taraması) çıktısında **görünmedi** → dışlanıyor. Dosya sonra silindi.
+- `env.py` **lint'leniyor:** `api/migrations/env.py`'ye geçici `import os,sys` eklendi;
+  `ruff check .` `env.py:77` için E401/E402/I001/F401 **raporladı** → kapsamda. Dosya
+  bit-bit geri yüklendi (`git diff` boş, backend'in dosyasına iz bırakılmadı).
+- `ruff check .` → `All checks passed!` (mevcut `a8d531be140e` migration dahil).
+
+**Not — ruff yol argümanı davranışı:** Bir dosya ruff'a *doğrudan argüman* olarak
+verildiğinde exclude uygulanmaz (`force-exclude` kapalı olduğu için); dışlama yalnızca
+dizin taramasında (`ruff check .`) etkindir. CI tam olarak `ruff check .` kullandığından
+kapı doğru davranır. `force-exclude` eklenmedi — görev kapsamı dışı ve CI için gereksiz.
+
+#### UP042 · `düşük` · **ertelendi — ruff pin 0.12.0'da sabit**
+
+**Karar (orkestra şefi):** ruff pin **yükseltilmiyor.** CI 0.12.0'da sabit kalır; bu
+sürümde `UP042` (`ComponentStatus(str, Enum)` → `enum.StrEnum` önerisi) **tetiklenmiyor**,
+dolayısıyla kapı zaten yeşil. `api/schemas.py` `StrEnum` düzeltmesi ileride pin bir üst
+sürüme çıkınca, tek satırlık değişiklikle yapılacak.
+
+**Uygulama (SEC-3):** UP042 `ruff.toml` `ignore`/`extend-ignore` listesine **eklenmedi.**
+Bu bilinçli: kural susturulmadı, yalnızca ertelendi — pin çıktığında gerçekten düzeltilecek
+bir bulgu olarak kalmalı, kalıcı olarak bastırılmamalı. `api/schemas.py` sahibi backend.

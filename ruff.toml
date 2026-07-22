@@ -11,7 +11,11 @@ src = ["api", "tests"]
 
 extend-exclude = [
     ".venv",
-    "migrations/versions",  # Alembic üretir, elle yazılmaz
+    # Yalnızca Alembic'in autogenerate ettiği revizyon dosyaları dışlanır. Gerçek
+    # yol api/migrations/versions — önceki "migrations/versions" hiçbir şeye uymuyordu,
+    # dolayısıyla her yeni migration lint gürültüsü yapardı (BE-2-B1). env.py ve
+    # script.py.mako gibi elle yazılan altyapı BİLİNÇLİ olarak kapsamda kalır.
+    "api/migrations/versions",
     "web",                  # frontend ajanının alanı, JS/TS tarafı ayrı lint'lenir
 ]
 
