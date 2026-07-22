@@ -5,11 +5,12 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.cache import create_redis
-from api.config import get_settings
+from api.config import get_cors_settings, get_settings
 from api.db import create_engine, create_session_factory
-from api.routes import health
+from api.routes import businesses, health, stats
 
 logging.basicConfig(level=logging.INFO)
 
@@ -45,7 +46,21 @@ def create_app() -> FastAPI:
         description="Kıyı Medya aday tarama ve denetim sistemi.",
         lifespan=lifespan,
     )
+
+    # CORS: panel (web/) bu API'ye tarayıcıdan istek atar. Açık origin listesi
+    # ayarlardan gelir; `allow_origins=["*"]` bilinçli olarak kullanılmaz.
+    # get_cors_settings() zorunlu alan içermez → uygulama canlı config olmadan da
+    # kurulabilir (hermetik testler bozulmaz).
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=get_cors_settings().origins(),
+        allow_methods=["GET"],
+        allow_headers=["*"],
+    )
+
     app.include_router(health.router)
+    app.include_router(stats.router)
+    app.include_router(businesses.router)
     return app
 
 

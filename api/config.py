@@ -47,3 +47,42 @@ def get_settings() -> Settings:
     # Alanlar ortamdan doldurulur; pydantic.mypy eklentisi bunu bildiği için
     # call-arg bastırması gerekmiyor.
     return Settings()
+
+
+class CorsSettings(BaseSettings):
+    """CORS origin'leri — uygulama **kurulurken** (create_app) gerekir.
+
+    Ayrı bir ayar sınıfı olması bilinçli: ana `Settings` `database_url`/`redis_url`'ı
+    zorunlu tutar (eksikse fail-fast), ama bunlar yalnızca çalışma anında (lifespan)
+    gerekir. CORS ise middleware eklenirken, yani uygulama kurulurken lazım. İkisi
+    aynı sınıfta olsaydı `create_app()` her çağrıda db/redis konfigürasyonu isterdi
+    ve hermetik testler (canlı config olmadan uygulamayı kuran) kırılırdı. Bu sınıfın
+    zorunlu alanı yok — güvenli varsayılana düşer, her ortamda kurulabilir.
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    cors_allow_origins: str = Field(
+        default="http://localhost:3000",
+        description="CORS için izin verilen origin'ler, virgülle ayrılmış.",
+    )
+
+    def origins(self) -> list[str]:
+        """Virgülle ayrılmış origin'leri temiz bir listeye çevirir.
+
+        Boş/yalnızca boşluk token'lar atılır. Sonuç boşsa (ör. `.env`'de anahtar
+        değersiz bırakılmışsa) varsayılan tek origin'e düşer — açık liste korunur,
+        yanlışlıkla `["*"]`'a dönüşmez.
+        """
+        raw = [o.strip() for o in self.cors_allow_origins.split(",") if o.strip()]
+        return raw or ["http://localhost:3000"]
+
+
+@lru_cache
+def get_cors_settings() -> CorsSettings:
+    """CORS ayarını bir kez okur ve önbelleğe alır."""
+    return CorsSettings()

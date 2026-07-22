@@ -16,16 +16,18 @@ Bitiş kriteri kutusu — üçü de işaretlenmeden Faz 2 açılmaz:
 - [x] Servisler ayağa kalkıyor, `GET /health` 200 dönüyor — yerel postgres@16 + redis ile
       doğrulandı (sağlıklı yol + iki arıza yolu), CI'da servis konteyneriyle tekrarlanıyor.
       **`docker compose` bu makinede doğrulanmadı**, bkz. `## Bloke` → Docker kararı.
-- [ ] `GET /stats` ve `GET /businesses` sahte veriyle 200 dönüyor ve `docs/openapi.yaml` ile birebir uyuşuyor
+- [x] `GET /stats` ve `GET /businesses` sahte veriyle 200 dönüyor ve `docs/openapi.yaml` ile birebir uyuşuyor
+      — BE-4 ile kapandı; canlı curl'le doğrulandı, üretilen `/openapi.json` sözleşmedeki `required`/
+      `additionalProperties`/enum ile uyuşuyor, yasak alan yok.
 - [ ] Panel üst şeridi `/stats` verisini, tablo `/businesses` boş listesini gerçek istekle çiziyor
+      _(FE-3 canlı doğrulama — API artık ayakta)_
 - [ ] CI yeşil: ruff, mypy, pytest
 
 ## Açık
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-4 | backend | `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir uyumlu + CORS | BE-2, BE-3 |
-| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı, mock sökümü | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 |
+| FE-3 | frontend | `docs/openapi.yaml`'dan tip üretimi, TanStack Query bağlantısı, mock sökümü | başlar: BE-3 + FE-2 · canlı doğrulama: BE-4 ✅ (API ayakta) |
 | SEC-3 | güvenlik | `ruff.toml` exclude yolu düzeltilsin (BE-2-B1); UP042/ruff-pin kararı uygulansın | — |
 
 ### Sıralama notu
@@ -89,6 +91,7 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 _(tek satır sonuç notuyla)_
 
+- **BE-4** · `/stats` ve `/businesses` uçları, sahte veri, BE-3 sözleşmesine birebir + CORS. `openapi.yaml` Faz 1 için eksiksizdi, **dokunulmadı** (sözleşme commit'i gerekmedi). Yanıt modelleri `response_model=` ile bağlı; üretilen `/openapi.json` sözleşmeyle uyuşuyor (12 `required` alan, `additionalProperties:false`, `TriageStatus` enum, yasak alan yok). Query paramları gerçekten uygulanıyor (saf `select_businesses`): `status=qualified`→[1,2], `status=rejected`→[5,6], `category=kafe`→[5,7], `min_score=70`→[1,2], `min_score=60&status=watch`→[4]; `limit`/`offset` sayfalıyor, `total` filtrelenmiş gerçek toplam; `?min_score=100&status=rejected`→`items:[]` (boş durum). Geçersiz param→422. **CORS:** açık origin listesi ayrı `CorsSettings` (pydantic-settings) ile `.env`'den, varsayılan `http://localhost:3000`, `["*"]` değil; izinli origin echo ediliyor, izinsiz edilmiyor, preflight 200. **Mimari not:** CORS'u ana `Settings`'e koymak `create_app()`'i her kurulumda db/redis config'i istemeye zorluyordu ve hermetik testleri (env'siz) kırıyordu — ayrı zorunlu-alansız `CorsSettings`'e taşındı, `Settings` fail-fast'i korundu. ruff 0.12.0 + mypy 2.3.0 + pytest(22/22, env'siz de) yeşil. FE-3 canlı doğrulama yapabilir.
 - **SEC-2** · SEC-1-B3 kapatıldı. Kök `.gitignore` doğru kuruldu: `.env.local`+`.env.*.local` (asıl bulgu), `*.pem`/`*.key`, pytest-cov çıktısı, Playwright (Faz 6), `.DS_Store`. `tests/test_gitignore.py` regresyon testi `git check-ignore`'a soruyor (desen taklidi değil); testin ölçtüğü kanıtlandı — `.env.local` satırı geçici silinince kırmızı, geri konunca yeşil, `.gitignore` bit-bit geri yüklendi. `.env.example` ters-yön koruması da eklendi (fazla geniş `.env` deseni şablonu yutmasın). pytest 11→22 yeşil, ruff+mypy temiz. `.gitignore` sahipliği artık güvenlik & test'te.
 - **BE-2** · SPEC §3 altı tablosu (`businesses`, `snapshots`, `posts`, `triage_scores`, `audits`, `outreach`) SQLAlchemy 2.0 `Mapped[]` stiliyle; tek Alembic migration (`a8d531be140e`). **Enum kararı: CHECK constraint** (`Enum(native_enum=False)`), native PG ENUM değil — gerekçe: (1) geri alınabilirlik temiz kalır, downgrade tabloyu düşürünce CHECK onunla gider, native tipin bıraktığı yetim `DROP TYPE` sorunu yok; (2) `alembic check` varchar+CHECK'i sahte diff üretmeden round-trip ediyor; (3) DB seviyesinde domain yine de zorlanıyor ve Python'da `Mapped[TriageStatus]` tiplemesi korunuyor. `values_callable` ile değerler küçük harf saklanıyor (SPEC/openapi ile aynı) — onsuz SQLAlchemy üye adını ('DRAFT') saklayıp `server_default='draft'` CHECK'ini kırardı. Doğrulandı: upgrade→check(boş diff)→downgrade→upgrade temiz; `outreach.status` varsayılansız satırda `draft`; `audits.llm_cost_usd` (Numeric, NOT NULL) boş bırakılınca hata; geçersiz status CHECK hatası; ruff+mypy+pytest(11/11) yeşil. Not: ruff exclude yolu düzeltilmeli, bkz. `## Bloke` BE-2-B1. BE-4 hazır.
 - **BE-5** · SEC-1-B1 (`ASYNC109`) ve SEC-1-B2 (`unused-ignore`) kapatıldı. `_check_*` fonksiyonları `timeout` parametresini bıraktı; `get_health` içindeki `bounded` closure zaman aşımını `asyncio.timeout()` ile sarıyor, her yoklama ayrı sarıldığı için granülerlik korundu (asılı db → 503 `db=error` ama `redis=ok`, 0.3s sınırda kesildiği elle doğrulandı). Sabit CI sürümleriyle (ruff 0.12.0, mypy 2.3.0) `ruff check .` + `ruff format --check` + `mypy` + `pytest` (11/11) hepsi yeşil.
