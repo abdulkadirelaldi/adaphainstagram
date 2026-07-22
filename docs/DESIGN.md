@@ -121,7 +121,16 @@ imkânsız kılar — aletin taksimatı kaymaz.
 **Kohort 5'in altındaysa çentikler çizilmez.** SPEC §4 gereği bu durumda potansiyel alt skoru
 hesaplanmaz ve hesap `watch` olur. Ray boş taşıyıcı olarak durur, erişilebilir etiketi
 "kohort 5 hesabın altında, karşılaştırma yapılmadı" der. Olmayan karşılaştırmayı çizmeyiz
-(CLAUDE.md kural 7'nin ruhu).
+(CLAUDE.md kural 7'nin ruhu). *Not: Faz 1 sahte verisinde her kategoride tek hesap var, bu
+yüzden çentikler henüz görünmez — doğru davranış budur; gerçek tarama (Faz 2+) kohortları
+doldurunca çentikler belirir.*
+
+**Kohort kaynağı filtreden bağımsızdır.** `/businesses` sayfalı ve filtreli gelir; ama kohort
+"aynı kategorideki taranmış tüm hesaplar" olmalı, yoksa `status=qualified` filtresi altında ray
+yalnızca qualified skorları gösterir ve görece konum yanıltıcı olur. Bu yüzden panel kohortu
+**ayrı, filtresiz bir istekten** besler (`useKohortKaynagi`, tek istek, 30s cache). Sınır:
+`limit` üst sınırı 200; bunu aşan bir kohort kaynağı eksik kalır — Faz 1'de sorun değil, kalıcı
+çözüm bir kategori-dağılım ucu ister (docs/TASKS.md `## Bloke`).
 
 **Anahtar bir kez gösterilir.** Skor sütunu başlığının altında 0 · 40 · 70 · 100 taksimatı
 duran sabit bir ray anahtarı var. Böylece her satırda bant etiketi tekrar etmeye gerek kalmaz.
@@ -213,9 +222,10 @@ editöryel ölçü yok, süs kural yok. Çizgi bir şey ayırmıyorsa silinir.
 ## 7. Durumlar
 
 Tablo üç durumu birinci sınıf çizer; hiçbiri baştan savma değildir. Durum tek bir tipli
-birleşimle (`yukleniyor | hata | hazir`) verilir. FE-2'de mock senkron olduğundan durum daima
-`hazir`; yükleniyor ve hata FE-3'te TanStack Query'nin `isLoading` / `isError` bayraklarına
-bağlanır — o bağlantı dışında hiçbir şey değişmez.
+birleşimle (`yukleniyor | hata | hazir`) verilir ve TanStack Query'nin `isPending` / `isError`
+bayraklarından türer. Üçü de gerçek: ağ/CORS hatası hata durumunu, `items: []` boş durumu
+tetikler. Sayfa değişiminde tablo boşalmasın diye önceki sayfa yeni gelene dek durur
+(`placeholderData`).
 
 **Boş.** Özür dilemez, davet eder. Dönen çark ya da illüstrasyon yok. Filtre boş sonuç
 verdiğinde:

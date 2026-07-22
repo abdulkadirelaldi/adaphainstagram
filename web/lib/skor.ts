@@ -16,14 +16,15 @@
  * raydaki konumu belirler.
  */
 
+import type { TriageStatus } from "@/lib/api/tipler";
+
+export type { TriageStatus };
+
 export const ESIK_NITELIKLI = 70;
 export const ESIK_IZLEMEDE = 40;
 
 /** Kohort medyanı bu sayının altındaki kohortlarda hesaplanmaz (SPEC §4). */
 export const ASGARI_KOHORT = 5;
-
-/** Triyaj durumu — SPEC §3, openapi `TriageStatus`. Henüz taranmadıysa null. */
-export type TriageStatus = "qualified" | "watch" | "rejected";
 
 /** Görsel bant. Statusun panel karşılığı; renk ve çentik yüksekliği buna bağlanır. */
 export type SkorBandi = "elendi" | "izlemede" | "nitelikli";

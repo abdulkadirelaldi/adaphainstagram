@@ -11,8 +11,7 @@ import { STATUS_ETIKET, type TriageStatus } from "@/lib/skor";
  * bileşen yerel state tutmaz, doğrudan URL'i yazar (router.replace ile — geçmişi
  * filtre değişiklikleriyle kirletmez).
  *
- * Kategori listesi FE-2'de mock'tan gelir; FE-3'te `/businesses` yanıtından ya da
- * ayrı bir uçtan türetilir.
+ * Kategori listesi filtresiz `/businesses` kohort kaynağından türetilir.
  */
 
 const STATUS_SIRA: readonly TriageStatus[] = ["qualified", "watch", "rejected"];

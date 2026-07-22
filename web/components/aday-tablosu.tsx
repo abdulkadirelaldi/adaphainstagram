@@ -1,7 +1,8 @@
 import { RayAnahtari } from "@/components/ray-anahtari";
 import { SkorHucresi } from "@/components/skor-hucresi";
+import type { Isletme } from "@/lib/api/tipler";
 import { sayi, tarih, YOK } from "@/lib/bicim";
-import { kategoriKohortu, type Isletme } from "@/lib/mock-veri";
+import { kategoriKohortu } from "@/lib/kohort";
 
 /**
  * Aday tablosu — tam genişlik, kenarlıklı yoğun satırlar.
@@ -27,7 +28,14 @@ const SUTUNLAR = [
   { anahtar: "skor", etiket: "Triyaj skoru", genislik: "212px" },
 ] as const;
 
-export function AdayTablosu({ durum }: { durum: Durum }) {
+export function AdayTablosu({
+  durum,
+  kohortKaynagi = [],
+}: {
+  durum: Durum;
+  /** Kohort rayının filtresiz dağılım kaynağı (bkz. useKohortKaynagi). */
+  kohortKaynagi?: readonly Isletme[];
+}) {
   return (
     <table className="w-full border-collapse text-govde">
       <caption className="sr-only">
@@ -78,15 +86,23 @@ export function AdayTablosu({ durum }: { durum: Durum }) {
               </td>
             </tr>
           ) : (
-            durum.kayitlar.map((k) => <Satir key={k.id} isletme={k} />)
+            durum.kayitlar.map((k) => (
+              <Satir key={k.id} isletme={k} kohortKaynagi={kohortKaynagi} />
+            ))
           ))}
       </tbody>
     </table>
   );
 }
 
-function Satir({ isletme }: { isletme: Isletme }) {
-  const kohort = kategoriKohortu(isletme.category);
+function Satir({
+  isletme,
+  kohortKaynagi,
+}: {
+  isletme: Isletme;
+  kohortKaynagi: readonly Isletme[];
+}) {
+  const kohort = kategoriKohortu(isletme.category, kohortKaynagi);
   return (
     <tr className="border-b border-cizgi align-middle" style={{ height: "var(--olcu-satir)" }}>
       <td className="px-6">

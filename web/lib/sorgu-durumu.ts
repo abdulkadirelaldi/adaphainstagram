@@ -1,4 +1,4 @@
-import type { IsletmeSorgusu } from "@/lib/mock-veri";
+import type { IsletmeSorgusu } from "@/lib/api/istemci";
 import type { TriageStatus } from "@/lib/skor";
 
 /**

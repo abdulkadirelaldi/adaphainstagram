@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // openapi-typescript çıktısı — elle düzenlenmez, lint'lenmez. `npm run gen:api`.
+      "lib/api/schema.ts",
     ],
   },
 ];

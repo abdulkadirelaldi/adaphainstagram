@@ -1,5 +1,5 @@
 import { para, sayi, YOK } from "@/lib/bicim";
-import type { Istatistik } from "@/lib/mock-veri";
+import type { Istatistik } from "@/lib/api/tipler";
 
 /**
  * Üst şerit — SPEC §7 `/stats`: taranan, nitelikli, rapor, aylık maliyet.

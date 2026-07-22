@@ -6,21 +6,17 @@ import { AdayTablosu } from "@/components/aday-tablosu";
 import { Filtreler } from "@/components/filtreler";
 import { Sayfalama } from "@/components/sayfalama";
 import { UstSerit } from "@/components/ust-serit";
-import {
-  MOCK_ISLETMELER,
-  MOCK_ISTATISTIK,
-  sorgula,
-} from "@/lib/mock-veri";
+import { useBusinesses, useKohortKaynagi, useStats } from "@/lib/api/sorgular";
+import { kategoriler as benzersizKategoriler } from "@/lib/kohort";
 import { sorguCoz } from "@/lib/sorgu-durumu";
 
 /**
- * Panel gövdesi. Filtre durumunu URL'den okur, mock kaynağı sorgular, üst şeridi
- * ve tabloyu çizer.
+ * Panel gövdesi. Filtre durumunu URL'den okur, gerçek `/stats` ve `/businesses`
+ * uçlarını TanStack Query ile çağırır, üst şeridi ve tabloyu çizer.
  *
- * FE-2 mock veriyi SENKRON tüketir; tablo durumu bu turda daima "hazir" (liste
- * boşsa boş durum). Yükleniyor ve hata durumları tabloda birinci sınıf tasarlıdır
- * ve FE-3'te TanStack Query'nin isLoading / isError bayraklarına bağlanacaktır —
- * o bağlantı dışında hiçbir şey değişmez.
+ * Üç durum artık gerçek: ağ/CORS hatası hata durumunu, `items: []` boş durumu
+ * tetikler. Kohort rayı ayrı, filtresiz bir kaynaktan beslenir ki filtre altında
+ * bile görece konum bozulmasın.
  */
 export function AdayPaneli() {
   const params = useSearchParams();
@@ -30,29 +26,34 @@ export function AdayPaneli() {
     [params],
   );
 
-  const liste = useMemo(() => sorgula(sorgu), [sorgu]);
+  const stats = useStats();
+  const liste = useBusinesses(sorgu);
+  const kohort = useKohortKaynagi();
 
+  const kohortKaynagi = useMemo(() => kohort.data?.items ?? [], [kohort.data]);
   const kategoriler = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          MOCK_ISLETMELER.map((i) => i.category).filter(
-            (c): c is string => c !== null,
-          ),
-        ),
-      ).sort((a, b) => a.localeCompare(b, "tr")),
-    [],
+    () => benzersizKategoriler(kohortKaynagi),
+    [kohortKaynagi],
   );
+
+  const durum = liste.isError
+    ? ({
+        tip: "hata",
+        yeniden: () => void liste.refetch(),
+      } as const)
+    : liste.isPending
+      ? ({ tip: "yukleniyor" } as const)
+      : ({ tip: "hazir", kayitlar: liste.data.items } as const);
 
   return (
     <div className="flex flex-col">
-      <UstSerit istatistik={MOCK_ISTATISTIK} />
-      <Filtreler kategoriler={kategoriler} toplam={liste.total} />
-      <AdayTablosu durum={{ tip: "hazir", kayitlar: liste.items }} />
+      <UstSerit istatistik={stats.data} />
+      <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
+      <AdayTablosu durum={durum} kohortKaynagi={kohortKaynagi} />
       <Sayfalama
         offset={sorgu.offset}
         limit={sorgu.limit}
-        toplam={liste.total}
+        toplam={liste.data?.total ?? 0}
       />
     </div>
   );
