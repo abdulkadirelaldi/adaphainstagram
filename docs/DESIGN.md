@@ -77,6 +77,14 @@ feda etmek, ölçüm aletinde kabul edilemez. Rakam 17.01:1'de kalır, renk 3:1 
 geçerli olduğu yere taşınır. "Renkli olan tek şey skordur" kuralı korunur: renk hâlâ yalnızca
 skor hücresinde, üstelik tam olarak ölçüm işaretinin üstünde.
 
+**Üçüncü karar: rakam `floor` ile yuvarlanır, `round` ile değil.** Skor bir eşik
+göstergesidir (SPEC §1: ≥70 nitelikli, ≥40 izlemede) ve bant otoriter olarak `status`'tan
+gelir (§5). `round` kullanılsa ham skoru 39.6 olan bir `rejected` satır "40" gösterir ve elendi
+bandıyla ters düşer — kullanıcı "40 neden elendi? 40 izlemede eşiği" diye okur. `floor` daima
+eşiğin doğru tarafında kalır: floor ile gösterilen "70" gerçekten ≥70'tir, "39" gerçekten
+<40'tır. Rakam ve bant hiçbir sınırda çelişmez. (FE-5'te 100 gerçek skorla eşik sınırında
+görülüp düzeltildi.)
+
 ---
 
 ## 3. Token'lar
@@ -121,9 +129,11 @@ imkânsız kılar — aletin taksimatı kaymaz.
 **Kohort 5'in altındaysa çentikler çizilmez.** SPEC §4 gereği bu durumda potansiyel alt skoru
 hesaplanmaz ve hesap `watch` olur. Ray boş taşıyıcı olarak durur, erişilebilir etiketi
 "kohort 5 hesabın altında, karşılaştırma yapılmadı" der. Olmayan karşılaştırmayı çizmeyiz
-(CLAUDE.md kural 7'nin ruhu). *Not: Faz 1 sahte verisinde her kategoride tek hesap var, bu
-yüzden çentikler henüz görünmez — doğru davranış budur; gerçek tarama (Faz 2+) kohortları
-doldurunca çentikler belirir.*
+(CLAUDE.md kural 7'nin ruhu). *Faz 3'te (100 skorlanmış hesap, fixture) kohortlar doldu ve
+çentikler imza öğesini tam gücüyle çiziyor: her kategoride (dental_clinic, jewelry_store,
+car_dealer, real_estate_agency, cafe, hair_salon…) skorlar rayda kümeleniyor, her satırın skoru
+kohortun içindeki yeriyle okunuyor. Kohortu 5'in altında kalan kategoriler (florist, gift_shop,
+pet_store) skorsuz `watch` — çentiksiz ray + "—" + "İzlemede", canlı doğrulandı.*
 
 **Kohort kaynağı filtreden bağımsızdır.** `/businesses` sayfalı ve filtreli gelir; ama kohort
 "aynı kategorideki taranmış tüm hesaplar" olmalı, yoksa `status=qualified` filtresi altında ray

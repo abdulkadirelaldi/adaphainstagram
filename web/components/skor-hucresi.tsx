@@ -36,7 +36,10 @@ export function SkorHucresi({
   return (
     <div className="flex items-center gap-3">
       <span className="sayi w-7 shrink-0 text-right text-orta tabular-nums">
-        {skor === null ? YOK : Math.round(skor)}
+        {/* floor, round değil: skor bir eşik göstergesidir (SPEC §1: ≥70, ≥40).
+            round(69.6)=70 "İzlemede" bir satırda "70" gösterip banda ters düşerdi;
+            floor daima status bandıyla hizalı kalır. */}
+        {skor === null ? YOK : Math.floor(skor)}
       </span>
       <KohortRayi skor={skor} bant={bant} kohort={kohort} />
       {/* Skor yokken durum sözle söylenir; ray konumu olmadığından tek işaret budur. */}
