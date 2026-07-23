@@ -49,8 +49,25 @@ Bitiş kriteri kutusu:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-9 | backend | arq worker + 7 günlük Redis cache + `POST /discovery/run` job, tek komutla 20 işletme | BE-7 ✅, BE-8 ✅ |
+| SEC-6 | güvenlik | Places fixture'ını ~20 Samsun işletmesine genişlet + handle eşleme sözleşmesine göre IG link'ler; BD/Apify fixture'larını handle'larla eşle | BE-6 ✅ |
+| BE-9 | backend | arq worker + 7 günlük Redis cache + handle eşleme + `POST /discovery/run` job, tek komutla 20 işletme | BE-7 ✅, BE-8 ✅, SEC-6 (fixture) |
 | SEC-5 | güvenlik | Adaptör entegrasyon testleri + 7 gün cache denetimi + gizlilik denetimi | BE-9 |
+
+### IG handle eşleme sözleşmesi (Faz 2 — orkestra şefi sabitledi)
+
+SPEC §1 akışında "IG handle eşleme" adımı var ama *nasıl* eşleneceği tanımsız. İki ajanı
+(SEC-6 fixture + BE-9 çıkarım) bağladığı için sözleşme burada donuyor:
+
+- Handle **yalnızca açık bir bağlantıdan** türetilir: Places sonucunun `raw` alanındaki website
+  veya sosyal bağlantılardan `instagram.com/{handle}` biçimindeki URL regex'le çıkarılır.
+- Ad benzerliğinden **tahmin edilmez** — yanlış eşleme = yanlış işletmeye rapor = SPEC hukuki
+  sınır ihlali. Belirsizse eşleme yok.
+- Handle bulunamayan işletme `ig_handle=NULL` kalır ve snapshot alınmaz (keşfedilir ama
+  taranmaz).
+- İşletme/kişisel hesap ayrımı (SPEC §1) profil çekiminde `is_professional` ile netleşir;
+  handle eşleme aşamasında değil.
+- SEC-6 fixture'ı bu sözleşmeye uyar: ~20 işletmenin bir kısmı `raw`'da instagram URL taşır
+  (handle + snapshot yolu), bir kısmı taşımaz (NULL yolu). BE-9 çıkarımı aynı sözleşmeye bakar.
 
 ### Sıralama notu (Faz 2)
 
