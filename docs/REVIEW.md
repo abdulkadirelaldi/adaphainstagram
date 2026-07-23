@@ -424,3 +424,63 @@ makinede gerçekten koşar (skip yok, kanıtlandı).
 
 Faz 2 backend'i (BE-7/BE-8/BE-9) beş kritere göre bağımsız doğrulandı; gizlilik/maliyet/sır
 ihlali bulunmadı. SEC-6-N1 (websiteUri handle taşıyıcısı) hâlâ geçerli bir kayıt, bulgu değil.
+
+---
+
+## SEC-8 · Faz 3 — skorlama fixture'ı (100 hesap, skor sinyalleri çeşitli)
+
+**Tarih:** 2026-07-23
+**Denetlenen ağaç:** `2da4b32` + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict), pytest — 94 test, yerel pg16 + redis
+
+Places + profil fixture'ları 20→100 hesaba çıkarıldı; SPEC §4 skor sinyalleri (aktiflik/
+potansiyel/kapasite) skorlar tüm bantlara yayılacak ve kohort<5 test edilebilecek biçimde
+çeşitlendirildi. **SEC-6'nın ilk 20 hesabı aynen korundu** — adaptör/cache/fallback
+testlerinin dayandığı bilinen değerler değişmedi.
+
+### Kabul kriterleri
+
+| Kriter | Durum | Kanıt |
+|---|---|---|
+| ~100 işletme, geçerli JSON, kategori dağılımı README'de | **PASS** | 100 işletme, 12 kategori; `test_yuz_isletme_var` |
+| En az bir kategori <5 (kohort) | **PASS** | florist(3)/gift_shop(3)/pet_store(2) <5; 9 kategori ≥5; `test_kategori_cesitliligi_kohort_icin_yeterli` |
+| Profiller 100 hesabı kapsıyor, handle-anahtarlı korundu | **PASS** | 83 handle → 71 BD-dolu + 12 fallback; hepsi çözülebilir; `test_her_handle_bir_profille_cozulebiliyor` |
+| Skor sinyalleri belirgin çeşitli | **PASS** | arketipler README'de: aktiflik dead/active/moderate/dormant, yönetim bad/good/avg, kapasite kategori+takipçi+rating |
+| Tarihler sabit ISO, göreli "bugün" yok, referans README'de | **PASS** | `REFERENCE_NOW=2026-07-15`; `test_referans_zaman_gecmiste_sabit` tüm damgaların 2026- sabit olduğunu doğrular |
+| `pytest` yeşil (genişletilmiş fixture'la), ağ kapalı | **PASS** | 94 passed; ağ muhafızı altında; DB testleri yerel pg/redis |
+| `ruff` + `mypy` temiz | **PASS** | `All checks passed!` / `no issues in 49 source files` |
+| Apify yasak alanları korundu | **PASS** | 12 apify profilinin hepsinde `impressions`/`reach`/`saves`/`profileVisits`/demografi var (74 örnek); `test_apify_profilleri_yasak_alanlari_koruyor` |
+
+### Sayı-tabanlı testler magic number'dan arındırıldı
+
+Fixture 20→100 büyüyünce SEC-5/SEC-6'nın sabit sayıları (14 handle, 2 fallback, 20 işletme)
+kırılırdı. Bunları `tests/_fixture_facts.py`'den **türetilir** hale getirdim: testler
+fixture'ı okuyup beklenen handle/fallback/snapshot sayısını hesaplar. Sonuç: fixture yeniden
+boyutlanınca testler kendiliğinden uyar, davranış yine tam olarak doğrulanır (ör.
+`handles_matched == fixture'daki handle sayısı`, `fallback_used == BD-boş & Apify-var sayısı`).
+
+Handle sözleşme testi ise production `extract_ig_handle`'ı `_fixture_facts.ref_extract_handle`
+(bağımsız referans regex) ile 100 işletmede karşılaştırır — production'ın sözleşmeye uyduğunu
+kendi kopyası olmayan bir kaynaktan doğrular.
+
+### Denetim — bu turda yeni gizlilik/sır bulgusu yok
+
+- **Sır:** Fixture'larda gerçek anahtar deseni taraması boş; tüm veri uydurma, `example.com`.
+- **Yasak veri (kural 7):** `places_response.json` ve `ig_business_discovery.json`
+  `impressions|reach|saves|profilevisits|demographic` taraması **boş** (BD temiz kaynak).
+  Apify fixture'ı yasak alanları **bilerek** korur — normalize düşürür (SEC-5 doğruladı).
+- **Zaman:** Göreli "bugün" yok; sabit referans (2026-07-15) README'de sözleşme olarak yazıldı.
+
+### Üretim yöntemi (izlenebilirlik)
+
+Yeni 80 hesap deterministik (indeks tabanlı, rastgelelik yok) bir üreticiyle kuruldu; çıktı
+statik JSON olarak commit'lendi (fixture = tek doğruluk kaynağı, kural 6 "sabit/tekrarlanabilir").
+Arketip mekaniği ve referans zaman README'de belgelidir; bir hesabın hangi banda düşeceği
+"nasıl kuruldu" sütunundan izlenebilir. Kesin skor/durum BE-11 motorundan çıkar.
+
+### Backend'e not
+
+**Fixture 100 hesap, skor sinyalleri çeşitli, referans zaman `REFERENCE_NOW=2026-07-15`
+README'de — BE-11 skorlamayı 100 ile doğrulayabilir.** 90 gün penceresini bu sabit referansa
+göre kur. Kohort<5 kategorileri: florist/gift_shop/pet_store (potansiyel hesaplanmaz → watch).
+Skor-bandı hedefleri README'de (yaklaşık; kesin skor senin motorundan).

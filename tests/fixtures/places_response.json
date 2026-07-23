@@ -2,9 +2,17 @@
   "places": [
     {
       "id": "ChIJradar00kuyumcu0001",
-      "displayName": { "text": "Elmas Kuyumculuk", "languageCode": "tr" },
+      "displayName": {
+        "text": "Elmas Kuyumculuk",
+        "languageCode": "tr"
+      },
       "primaryType": "jewelry_store",
-      "types": ["jewelry_store", "store", "point_of_interest", "establishment"],
+      "types": [
+        "jewelry_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Kale Mah. Bankalar Cad. No:14, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 431 20 14",
       "internationalPhoneNumber": "+90 362 431 20 14",
@@ -14,9 +22,17 @@
     },
     {
       "id": "ChIJradar00klinik0002",
-      "displayName": { "text": "Atakum Ağız ve Diş Sağlığı Kliniği", "languageCode": "tr" },
+      "displayName": {
+        "text": "Atakum Ağız ve Diş Sağlığı Kliniği",
+        "languageCode": "tr"
+      },
       "primaryType": "dental_clinic",
-      "types": ["dental_clinic", "doctor", "health", "point_of_interest"],
+      "types": [
+        "dental_clinic",
+        "doctor",
+        "health",
+        "point_of_interest"
+      ],
       "formattedAddress": "Denizevleri Mah. Atatürk Bulvarı No:212, Atakum/Samsun",
       "nationalPhoneNumber": "0362 512 88 40",
       "internationalPhoneNumber": "+90 362 512 88 40",
@@ -26,9 +42,17 @@
     },
     {
       "id": "ChIJradar00kafe0003",
-      "displayName": { "text": "Sahil Kahve Evi", "languageCode": "tr" },
+      "displayName": {
+        "text": "Sahil Kahve Evi",
+        "languageCode": "tr"
+      },
       "primaryType": "cafe",
-      "types": ["cafe", "food", "point_of_interest", "establishment"],
+      "types": [
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Kışla Mah. Sahil Yolu No:3, İlkadım/Samsun",
       "websiteUri": "https://www.instagram.com/sahilkahveevi/",
       "rating": 4.3,
@@ -36,9 +60,17 @@
     },
     {
       "id": "ChIJradar00oto0004",
-      "displayName": { "text": "Karadeniz Oto Galeri", "languageCode": "tr" },
+      "displayName": {
+        "text": "Karadeniz Oto Galeri",
+        "languageCode": "tr"
+      },
       "primaryType": "car_dealer",
-      "types": ["car_dealer", "store", "point_of_interest", "establishment"],
+      "types": [
+        "car_dealer",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Çarşamba Yolu 9. km, Tekkeköy/Samsun",
       "nationalPhoneNumber": "0362 266 17 05",
       "internationalPhoneNumber": "+90 362 266 17 05",
@@ -48,9 +80,16 @@
     },
     {
       "id": "ChIJradar00emlak0005",
-      "displayName": { "text": "Samsun Emlak Ofisi", "languageCode": "tr" },
+      "displayName": {
+        "text": "Samsun Emlak Ofisi",
+        "languageCode": "tr"
+      },
       "primaryType": "real_estate_agency",
-      "types": ["real_estate_agency", "point_of_interest", "establishment"],
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Denizevleri Mah. Cumhuriyet Cad. No:88, Atakum/Samsun",
       "nationalPhoneNumber": "0362 502 33 21",
       "internationalPhoneNumber": "+90 362 502 33 21",
@@ -60,9 +99,16 @@
     },
     {
       "id": "ChIJradar00kuyumcu0006",
-      "displayName": { "text": "Bayram Kuyumculuk", "languageCode": "tr" },
+      "displayName": {
+        "text": "Bayram Kuyumculuk",
+        "languageCode": "tr"
+      },
       "primaryType": "jewelry_store",
-      "types": ["jewelry_store", "store", "point_of_interest"],
+      "types": [
+        "jewelry_store",
+        "store",
+        "point_of_interest"
+      ],
       "formattedAddress": "Saathane Meydanı No:7, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 435 60 90",
       "internationalPhoneNumber": "+90 362 435 60 90",
@@ -72,9 +118,17 @@
     },
     {
       "id": "ChIJradar00kafe0007",
-      "displayName": { "text": "Deniz Kafe", "languageCode": "tr" },
+      "displayName": {
+        "text": "Deniz Kafe",
+        "languageCode": "tr"
+      },
       "primaryType": "cafe",
-      "types": ["cafe", "food", "point_of_interest", "establishment"],
+      "types": [
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Mimar Sinan Mah. Sahil Cad. No:41, Atakum/Samsun",
       "nationalPhoneNumber": "0362 517 40 12",
       "internationalPhoneNumber": "+90 362 517 40 12",
@@ -84,9 +138,16 @@
     },
     {
       "id": "ChIJradar00kuafor0008",
-      "displayName": { "text": "Atakum Kuaför", "languageCode": "tr" },
+      "displayName": {
+        "text": "Atakum Kuaför",
+        "languageCode": "tr"
+      },
       "primaryType": "hair_salon",
-      "types": ["hair_salon", "beauty_salon", "point_of_interest"],
+      "types": [
+        "hair_salon",
+        "beauty_salon",
+        "point_of_interest"
+      ],
       "formattedAddress": "Yeşiltepe Mah. 19 Mayıs Bulvarı No:15, Atakum/Samsun",
       "nationalPhoneNumber": "0362 511 22 33",
       "internationalPhoneNumber": "+90 362 511 22 33",
@@ -96,9 +157,16 @@
     },
     {
       "id": "ChIJradar00kuafor0009",
-      "displayName": { "text": "Saç Tasarım Studio", "languageCode": "tr" },
+      "displayName": {
+        "text": "Saç Tasarım Studio",
+        "languageCode": "tr"
+      },
       "primaryType": "hair_salon",
-      "types": ["hair_salon", "beauty_salon", "point_of_interest"],
+      "types": [
+        "hair_salon",
+        "beauty_salon",
+        "point_of_interest"
+      ],
       "formattedAddress": "Çiftlik Mah. Ostim Cad. No:23, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 228 19 47",
       "internationalPhoneNumber": "+90 362 228 19 47",
@@ -108,9 +176,16 @@
     },
     {
       "id": "ChIJradar00emlak0010",
-      "displayName": { "text": "Mavi Deniz Emlak", "languageCode": "tr" },
+      "displayName": {
+        "text": "Mavi Deniz Emlak",
+        "languageCode": "tr"
+      },
       "primaryType": "real_estate_agency",
-      "types": ["real_estate_agency", "point_of_interest", "establishment"],
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Gazi Mah. Çamlık Cad. No:5, Canik/Samsun",
       "nationalPhoneNumber": "0362 233 71 08",
       "internationalPhoneNumber": "+90 362 233 71 08",
@@ -120,9 +195,17 @@
     },
     {
       "id": "ChIJradar00kafe0011",
-      "displayName": { "text": "Cadde 19 Kafe", "languageCode": "tr" },
+      "displayName": {
+        "text": "Cadde 19 Kafe",
+        "languageCode": "tr"
+      },
       "primaryType": "cafe",
-      "types": ["cafe", "restaurant", "food", "point_of_interest"],
+      "types": [
+        "cafe",
+        "restaurant",
+        "food",
+        "point_of_interest"
+      ],
       "formattedAddress": "Bahçelievler Mah. 100. Yıl Bulvarı No:19, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 230 55 19",
       "internationalPhoneNumber": "+90 362 230 55 19",
@@ -132,9 +215,16 @@
     },
     {
       "id": "ChIJradar00kuafor0012",
-      "displayName": { "text": "Glam Kuaför", "languageCode": "tr" },
+      "displayName": {
+        "text": "Glam Kuaför",
+        "languageCode": "tr"
+      },
       "primaryType": "hair_salon",
-      "types": ["hair_salon", "beauty_salon", "point_of_interest"],
+      "types": [
+        "hair_salon",
+        "beauty_salon",
+        "point_of_interest"
+      ],
       "formattedAddress": "Denizevleri Mah. Spor Cad. No:9, Atakum/Samsun",
       "nationalPhoneNumber": "0362 514 66 21",
       "internationalPhoneNumber": "+90 362 514 66 21",
@@ -144,9 +234,16 @@
     },
     {
       "id": "ChIJradar00kuafor0013",
-      "displayName": { "text": "Moda Kuaför", "languageCode": "tr" },
+      "displayName": {
+        "text": "Moda Kuaför",
+        "languageCode": "tr"
+      },
       "primaryType": "hair_salon",
-      "types": ["hair_salon", "beauty_salon", "point_of_interest"],
+      "types": [
+        "hair_salon",
+        "beauty_salon",
+        "point_of_interest"
+      ],
       "formattedAddress": "Kılıçdede Mah. Mektep Cad. No:31, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 431 77 52",
       "internationalPhoneNumber": "+90 362 431 77 52",
@@ -156,9 +253,17 @@
     },
     {
       "id": "ChIJradar00kafe0014",
-      "displayName": { "text": "EspressoLab Samsun", "languageCode": "tr" },
+      "displayName": {
+        "text": "EspressoLab Samsun",
+        "languageCode": "tr"
+      },
       "primaryType": "cafe",
-      "types": ["cafe", "food", "point_of_interest", "establishment"],
+      "types": [
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Piazza AVM, Kalkanca Mah., Atakum/Samsun",
       "nationalPhoneNumber": "0362 502 90 90",
       "internationalPhoneNumber": "+90 362 502 90 90",
@@ -168,9 +273,16 @@
     },
     {
       "id": "ChIJradar00kuyumcu0015",
-      "displayName": { "text": "Yıldız Kuyumculuk", "languageCode": "tr" },
+      "displayName": {
+        "text": "Yıldız Kuyumculuk",
+        "languageCode": "tr"
+      },
       "primaryType": "jewelry_store",
-      "types": ["jewelry_store", "store", "point_of_interest"],
+      "types": [
+        "jewelry_store",
+        "store",
+        "point_of_interest"
+      ],
       "formattedAddress": "Pazar Mah. Kuyumcular Çarşısı No:12, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 432 18 40",
       "internationalPhoneNumber": "+90 362 432 18 40",
@@ -180,9 +292,17 @@
     },
     {
       "id": "ChIJradar00klinik0016",
-      "displayName": { "text": "Güneş Diş Kliniği", "languageCode": "tr" },
+      "displayName": {
+        "text": "Güneş Diş Kliniği",
+        "languageCode": "tr"
+      },
       "primaryType": "dental_clinic",
-      "types": ["dental_clinic", "doctor", "health", "point_of_interest"],
+      "types": [
+        "dental_clinic",
+        "doctor",
+        "health",
+        "point_of_interest"
+      ],
       "formattedAddress": "Gaziosmanpaşa Mah. İstiklal Cad. No:64, Canik/Samsun",
       "nationalPhoneNumber": "0362 238 55 70",
       "internationalPhoneNumber": "+90 362 238 55 70",
@@ -191,9 +311,17 @@
     },
     {
       "id": "ChIJradar00oto0017",
-      "displayName": { "text": "Atlas Oto Galeri", "languageCode": "tr" },
+      "displayName": {
+        "text": "Atlas Oto Galeri",
+        "languageCode": "tr"
+      },
       "primaryType": "car_dealer",
-      "types": ["car_dealer", "store", "point_of_interest", "establishment"],
+      "types": [
+        "car_dealer",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Samsun-Ordu Yolu 4. km, Tekkeköy/Samsun",
       "nationalPhoneNumber": "0362 266 44 90",
       "internationalPhoneNumber": "+90 362 266 44 90",
@@ -203,18 +331,32 @@
     },
     {
       "id": "ChIJradar00emlak0018",
-      "displayName": { "text": "Ada Emlak", "languageCode": "tr" },
+      "displayName": {
+        "text": "Ada Emlak",
+        "languageCode": "tr"
+      },
       "primaryType": "real_estate_agency",
-      "types": ["real_estate_agency", "point_of_interest", "establishment"],
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Körfez Mah. Sahil Yolu No:120, Atakum/Samsun",
       "rating": 4.1,
       "userRatingCount": 39
     },
     {
       "id": "ChIJradar00kuafor0019",
-      "displayName": { "text": "Sırma Kuaför", "languageCode": "tr" },
+      "displayName": {
+        "text": "Sırma Kuaför",
+        "languageCode": "tr"
+      },
       "primaryType": "hair_salon",
-      "types": ["hair_salon", "beauty_salon", "point_of_interest"],
+      "types": [
+        "hair_salon",
+        "beauty_salon",
+        "point_of_interest"
+      ],
       "formattedAddress": "Ulugazi Mah. Kaptanağa Cad. No:6, İlkadım/Samsun",
       "nationalPhoneNumber": "0362 435 12 08",
       "internationalPhoneNumber": "+90 362 435 12 08",
@@ -224,15 +366,1540 @@
     },
     {
       "id": "ChIJradar00kafe0020",
-      "displayName": { "text": "Nostalji Kafe", "languageCode": "tr" },
+      "displayName": {
+        "text": "Nostalji Kafe",
+        "languageCode": "tr"
+      },
       "primaryType": "cafe",
-      "types": ["cafe", "food", "point_of_interest", "establishment"],
+      "types": [
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
       "formattedAddress": "Cumhuriyet Mah. Bafra Cad. No:47, Canik/Samsun",
       "nationalPhoneNumber": "0362 233 90 14",
       "internationalPhoneNumber": "+90 362 233 90 14",
       "websiteUri": "https://www.instagramm.example.com/nostaljikafe",
       "rating": 4.2,
       "userRatingCount": 66
+    },
+    {
+      "id": "ChIJradarS021dent",
+      "displayName": {
+        "text": "Diş Kliniği A21",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 121. Sok. No:21, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 221 10 00",
+      "internationalPhoneNumber": "+90 362 221 10 00",
+      "rating": 4.1,
+      "userRatingCount": 16,
+      "websiteUri": "https://www.instagram.com/dentalclinic21/"
+    },
+    {
+      "id": "ChIJradarS022dent",
+      "displayName": {
+        "text": "Diş Kliniği B22",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 122. Sok. No:22, Canik/Samsun",
+      "nationalPhoneNumber": "0362 222 11 01",
+      "internationalPhoneNumber": "+90 362 222 11 01",
+      "rating": 4.2,
+      "userRatingCount": 408,
+      "websiteUri": "https://www.instagram.com/dentalclinic22/"
+    },
+    {
+      "id": "ChIJradarS023dent",
+      "displayName": {
+        "text": "Diş Kliniği C23",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 123. Sok. No:23, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 223 12 02",
+      "internationalPhoneNumber": "+90 362 223 12 02",
+      "rating": 4.3,
+      "userRatingCount": 143,
+      "websiteUri": "https://www.instagram.com/dentalclinic23/"
+    },
+    {
+      "id": "ChIJradarS024dent",
+      "displayName": {
+        "text": "Diş Kliniği D24",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 124. Sok. No:24, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 224 13 03",
+      "internationalPhoneNumber": "+90 362 224 13 03",
+      "rating": 4.4,
+      "userRatingCount": 84,
+      "websiteUri": "https://www.instagram.com/dentalclinic24/"
+    },
+    {
+      "id": "ChIJradarS025dent",
+      "displayName": {
+        "text": "Diş Kliniği E25",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 125. Sok. No:25, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 225 14 04",
+      "internationalPhoneNumber": "+90 362 225 14 04",
+      "rating": 4.5,
+      "userRatingCount": 45,
+      "websiteUri": "https://dental_clinic25.example.com"
+    },
+    {
+      "id": "ChIJradarS026dent",
+      "displayName": {
+        "text": "Diş Kliniği F26",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 126. Sok. No:26, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 226 15 05",
+      "internationalPhoneNumber": "+90 362 226 15 05",
+      "rating": 4.6,
+      "userRatingCount": 21,
+      "websiteUri": "https://www.instagram.com/dentalclinic26/"
+    },
+    {
+      "id": "ChIJradarS027dent",
+      "displayName": {
+        "text": "Diş Kliniği G27",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 127. Sok. No:27, Canik/Samsun",
+      "nationalPhoneNumber": "0362 227 16 06",
+      "internationalPhoneNumber": "+90 362 227 16 06",
+      "rating": 4.7,
+      "userRatingCount": 428,
+      "websiteUri": "https://www.instagram.com/dentalclinic27/"
+    },
+    {
+      "id": "ChIJradarS028dent",
+      "displayName": {
+        "text": "Diş Kliniği H28",
+        "languageCode": "tr"
+      },
+      "primaryType": "dental_clinic",
+      "types": [
+        "dental_clinic",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 128. Sok. No:28, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 228 17 07",
+      "internationalPhoneNumber": "+90 362 228 17 07",
+      "rating": 4.8,
+      "userRatingCount": 148,
+      "websiteUri": "https://www.instagram.com/dentalclinic28/"
+    },
+    {
+      "id": "ChIJradarS029jewe",
+      "displayName": {
+        "text": "Kuyumcu A29",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 129. Sok. No:29, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 229 10 00",
+      "internationalPhoneNumber": "+90 362 229 10 00",
+      "rating": 4.9,
+      "userRatingCount": 24,
+      "websiteUri": "https://www.instagram.com/jewelrystore29/"
+    },
+    {
+      "id": "ChIJradarS030jewe",
+      "displayName": {
+        "text": "Kuyumcu B30",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 130. Sok. No:30, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 230 11 01",
+      "internationalPhoneNumber": "+90 362 230 11 01",
+      "rating": 3.5,
+      "userRatingCount": 440,
+      "websiteUri": "https://www.instagram.com/jewelrystore30/"
+    },
+    {
+      "id": "ChIJradarS031jewe",
+      "displayName": {
+        "text": "Kuyumcu C31",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 131. Sok. No:31, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 231 12 02",
+      "internationalPhoneNumber": "+90 362 231 12 02",
+      "rating": 3.6,
+      "userRatingCount": 151,
+      "websiteUri": "https://www.instagram.com/jewelrystore31/"
+    },
+    {
+      "id": "ChIJradarS032jewe",
+      "displayName": {
+        "text": "Kuyumcu D32",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 132. Sok. No:32, Canik/Samsun",
+      "nationalPhoneNumber": "0362 232 13 03",
+      "internationalPhoneNumber": "+90 362 232 13 03",
+      "rating": 3.7,
+      "userRatingCount": 92,
+      "websiteUri": "https://www.instagram.com/jewelrystore32/"
+    },
+    {
+      "id": "ChIJradarS033jewe",
+      "displayName": {
+        "text": "Kuyumcu E33",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 133. Sok. No:33, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 233 14 04",
+      "internationalPhoneNumber": "+90 362 233 14 04",
+      "rating": 3.8,
+      "userRatingCount": 53,
+      "websiteUri": "https://www.facebook.com/jewelry_store33"
+    },
+    {
+      "id": "ChIJradarS034jewe",
+      "displayName": {
+        "text": "Kuyumcu F34",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 134. Sok. No:34, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 234 15 05",
+      "internationalPhoneNumber": "+90 362 234 15 05",
+      "rating": 3.9,
+      "userRatingCount": 29,
+      "websiteUri": "https://www.instagram.com/jewelrystore34/"
+    },
+    {
+      "id": "ChIJradarS035jewe",
+      "displayName": {
+        "text": "Kuyumcu G35",
+        "languageCode": "tr"
+      },
+      "primaryType": "jewelry_store",
+      "types": [
+        "jewelry_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 135. Sok. No:35, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 235 16 06",
+      "internationalPhoneNumber": "+90 362 235 16 06",
+      "rating": 4.0,
+      "userRatingCount": 460,
+      "websiteUri": "https://www.instagram.com/jewelrystore35/"
+    },
+    {
+      "id": "ChIJradarS036car_",
+      "displayName": {
+        "text": "Oto Galeri A36",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 136. Sok. No:36, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 236 10 00",
+      "internationalPhoneNumber": "+90 362 236 10 00",
+      "rating": 4.1,
+      "userRatingCount": 31,
+      "websiteUri": "https://www.instagram.com/cardealer36/"
+    },
+    {
+      "id": "ChIJradarS037car_",
+      "displayName": {
+        "text": "Oto Galeri B37",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 137. Sok. No:37, Canik/Samsun",
+      "nationalPhoneNumber": "0362 237 11 01",
+      "internationalPhoneNumber": "+90 362 237 11 01",
+      "rating": 4.2,
+      "userRatingCount": 468,
+      "websiteUri": "https://www.instagram.com/cardealer37/"
+    },
+    {
+      "id": "ChIJradarS038car_",
+      "displayName": {
+        "text": "Oto Galeri C38",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 138. Sok. No:38, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 238 12 02",
+      "internationalPhoneNumber": "+90 362 238 12 02",
+      "rating": 4.3,
+      "userRatingCount": 158,
+      "websiteUri": "https://www.instagram.com/cardealer38/"
+    },
+    {
+      "id": "ChIJradarS039car_",
+      "displayName": {
+        "text": "Oto Galeri D39",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 139. Sok. No:39, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 239 13 03",
+      "internationalPhoneNumber": "+90 362 239 13 03",
+      "rating": 4.4,
+      "userRatingCount": 99,
+      "websiteUri": "https://www.instagram.com/cardealer39/"
+    },
+    {
+      "id": "ChIJradarS040car_",
+      "displayName": {
+        "text": "Oto Galeri E40",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 140. Sok. No:40, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 240 14 04",
+      "internationalPhoneNumber": "+90 362 240 14 04",
+      "rating": 4.5,
+      "userRatingCount": 60,
+      "websiteUri": "https://car_dealer40.example.com"
+    },
+    {
+      "id": "ChIJradarS041car_",
+      "displayName": {
+        "text": "Oto Galeri F41",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 141. Sok. No:41, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 241 15 05",
+      "internationalPhoneNumber": "+90 362 241 15 05",
+      "rating": 4.6,
+      "userRatingCount": 16,
+      "websiteUri": "https://www.instagram.com/cardealer41/"
+    },
+    {
+      "id": "ChIJradarS042car_",
+      "displayName": {
+        "text": "Oto Galeri G42",
+        "languageCode": "tr"
+      },
+      "primaryType": "car_dealer",
+      "types": [
+        "car_dealer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 142. Sok. No:42, Canik/Samsun",
+      "nationalPhoneNumber": "0362 242 16 06",
+      "internationalPhoneNumber": "+90 362 242 16 06",
+      "rating": 4.7,
+      "userRatingCount": 488,
+      "websiteUri": "https://www.instagram.com/cardealer42/"
+    },
+    {
+      "id": "ChIJradarS043real",
+      "displayName": {
+        "text": "Emlak A43",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 143. Sok. No:43, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 243 10 00",
+      "internationalPhoneNumber": "+90 362 243 10 00",
+      "rating": 4.8,
+      "userRatingCount": 18,
+      "websiteUri": "https://www.instagram.com/realestateagency43/"
+    },
+    {
+      "id": "ChIJradarS044real",
+      "displayName": {
+        "text": "Emlak B44",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 144. Sok. No:44, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 244 11 01",
+      "internationalPhoneNumber": "+90 362 244 11 01",
+      "rating": 4.9,
+      "userRatingCount": 496,
+      "websiteUri": "https://www.instagram.com/realestateagency44/"
+    },
+    {
+      "id": "ChIJradarS045real",
+      "displayName": {
+        "text": "Emlak C45",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 145. Sok. No:45, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 245 12 02",
+      "internationalPhoneNumber": "+90 362 245 12 02",
+      "rating": 3.5,
+      "userRatingCount": 165,
+      "websiteUri": "https://www.instagram.com/realestateagency45/"
+    },
+    {
+      "id": "ChIJradarS046real",
+      "displayName": {
+        "text": "Emlak D46",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 146. Sok. No:46, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 246 13 03",
+      "internationalPhoneNumber": "+90 362 246 13 03",
+      "rating": 3.6,
+      "userRatingCount": 106,
+      "websiteUri": "https://www.instagram.com/realestateagency46/"
+    },
+    {
+      "id": "ChIJradarS047real",
+      "displayName": {
+        "text": "Emlak E47",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 147. Sok. No:47, Canik/Samsun",
+      "nationalPhoneNumber": "0362 247 14 04",
+      "internationalPhoneNumber": "+90 362 247 14 04",
+      "rating": 3.7,
+      "userRatingCount": 67
+    },
+    {
+      "id": "ChIJradarS048real",
+      "displayName": {
+        "text": "Emlak F48",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 148. Sok. No:48, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 248 15 05",
+      "internationalPhoneNumber": "+90 362 248 15 05",
+      "rating": 3.8,
+      "userRatingCount": 23,
+      "websiteUri": "https://www.instagram.com/realestateagency48/"
+    },
+    {
+      "id": "ChIJradarS049real",
+      "displayName": {
+        "text": "Emlak G49",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 149. Sok. No:49, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 249 16 06",
+      "internationalPhoneNumber": "+90 362 249 16 06",
+      "rating": 3.9,
+      "userRatingCount": 516,
+      "websiteUri": "https://www.instagram.com/realestateagency49/"
+    },
+    {
+      "id": "ChIJradarS050real",
+      "displayName": {
+        "text": "Emlak H50",
+        "languageCode": "tr"
+      },
+      "primaryType": "real_estate_agency",
+      "types": [
+        "real_estate_agency",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 150. Sok. No:50, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 250 17 07",
+      "internationalPhoneNumber": "+90 362 250 17 07",
+      "rating": 4.0,
+      "userRatingCount": 170,
+      "websiteUri": "https://www.instagram.com/realestateagency50/"
+    },
+    {
+      "id": "ChIJradarS051cafe",
+      "displayName": {
+        "text": "Kafe A51",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 151. Sok. No:51, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 251 10 00",
+      "internationalPhoneNumber": "+90 362 251 10 00",
+      "rating": 4.1,
+      "userRatingCount": 26,
+      "websiteUri": "https://www.instagram.com/cafe51/"
+    },
+    {
+      "id": "ChIJradarS052cafe",
+      "displayName": {
+        "text": "Kafe B52",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 152. Sok. No:52, Canik/Samsun",
+      "nationalPhoneNumber": "0362 252 11 01",
+      "internationalPhoneNumber": "+90 362 252 11 01",
+      "rating": 4.2,
+      "userRatingCount": 112,
+      "websiteUri": "https://www.instagram.com/cafe52/"
+    },
+    {
+      "id": "ChIJradarS053cafe",
+      "displayName": {
+        "text": "Kafe C53",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 153. Sok. No:53, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 253 12 02",
+      "internationalPhoneNumber": "+90 362 253 12 02",
+      "rating": 4.3,
+      "userRatingCount": 173,
+      "websiteUri": "https://www.instagram.com/cafe53/"
+    },
+    {
+      "id": "ChIJradarS054cafe",
+      "displayName": {
+        "text": "Kafe D54",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 154. Sok. No:54, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 254 13 03",
+      "internationalPhoneNumber": "+90 362 254 13 03",
+      "rating": 4.4,
+      "userRatingCount": 114,
+      "websiteUri": "https://www.instagram.com/cafe54/"
+    },
+    {
+      "id": "ChIJradarS055cafe",
+      "displayName": {
+        "text": "Kafe E55",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 155. Sok. No:55, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 255 14 04",
+      "internationalPhoneNumber": "+90 362 255 14 04",
+      "rating": 4.5,
+      "userRatingCount": 75,
+      "websiteUri": "https://cafe55.example.com"
+    },
+    {
+      "id": "ChIJradarS056cafe",
+      "displayName": {
+        "text": "Kafe F56",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 156. Sok. No:56, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 256 15 05",
+      "internationalPhoneNumber": "+90 362 256 15 05",
+      "rating": 4.6,
+      "userRatingCount": 31,
+      "websiteUri": "https://www.instagram.com/cafe56/"
+    },
+    {
+      "id": "ChIJradarS057cafe",
+      "displayName": {
+        "text": "Kafe G57",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 157. Sok. No:57, Canik/Samsun",
+      "nationalPhoneNumber": "0362 257 16 06",
+      "internationalPhoneNumber": "+90 362 257 16 06",
+      "rating": 4.7,
+      "userRatingCount": 117,
+      "websiteUri": "https://www.instagram.com/cafe57/"
+    },
+    {
+      "id": "ChIJradarS058cafe",
+      "displayName": {
+        "text": "Kafe H58",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 158. Sok. No:58, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 258 17 07",
+      "internationalPhoneNumber": "+90 362 258 17 07",
+      "rating": 4.8,
+      "userRatingCount": 178,
+      "websiteUri": "https://www.instagram.com/cafe58/"
+    },
+    {
+      "id": "ChIJradarS059cafe",
+      "displayName": {
+        "text": "Kafe I59",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 159. Sok. No:59, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 259 18 08",
+      "internationalPhoneNumber": "+90 362 259 18 08",
+      "rating": 4.9,
+      "userRatingCount": 119,
+      "websiteUri": "https://www.instagram.com/cafe59/"
+    },
+    {
+      "id": "ChIJradarS060cafe",
+      "displayName": {
+        "text": "Kafe J60",
+        "languageCode": "tr"
+      },
+      "primaryType": "cafe",
+      "types": [
+        "cafe",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 160. Sok. No:60, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 260 19 09",
+      "internationalPhoneNumber": "+90 362 260 19 09",
+      "rating": 3.5,
+      "userRatingCount": 80,
+      "websiteUri": "https://www.facebook.com/cafe60"
+    },
+    {
+      "id": "ChIJradarS061hair",
+      "displayName": {
+        "text": "Kuaför A61",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 161. Sok. No:61, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 261 10 00",
+      "internationalPhoneNumber": "+90 362 261 10 00",
+      "rating": 3.6,
+      "userRatingCount": 16,
+      "websiteUri": "https://www.instagram.com/hairsalon61/"
+    },
+    {
+      "id": "ChIJradarS062hair",
+      "displayName": {
+        "text": "Kuaför B62",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 162. Sok. No:62, Canik/Samsun",
+      "nationalPhoneNumber": "0362 262 11 01",
+      "internationalPhoneNumber": "+90 362 262 11 01",
+      "rating": 3.7,
+      "userRatingCount": 122,
+      "websiteUri": "https://www.instagram.com/hairsalon62/"
+    },
+    {
+      "id": "ChIJradarS063hair",
+      "displayName": {
+        "text": "Kuaför C63",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 163. Sok. No:63, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 263 12 02",
+      "internationalPhoneNumber": "+90 362 263 12 02",
+      "rating": 3.8,
+      "userRatingCount": 183,
+      "websiteUri": "https://www.instagram.com/hairsalon63/"
+    },
+    {
+      "id": "ChIJradarS064hair",
+      "displayName": {
+        "text": "Kuaför D64",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 164. Sok. No:64, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 264 13 03",
+      "internationalPhoneNumber": "+90 362 264 13 03",
+      "rating": 3.9,
+      "userRatingCount": 124,
+      "websiteUri": "https://www.instagram.com/hairsalon64/"
+    },
+    {
+      "id": "ChIJradarS065hair",
+      "displayName": {
+        "text": "Kuaför E65",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 165. Sok. No:65, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 265 14 04",
+      "internationalPhoneNumber": "+90 362 265 14 04",
+      "rating": 4.0,
+      "userRatingCount": 85
+    },
+    {
+      "id": "ChIJradarS066hair",
+      "displayName": {
+        "text": "Kuaför F66",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 166. Sok. No:66, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 266 15 05",
+      "internationalPhoneNumber": "+90 362 266 15 05",
+      "rating": 4.1,
+      "userRatingCount": 21,
+      "websiteUri": "https://www.instagram.com/hairsalon66/"
+    },
+    {
+      "id": "ChIJradarS067hair",
+      "displayName": {
+        "text": "Kuaför G67",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 167. Sok. No:67, Canik/Samsun",
+      "nationalPhoneNumber": "0362 267 16 06",
+      "internationalPhoneNumber": "+90 362 267 16 06",
+      "rating": 4.2,
+      "userRatingCount": 127,
+      "websiteUri": "https://www.instagram.com/hairsalon67/"
+    },
+    {
+      "id": "ChIJradarS068hair",
+      "displayName": {
+        "text": "Kuaför H68",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 168. Sok. No:68, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 268 17 07",
+      "internationalPhoneNumber": "+90 362 268 17 07",
+      "rating": 4.3,
+      "userRatingCount": 188,
+      "websiteUri": "https://www.instagram.com/hairsalon68/"
+    },
+    {
+      "id": "ChIJradarS069hair",
+      "displayName": {
+        "text": "Kuaför I69",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 169. Sok. No:69, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 269 18 08",
+      "internationalPhoneNumber": "+90 362 269 18 08",
+      "rating": 4.4,
+      "userRatingCount": 129,
+      "websiteUri": "https://www.instagram.com/hairsalon69/"
+    },
+    {
+      "id": "ChIJradarS070hair",
+      "displayName": {
+        "text": "Kuaför J70",
+        "languageCode": "tr"
+      },
+      "primaryType": "hair_salon",
+      "types": [
+        "hair_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 170. Sok. No:70, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 270 19 09",
+      "internationalPhoneNumber": "+90 362 270 19 09",
+      "rating": 4.5,
+      "userRatingCount": 90,
+      "websiteUri": "https://hair_salon70.example.com"
+    },
+    {
+      "id": "ChIJradarS071rest",
+      "displayName": {
+        "text": "Restoran A71",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 171. Sok. No:71, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 271 10 00",
+      "internationalPhoneNumber": "+90 362 271 10 00",
+      "rating": 4.6,
+      "userRatingCount": 26,
+      "websiteUri": "https://www.instagram.com/restaurant71/"
+    },
+    {
+      "id": "ChIJradarS072rest",
+      "displayName": {
+        "text": "Restoran B72",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 172. Sok. No:72, Canik/Samsun",
+      "nationalPhoneNumber": "0362 272 11 01",
+      "internationalPhoneNumber": "+90 362 272 11 01",
+      "rating": 4.7,
+      "userRatingCount": 132,
+      "websiteUri": "https://www.instagram.com/restaurant72/"
+    },
+    {
+      "id": "ChIJradarS073rest",
+      "displayName": {
+        "text": "Restoran C73",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 173. Sok. No:73, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 273 12 02",
+      "internationalPhoneNumber": "+90 362 273 12 02",
+      "rating": 4.8,
+      "userRatingCount": 193,
+      "websiteUri": "https://www.instagram.com/restaurant73/"
+    },
+    {
+      "id": "ChIJradarS074rest",
+      "displayName": {
+        "text": "Restoran D74",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 174. Sok. No:74, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 274 13 03",
+      "internationalPhoneNumber": "+90 362 274 13 03",
+      "rating": 4.9,
+      "userRatingCount": 134,
+      "websiteUri": "https://www.instagram.com/restaurant74/"
+    },
+    {
+      "id": "ChIJradarS075rest",
+      "displayName": {
+        "text": "Restoran E75",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 175. Sok. No:75, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 275 14 04",
+      "internationalPhoneNumber": "+90 362 275 14 04",
+      "rating": 3.5,
+      "userRatingCount": 95,
+      "websiteUri": "https://www.facebook.com/restaurant75"
+    },
+    {
+      "id": "ChIJradarS076rest",
+      "displayName": {
+        "text": "Restoran F76",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 176. Sok. No:76, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 276 15 05",
+      "internationalPhoneNumber": "+90 362 276 15 05",
+      "rating": 3.6,
+      "userRatingCount": 31,
+      "websiteUri": "https://www.instagram.com/restaurant76/"
+    },
+    {
+      "id": "ChIJradarS077rest",
+      "displayName": {
+        "text": "Restoran G77",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 177. Sok. No:77, Canik/Samsun",
+      "nationalPhoneNumber": "0362 277 16 06",
+      "internationalPhoneNumber": "+90 362 277 16 06",
+      "rating": 3.7,
+      "userRatingCount": 137,
+      "websiteUri": "https://www.instagram.com/restaurant77/"
+    },
+    {
+      "id": "ChIJradarS078rest",
+      "displayName": {
+        "text": "Restoran H78",
+        "languageCode": "tr"
+      },
+      "primaryType": "restaurant",
+      "types": [
+        "restaurant",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 178. Sok. No:78, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 278 17 07",
+      "internationalPhoneNumber": "+90 362 278 17 07",
+      "rating": 3.8,
+      "userRatingCount": 198,
+      "websiteUri": "https://www.instagram.com/restaurant78/"
+    },
+    {
+      "id": "ChIJradarS079beau",
+      "displayName": {
+        "text": "Güzellik Salonu A79",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 179. Sok. No:79, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 279 10 00",
+      "internationalPhoneNumber": "+90 362 279 10 00",
+      "rating": 3.9,
+      "userRatingCount": 34,
+      "websiteUri": "https://www.instagram.com/beautysalon79/"
+    },
+    {
+      "id": "ChIJradarS080beau",
+      "displayName": {
+        "text": "Güzellik Salonu B80",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 180. Sok. No:80, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 280 11 01",
+      "internationalPhoneNumber": "+90 362 280 11 01",
+      "rating": 4.0,
+      "userRatingCount": 140,
+      "websiteUri": "https://www.instagram.com/beautysalon80/"
+    },
+    {
+      "id": "ChIJradarS081beau",
+      "displayName": {
+        "text": "Güzellik Salonu C81",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 181. Sok. No:81, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 281 12 02",
+      "internationalPhoneNumber": "+90 362 281 12 02",
+      "rating": 4.1,
+      "userRatingCount": 201,
+      "websiteUri": "https://www.instagram.com/beautysalon81/"
+    },
+    {
+      "id": "ChIJradarS082beau",
+      "displayName": {
+        "text": "Güzellik Salonu D82",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 182. Sok. No:82, Canik/Samsun",
+      "nationalPhoneNumber": "0362 282 13 03",
+      "internationalPhoneNumber": "+90 362 282 13 03",
+      "rating": 4.2,
+      "userRatingCount": 142,
+      "websiteUri": "https://www.instagram.com/beautysalon82/"
+    },
+    {
+      "id": "ChIJradarS083beau",
+      "displayName": {
+        "text": "Güzellik Salonu E83",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 183. Sok. No:83, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 283 14 04",
+      "internationalPhoneNumber": "+90 362 283 14 04",
+      "rating": 4.3,
+      "userRatingCount": 103
+    },
+    {
+      "id": "ChIJradarS084beau",
+      "displayName": {
+        "text": "Güzellik Salonu F84",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 184. Sok. No:84, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 284 15 05",
+      "internationalPhoneNumber": "+90 362 284 15 05",
+      "rating": 4.4,
+      "userRatingCount": 19,
+      "websiteUri": "https://www.instagram.com/beautysalon84/"
+    },
+    {
+      "id": "ChIJradarS085beau",
+      "displayName": {
+        "text": "Güzellik Salonu G85",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 185. Sok. No:85, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 285 16 06",
+      "internationalPhoneNumber": "+90 362 285 16 06",
+      "rating": 4.5,
+      "userRatingCount": 145,
+      "websiteUri": "https://www.instagram.com/beautysalon85/"
+    },
+    {
+      "id": "ChIJradarS086beau",
+      "displayName": {
+        "text": "Güzellik Salonu H86",
+        "languageCode": "tr"
+      },
+      "primaryType": "beauty_salon",
+      "types": [
+        "beauty_salon",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 186. Sok. No:86, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 286 17 07",
+      "internationalPhoneNumber": "+90 362 286 17 07",
+      "rating": 4.6,
+      "userRatingCount": 206,
+      "websiteUri": "https://www.instagram.com/beautysalon86/"
+    },
+    {
+      "id": "ChIJradarS087gym",
+      "displayName": {
+        "text": "Spor Salonu A87",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 187. Sok. No:87, Canik/Samsun",
+      "nationalPhoneNumber": "0362 287 10 00",
+      "internationalPhoneNumber": "+90 362 287 10 00",
+      "rating": 4.7,
+      "userRatingCount": 22,
+      "websiteUri": "https://www.instagram.com/gym87/"
+    },
+    {
+      "id": "ChIJradarS088gym",
+      "displayName": {
+        "text": "Spor Salonu B88",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 188. Sok. No:88, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 288 11 01",
+      "internationalPhoneNumber": "+90 362 288 11 01",
+      "rating": 4.8,
+      "userRatingCount": 148,
+      "websiteUri": "https://www.instagram.com/gym88/"
+    },
+    {
+      "id": "ChIJradarS089gym",
+      "displayName": {
+        "text": "Spor Salonu C89",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 189. Sok. No:89, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 289 12 02",
+      "internationalPhoneNumber": "+90 362 289 12 02",
+      "rating": 4.9,
+      "userRatingCount": 209,
+      "websiteUri": "https://www.instagram.com/gym89/"
+    },
+    {
+      "id": "ChIJradarS090gym",
+      "displayName": {
+        "text": "Spor Salonu D90",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 190. Sok. No:90, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 290 13 03",
+      "internationalPhoneNumber": "+90 362 290 13 03",
+      "rating": 3.5,
+      "userRatingCount": 150,
+      "websiteUri": "https://www.instagram.com/gym90/"
+    },
+    {
+      "id": "ChIJradarS091gym",
+      "displayName": {
+        "text": "Spor Salonu E91",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 191. Sok. No:91, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 291 14 04",
+      "internationalPhoneNumber": "+90 362 291 14 04",
+      "rating": 3.6,
+      "userRatingCount": 111,
+      "websiteUri": "https://gym91.example.com"
+    },
+    {
+      "id": "ChIJradarS092gym",
+      "displayName": {
+        "text": "Spor Salonu F92",
+        "languageCode": "tr"
+      },
+      "primaryType": "gym",
+      "types": [
+        "gym",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 192. Sok. No:92, Canik/Samsun",
+      "nationalPhoneNumber": "0362 292 15 05",
+      "internationalPhoneNumber": "+90 362 292 15 05",
+      "rating": 3.7,
+      "userRatingCount": 27,
+      "websiteUri": "https://www.instagram.com/gym92/"
+    },
+    {
+      "id": "ChIJradarS093flor",
+      "displayName": {
+        "text": "Çiçekçi A93",
+        "languageCode": "tr"
+      },
+      "primaryType": "florist",
+      "types": [
+        "florist",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 193. Sok. No:93, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 293 10 00",
+      "internationalPhoneNumber": "+90 362 293 10 00",
+      "rating": 3.8,
+      "userRatingCount": 118,
+      "websiteUri": "https://www.instagram.com/florist93/"
+    },
+    {
+      "id": "ChIJradarS094flor",
+      "displayName": {
+        "text": "Çiçekçi B94",
+        "languageCode": "tr"
+      },
+      "primaryType": "florist",
+      "types": [
+        "florist",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 194. Sok. No:94, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 294 11 01",
+      "internationalPhoneNumber": "+90 362 294 11 01",
+      "rating": 3.9,
+      "userRatingCount": 119,
+      "websiteUri": "https://www.instagram.com/florist94/"
+    },
+    {
+      "id": "ChIJradarS095flor",
+      "displayName": {
+        "text": "Çiçekçi C95",
+        "languageCode": "tr"
+      },
+      "primaryType": "florist",
+      "types": [
+        "florist",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 195. Sok. No:95, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 295 12 02",
+      "internationalPhoneNumber": "+90 362 295 12 02",
+      "rating": 4.0,
+      "userRatingCount": 120,
+      "websiteUri": "https://www.instagram.com/florist95/"
+    },
+    {
+      "id": "ChIJradarS096pet_",
+      "displayName": {
+        "text": "Pet Shop A96",
+        "languageCode": "tr"
+      },
+      "primaryType": "pet_store",
+      "types": [
+        "pet_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "İlkadım Mah. 196. Sok. No:96, İlkadım/Samsun",
+      "nationalPhoneNumber": "0362 296 10 00",
+      "internationalPhoneNumber": "+90 362 296 10 00",
+      "rating": 4.1,
+      "userRatingCount": 121,
+      "websiteUri": "https://www.instagram.com/petstore96/"
+    },
+    {
+      "id": "ChIJradarS097pet_",
+      "displayName": {
+        "text": "Pet Shop B97",
+        "languageCode": "tr"
+      },
+      "primaryType": "pet_store",
+      "types": [
+        "pet_store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Canik Mah. 197. Sok. No:97, Canik/Samsun",
+      "nationalPhoneNumber": "0362 297 11 01",
+      "internationalPhoneNumber": "+90 362 297 11 01",
+      "rating": 4.2,
+      "userRatingCount": 122,
+      "websiteUri": "https://www.instagram.com/petstore97/"
+    },
+    {
+      "id": "ChIJradarS098gift",
+      "displayName": {
+        "text": "Hediyelik A98",
+        "languageCode": "tr"
+      },
+      "primaryType": "gift_shop",
+      "types": [
+        "gift_shop",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Tekkeköy Mah. 198. Sok. No:98, Tekkeköy/Samsun",
+      "nationalPhoneNumber": "0362 298 10 00",
+      "internationalPhoneNumber": "+90 362 298 10 00",
+      "rating": 4.3,
+      "userRatingCount": 123,
+      "websiteUri": "https://www.instagram.com/giftshop98/"
+    },
+    {
+      "id": "ChIJradarS099gift",
+      "displayName": {
+        "text": "Hediyelik B99",
+        "languageCode": "tr"
+      },
+      "primaryType": "gift_shop",
+      "types": [
+        "gift_shop",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Bafra Mah. 199. Sok. No:99, Bafra/Samsun",
+      "nationalPhoneNumber": "0362 299 11 01",
+      "internationalPhoneNumber": "+90 362 299 11 01",
+      "rating": 4.4,
+      "userRatingCount": 124,
+      "websiteUri": "https://www.instagram.com/giftshop99/"
+    },
+    {
+      "id": "ChIJradarS100gift",
+      "displayName": {
+        "text": "Hediyelik C100",
+        "languageCode": "tr"
+      },
+      "primaryType": "gift_shop",
+      "types": [
+        "gift_shop",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "Atakum Mah. 200. Sok. No:100, Atakum/Samsun",
+      "nationalPhoneNumber": "0362 300 12 02",
+      "internationalPhoneNumber": "+90 362 300 12 02",
+      "rating": 4.5,
+      "userRatingCount": 125,
+      "websiteUri": "https://www.instagram.com/giftshop100/"
     }
   ]
 }

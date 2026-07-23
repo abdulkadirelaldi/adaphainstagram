@@ -438,6 +438,3197 @@
       "id": "17841400000014001"
     },
     "sahilkahveevi": {},
-    "cadde19kafe": {}
+    "cadde19kafe": {},
+    "dentalclinic21": {},
+    "dentalclinic22": {
+      "business_discovery": {
+        "username": "dentalclinic22",
+        "name": "Diş Kliniği B22",
+        "followers_count": 4080,
+        "follows_count": 222,
+        "media_count": 17,
+        "biography": "Diş Kliniği — Canik. Diş Kliniği B22.",
+        "website": "https://www.instagram.com/dentalclinic22/",
+        "media": {
+          "data": [
+            {
+              "id": "1790010200",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 32,
+              "comments_count": 0,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1020/",
+              "media_url": "https://scontent.example.com/s102_0.jpg"
+            },
+            {
+              "id": "1790010201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 33,
+              "comments_count": 1,
+              "timestamp": "2026-07-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1021/",
+              "media_url": "https://scontent.example.com/s102_1.jpg"
+            },
+            {
+              "id": "1790010202",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 34,
+              "comments_count": 0,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1022/",
+              "media_url": "https://scontent.example.com/s102_2.jpg"
+            },
+            {
+              "id": "1790010203",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 32,
+              "comments_count": 1,
+              "timestamp": "2026-06-24T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1023/",
+              "media_url": "https://scontent.example.com/s102_3.jpg"
+            },
+            {
+              "id": "1790010204",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 33,
+              "comments_count": 0,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1024/",
+              "media_url": "https://scontent.example.com/s102_4.jpg"
+            },
+            {
+              "id": "1790010205",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 34,
+              "comments_count": 1,
+              "timestamp": "2026-06-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1025/",
+              "media_url": "https://scontent.example.com/s102_5.jpg"
+            },
+            {
+              "id": "1790010206",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 32,
+              "comments_count": 0,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1026/",
+              "media_url": "https://scontent.example.com/s102_6.jpg"
+            },
+            {
+              "id": "1790010207",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 33,
+              "comments_count": 1,
+              "timestamp": "2026-05-31T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1027/",
+              "media_url": "https://scontent.example.com/s102_7.jpg"
+            },
+            {
+              "id": "1790010208",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 34,
+              "comments_count": 0,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1028/",
+              "media_url": "https://scontent.example.com/s102_8.jpg"
+            },
+            {
+              "id": "1790010209",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 32,
+              "comments_count": 1,
+              "timestamp": "2026-05-19T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1029/",
+              "media_url": "https://scontent.example.com/s102_9.jpg"
+            },
+            {
+              "id": "1790010210",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 33,
+              "comments_count": 0,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS10210/",
+              "media_url": "https://scontent.example.com/s102_10.jpg"
+            },
+            {
+              "id": "1790010211",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 34,
+              "comments_count": 1,
+              "timestamp": "2026-05-07T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS10211/",
+              "media_url": "https://scontent.example.com/s102_11.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000102"
+    },
+    "dentalclinic23": {
+      "business_discovery": {
+        "username": "dentalclinic23",
+        "name": "Diş Kliniği C23",
+        "followers_count": 1730,
+        "follows_count": 223,
+        "media_count": 11,
+        "biography": "Diş Kliniği — Tekkeköy. Diş Kliniği C23.",
+        "website": "https://www.instagram.com/dentalclinic23/",
+        "media": {
+          "data": [
+            {
+              "id": "1790010300",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 155,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1030/",
+              "media_url": "https://scontent.example.com/s103_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s103_0_thumb.jpg"
+            },
+            {
+              "id": "1790010301",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 156,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1031/",
+              "media_url": "https://scontent.example.com/s103_1.jpg"
+            },
+            {
+              "id": "1790010302",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 157,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1032/",
+              "media_url": "https://scontent.example.com/s103_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s103_2_thumb.jpg"
+            },
+            {
+              "id": "1790010303",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 158,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1033/",
+              "media_url": "https://scontent.example.com/s103_3.jpg"
+            },
+            {
+              "id": "1790010304",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 159,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1034/",
+              "media_url": "https://scontent.example.com/s103_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s103_4_thumb.jpg"
+            },
+            {
+              "id": "1790010305",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 160,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1035/",
+              "media_url": "https://scontent.example.com/s103_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000103"
+    },
+    "dentalclinic24": {
+      "business_discovery": {
+        "username": "dentalclinic24",
+        "name": "Diş Kliniği D24",
+        "followers_count": 1044,
+        "follows_count": 224,
+        "media_count": 7,
+        "biography": "Diş Kliniği — Bafra. Diş Kliniği D24.",
+        "website": "https://www.instagram.com/dentalclinic24/",
+        "media": {
+          "data": [
+            {
+              "id": "1790010400",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 41,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1040/",
+              "media_url": "https://scontent.example.com/s104_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s104_0_thumb.jpg"
+            },
+            {
+              "id": "1790010401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 42,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1041/",
+              "media_url": "https://scontent.example.com/s104_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000104"
+    },
+    "dentalclinic26": {
+      "business_discovery": {
+        "username": "dentalclinic26",
+        "name": "Diş Kliniği F26",
+        "followers_count": 426,
+        "follows_count": 226,
+        "media_count": 3,
+        "biography": "Diş Kliniği — İlkadım. Diş Kliniği F26.",
+        "website": "https://www.instagram.com/dentalclinic26/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000106"
+    },
+    "dentalclinic27": {
+      "business_discovery": {
+        "username": "dentalclinic27",
+        "name": "Diş Kliniği G27",
+        "followers_count": 4280,
+        "follows_count": 227,
+        "media_count": 17,
+        "biography": "Diş Kliniği — Canik. Diş Kliniği G27.",
+        "website": "https://www.instagram.com/dentalclinic27/",
+        "media": {
+          "data": [
+            {
+              "id": "1790010700",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 34,
+              "comments_count": 0,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1070/",
+              "media_url": "https://scontent.example.com/s107_0.jpg"
+            },
+            {
+              "id": "1790010701",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 35,
+              "comments_count": 1,
+              "timestamp": "2026-07-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1071/",
+              "media_url": "https://scontent.example.com/s107_1.jpg"
+            },
+            {
+              "id": "1790010702",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 36,
+              "comments_count": 0,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1072/",
+              "media_url": "https://scontent.example.com/s107_2.jpg"
+            },
+            {
+              "id": "1790010703",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 34,
+              "comments_count": 1,
+              "timestamp": "2026-06-24T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1073/",
+              "media_url": "https://scontent.example.com/s107_3.jpg"
+            },
+            {
+              "id": "1790010704",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 35,
+              "comments_count": 0,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1074/",
+              "media_url": "https://scontent.example.com/s107_4.jpg"
+            },
+            {
+              "id": "1790010705",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 36,
+              "comments_count": 1,
+              "timestamp": "2026-06-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1075/",
+              "media_url": "https://scontent.example.com/s107_5.jpg"
+            },
+            {
+              "id": "1790010706",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 34,
+              "comments_count": 0,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1076/",
+              "media_url": "https://scontent.example.com/s107_6.jpg"
+            },
+            {
+              "id": "1790010707",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 35,
+              "comments_count": 1,
+              "timestamp": "2026-05-31T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1077/",
+              "media_url": "https://scontent.example.com/s107_7.jpg"
+            },
+            {
+              "id": "1790010708",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 36,
+              "comments_count": 0,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1078/",
+              "media_url": "https://scontent.example.com/s107_8.jpg"
+            },
+            {
+              "id": "1790010709",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 34,
+              "comments_count": 1,
+              "timestamp": "2026-05-19T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1079/",
+              "media_url": "https://scontent.example.com/s107_9.jpg"
+            },
+            {
+              "id": "1790010710",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 35,
+              "comments_count": 0,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS10710/",
+              "media_url": "https://scontent.example.com/s107_10.jpg"
+            },
+            {
+              "id": "1790010711",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 36,
+              "comments_count": 1,
+              "timestamp": "2026-05-07T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS10711/",
+              "media_url": "https://scontent.example.com/s107_11.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000107"
+    },
+    "dentalclinic28": {},
+    "jewelrystore29": {
+      "business_discovery": {
+        "username": "jewelrystore29",
+        "name": "Kuyumcu A29",
+        "followers_count": 429,
+        "follows_count": 229,
+        "media_count": 3,
+        "biography": "Kuyumcu — Bafra. Kuyumcu A29.",
+        "website": "https://www.instagram.com/jewelrystore29/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000109"
+    },
+    "jewelrystore30": {
+      "business_discovery": {
+        "username": "jewelrystore30",
+        "name": "Kuyumcu B30",
+        "followers_count": 4400,
+        "follows_count": 230,
+        "media_count": 17,
+        "biography": "Kuyumcu — Atakum. Kuyumcu B30.",
+        "website": "https://www.instagram.com/jewelrystore30/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011000",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 35,
+              "comments_count": 0,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1100/",
+              "media_url": "https://scontent.example.com/s110_0.jpg"
+            },
+            {
+              "id": "1790011001",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 36,
+              "comments_count": 1,
+              "timestamp": "2026-07-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1101/",
+              "media_url": "https://scontent.example.com/s110_1.jpg"
+            },
+            {
+              "id": "1790011002",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 37,
+              "comments_count": 0,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1102/",
+              "media_url": "https://scontent.example.com/s110_2.jpg"
+            },
+            {
+              "id": "1790011003",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 35,
+              "comments_count": 1,
+              "timestamp": "2026-06-24T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1103/",
+              "media_url": "https://scontent.example.com/s110_3.jpg"
+            },
+            {
+              "id": "1790011004",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 36,
+              "comments_count": 0,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1104/",
+              "media_url": "https://scontent.example.com/s110_4.jpg"
+            },
+            {
+              "id": "1790011005",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 37,
+              "comments_count": 1,
+              "timestamp": "2026-06-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1105/",
+              "media_url": "https://scontent.example.com/s110_5.jpg"
+            },
+            {
+              "id": "1790011006",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 35,
+              "comments_count": 0,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1106/",
+              "media_url": "https://scontent.example.com/s110_6.jpg"
+            },
+            {
+              "id": "1790011007",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 36,
+              "comments_count": 1,
+              "timestamp": "2026-05-31T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1107/",
+              "media_url": "https://scontent.example.com/s110_7.jpg"
+            },
+            {
+              "id": "1790011008",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 37,
+              "comments_count": 0,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1108/",
+              "media_url": "https://scontent.example.com/s110_8.jpg"
+            },
+            {
+              "id": "1790011009",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 35,
+              "comments_count": 1,
+              "timestamp": "2026-05-19T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1109/",
+              "media_url": "https://scontent.example.com/s110_9.jpg"
+            },
+            {
+              "id": "1790011010",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 36,
+              "comments_count": 0,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS11010/",
+              "media_url": "https://scontent.example.com/s110_10.jpg"
+            },
+            {
+              "id": "1790011011",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 37,
+              "comments_count": 1,
+              "timestamp": "2026-05-07T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS11011/",
+              "media_url": "https://scontent.example.com/s110_11.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000110"
+    },
+    "jewelrystore31": {
+      "business_discovery": {
+        "username": "jewelrystore31",
+        "name": "Kuyumcu C31",
+        "followers_count": 1810,
+        "follows_count": 231,
+        "media_count": 11,
+        "biography": "Kuyumcu — İlkadım. Kuyumcu C31.",
+        "website": "https://www.instagram.com/jewelrystore31/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011100",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 162,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1110/",
+              "media_url": "https://scontent.example.com/s111_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s111_0_thumb.jpg"
+            },
+            {
+              "id": "1790011101",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 163,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1111/",
+              "media_url": "https://scontent.example.com/s111_1.jpg"
+            },
+            {
+              "id": "1790011102",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 164,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1112/",
+              "media_url": "https://scontent.example.com/s111_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s111_2_thumb.jpg"
+            },
+            {
+              "id": "1790011103",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 165,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1113/",
+              "media_url": "https://scontent.example.com/s111_3.jpg"
+            },
+            {
+              "id": "1790011104",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 166,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1114/",
+              "media_url": "https://scontent.example.com/s111_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s111_4_thumb.jpg"
+            },
+            {
+              "id": "1790011105",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 167,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1115/",
+              "media_url": "https://scontent.example.com/s111_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000111"
+    },
+    "jewelrystore32": {
+      "business_discovery": {
+        "username": "jewelrystore32",
+        "name": "Kuyumcu D32",
+        "followers_count": 1092,
+        "follows_count": 232,
+        "media_count": 7,
+        "biography": "Kuyumcu — Canik. Kuyumcu D32.",
+        "website": "https://www.instagram.com/jewelrystore32/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011200",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 43,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1120/",
+              "media_url": "https://scontent.example.com/s112_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s112_0_thumb.jpg"
+            },
+            {
+              "id": "1790011201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1121/",
+              "media_url": "https://scontent.example.com/s112_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000112"
+    },
+    "jewelrystore34": {
+      "business_discovery": {
+        "username": "jewelrystore34",
+        "name": "Kuyumcu F34",
+        "followers_count": 434,
+        "follows_count": 234,
+        "media_count": 3,
+        "biography": "Kuyumcu — Bafra. Kuyumcu F34.",
+        "website": "https://www.instagram.com/jewelrystore34/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000114"
+    },
+    "jewelrystore35": {},
+    "cardealer36": {
+      "business_discovery": {
+        "username": "cardealer36",
+        "name": "Oto Galeri A36",
+        "followers_count": 436,
+        "follows_count": 236,
+        "media_count": 3,
+        "biography": "Oto Galeri — İlkadım. Oto Galeri A36.",
+        "website": "https://www.instagram.com/cardealer36/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000116"
+    },
+    "cardealer37": {
+      "business_discovery": {
+        "username": "cardealer37",
+        "name": "Oto Galeri B37",
+        "followers_count": 4680,
+        "follows_count": 237,
+        "media_count": 17,
+        "biography": "Oto Galeri — Canik. Oto Galeri B37.",
+        "website": "https://www.instagram.com/cardealer37/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011700",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 37,
+              "comments_count": 0,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1170/",
+              "media_url": "https://scontent.example.com/s117_0.jpg"
+            },
+            {
+              "id": "1790011701",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 38,
+              "comments_count": 1,
+              "timestamp": "2026-07-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1171/",
+              "media_url": "https://scontent.example.com/s117_1.jpg"
+            },
+            {
+              "id": "1790011702",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 39,
+              "comments_count": 0,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1172/",
+              "media_url": "https://scontent.example.com/s117_2.jpg"
+            },
+            {
+              "id": "1790011703",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 37,
+              "comments_count": 1,
+              "timestamp": "2026-06-24T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1173/",
+              "media_url": "https://scontent.example.com/s117_3.jpg"
+            },
+            {
+              "id": "1790011704",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 38,
+              "comments_count": 0,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1174/",
+              "media_url": "https://scontent.example.com/s117_4.jpg"
+            },
+            {
+              "id": "1790011705",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 39,
+              "comments_count": 1,
+              "timestamp": "2026-06-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1175/",
+              "media_url": "https://scontent.example.com/s117_5.jpg"
+            },
+            {
+              "id": "1790011706",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 37,
+              "comments_count": 0,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1176/",
+              "media_url": "https://scontent.example.com/s117_6.jpg"
+            },
+            {
+              "id": "1790011707",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 38,
+              "comments_count": 1,
+              "timestamp": "2026-05-31T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1177/",
+              "media_url": "https://scontent.example.com/s117_7.jpg"
+            },
+            {
+              "id": "1790011708",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 39,
+              "comments_count": 0,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1178/",
+              "media_url": "https://scontent.example.com/s117_8.jpg"
+            },
+            {
+              "id": "1790011709",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 37,
+              "comments_count": 1,
+              "timestamp": "2026-05-19T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1179/",
+              "media_url": "https://scontent.example.com/s117_9.jpg"
+            },
+            {
+              "id": "1790011710",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 38,
+              "comments_count": 0,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS11710/",
+              "media_url": "https://scontent.example.com/s117_10.jpg"
+            },
+            {
+              "id": "1790011711",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 39,
+              "comments_count": 1,
+              "timestamp": "2026-05-07T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS11711/",
+              "media_url": "https://scontent.example.com/s117_11.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000117"
+    },
+    "cardealer38": {
+      "business_discovery": {
+        "username": "cardealer38",
+        "name": "Oto Galeri C38",
+        "followers_count": 1880,
+        "follows_count": 238,
+        "media_count": 11,
+        "biography": "Oto Galeri — Tekkeköy. Oto Galeri C38.",
+        "website": "https://www.instagram.com/cardealer38/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011800",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 169,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1180/",
+              "media_url": "https://scontent.example.com/s118_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s118_0_thumb.jpg"
+            },
+            {
+              "id": "1790011801",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 170,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1181/",
+              "media_url": "https://scontent.example.com/s118_1.jpg"
+            },
+            {
+              "id": "1790011802",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 171,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1182/",
+              "media_url": "https://scontent.example.com/s118_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s118_2_thumb.jpg"
+            },
+            {
+              "id": "1790011803",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 172,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1183/",
+              "media_url": "https://scontent.example.com/s118_3.jpg"
+            },
+            {
+              "id": "1790011804",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 173,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1184/",
+              "media_url": "https://scontent.example.com/s118_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s118_4_thumb.jpg"
+            },
+            {
+              "id": "1790011805",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 174,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1185/",
+              "media_url": "https://scontent.example.com/s118_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000118"
+    },
+    "cardealer39": {
+      "business_discovery": {
+        "username": "cardealer39",
+        "name": "Oto Galeri D39",
+        "followers_count": 1134,
+        "follows_count": 239,
+        "media_count": 7,
+        "biography": "Oto Galeri — Bafra. Oto Galeri D39.",
+        "website": "https://www.instagram.com/cardealer39/",
+        "media": {
+          "data": [
+            {
+              "id": "1790011900",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 45,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1190/",
+              "media_url": "https://scontent.example.com/s119_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s119_0_thumb.jpg"
+            },
+            {
+              "id": "1790011901",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 46,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1191/",
+              "media_url": "https://scontent.example.com/s119_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000119"
+    },
+    "cardealer41": {
+      "business_discovery": {
+        "username": "cardealer41",
+        "name": "Oto Galeri F41",
+        "followers_count": 441,
+        "follows_count": 241,
+        "media_count": 3,
+        "biography": "Oto Galeri — İlkadım. Oto Galeri F41.",
+        "website": "https://www.instagram.com/cardealer41/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000121"
+    },
+    "cardealer42": {},
+    "realestateagency43": {
+      "business_discovery": {
+        "username": "realestateagency43",
+        "name": "Emlak A43",
+        "followers_count": 443,
+        "follows_count": 243,
+        "media_count": 3,
+        "biography": "Emlak — Tekkeköy. Emlak A43.",
+        "website": "https://www.instagram.com/realestateagency43/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000123"
+    },
+    "realestateagency44": {
+      "business_discovery": {
+        "username": "realestateagency44",
+        "name": "Emlak B44",
+        "followers_count": 4960,
+        "follows_count": 244,
+        "media_count": 17,
+        "biography": "Emlak — Bafra. Emlak B44.",
+        "website": "https://www.instagram.com/realestateagency44/",
+        "media": {
+          "data": [
+            {
+              "id": "1790012400",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 39,
+              "comments_count": 0,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1240/",
+              "media_url": "https://scontent.example.com/s124_0.jpg"
+            },
+            {
+              "id": "1790012401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 1,
+              "timestamp": "2026-07-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1241/",
+              "media_url": "https://scontent.example.com/s124_1.jpg"
+            },
+            {
+              "id": "1790012402",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 0,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1242/",
+              "media_url": "https://scontent.example.com/s124_2.jpg"
+            },
+            {
+              "id": "1790012403",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 39,
+              "comments_count": 1,
+              "timestamp": "2026-06-24T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1243/",
+              "media_url": "https://scontent.example.com/s124_3.jpg"
+            },
+            {
+              "id": "1790012404",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 40,
+              "comments_count": 0,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1244/",
+              "media_url": "https://scontent.example.com/s124_4.jpg"
+            },
+            {
+              "id": "1790012405",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 41,
+              "comments_count": 1,
+              "timestamp": "2026-06-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1245/",
+              "media_url": "https://scontent.example.com/s124_5.jpg"
+            },
+            {
+              "id": "1790012406",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 39,
+              "comments_count": 0,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1246/",
+              "media_url": "https://scontent.example.com/s124_6.jpg"
+            },
+            {
+              "id": "1790012407",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 40,
+              "comments_count": 1,
+              "timestamp": "2026-05-31T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1247/",
+              "media_url": "https://scontent.example.com/s124_7.jpg"
+            },
+            {
+              "id": "1790012408",
+              "media_type": "IMAGE",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 41,
+              "comments_count": 0,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1248/",
+              "media_url": "https://scontent.example.com/s124_8.jpg"
+            },
+            {
+              "id": "1790012409",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 39,
+              "comments_count": 1,
+              "timestamp": "2026-05-19T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1249/",
+              "media_url": "https://scontent.example.com/s124_9.jpg"
+            },
+            {
+              "id": "1790012410",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 40,
+              "comments_count": 0,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS12410/",
+              "media_url": "https://scontent.example.com/s124_10.jpg"
+            },
+            {
+              "id": "1790012411",
+              "media_type": "IMAGE",
+              "caption": "Güzel anlar.",
+              "like_count": 41,
+              "comments_count": 1,
+              "timestamp": "2026-05-07T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS12411/",
+              "media_url": "https://scontent.example.com/s124_11.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000124"
+    },
+    "realestateagency45": {
+      "business_discovery": {
+        "username": "realestateagency45",
+        "name": "Emlak C45",
+        "followers_count": 1950,
+        "follows_count": 245,
+        "media_count": 11,
+        "biography": "Emlak — Atakum. Emlak C45.",
+        "website": "https://www.instagram.com/realestateagency45/",
+        "media": {
+          "data": [
+            {
+              "id": "1790012500",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 175,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1250/",
+              "media_url": "https://scontent.example.com/s125_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s125_0_thumb.jpg"
+            },
+            {
+              "id": "1790012501",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 176,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1251/",
+              "media_url": "https://scontent.example.com/s125_1.jpg"
+            },
+            {
+              "id": "1790012502",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 177,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1252/",
+              "media_url": "https://scontent.example.com/s125_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s125_2_thumb.jpg"
+            },
+            {
+              "id": "1790012503",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 178,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1253/",
+              "media_url": "https://scontent.example.com/s125_3.jpg"
+            },
+            {
+              "id": "1790012504",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 179,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1254/",
+              "media_url": "https://scontent.example.com/s125_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s125_4_thumb.jpg"
+            },
+            {
+              "id": "1790012505",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 180,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1255/",
+              "media_url": "https://scontent.example.com/s125_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000125"
+    },
+    "realestateagency46": {
+      "business_discovery": {
+        "username": "realestateagency46",
+        "name": "Emlak D46",
+        "followers_count": 1176,
+        "follows_count": 246,
+        "media_count": 7,
+        "biography": "Emlak — İlkadım. Emlak D46.",
+        "website": "https://www.instagram.com/realestateagency46/",
+        "media": {
+          "data": [
+            {
+              "id": "1790012600",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 47,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1260/",
+              "media_url": "https://scontent.example.com/s126_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s126_0_thumb.jpg"
+            },
+            {
+              "id": "1790012601",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 48,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1261/",
+              "media_url": "https://scontent.example.com/s126_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000126"
+    },
+    "realestateagency48": {
+      "business_discovery": {
+        "username": "realestateagency48",
+        "name": "Emlak F48",
+        "followers_count": 448,
+        "follows_count": 248,
+        "media_count": 3,
+        "biography": "Emlak — Tekkeköy. Emlak F48.",
+        "website": "https://www.instagram.com/realestateagency48/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000128"
+    },
+    "realestateagency49": {},
+    "realestateagency50": {
+      "business_discovery": {
+        "username": "realestateagency50",
+        "name": "Emlak H50",
+        "followers_count": 2000,
+        "follows_count": 250,
+        "media_count": 11,
+        "biography": "Emlak — Atakum. Emlak H50.",
+        "website": "https://www.instagram.com/realestateagency50/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013000",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 180,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1300/",
+              "media_url": "https://scontent.example.com/s130_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s130_0_thumb.jpg"
+            },
+            {
+              "id": "1790013001",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 181,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1301/",
+              "media_url": "https://scontent.example.com/s130_1.jpg"
+            },
+            {
+              "id": "1790013002",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 182,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1302/",
+              "media_url": "https://scontent.example.com/s130_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s130_2_thumb.jpg"
+            },
+            {
+              "id": "1790013003",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 183,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1303/",
+              "media_url": "https://scontent.example.com/s130_3.jpg"
+            },
+            {
+              "id": "1790013004",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 184,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1304/",
+              "media_url": "https://scontent.example.com/s130_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s130_4_thumb.jpg"
+            },
+            {
+              "id": "1790013005",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 185,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1305/",
+              "media_url": "https://scontent.example.com/s130_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000130"
+    },
+    "cafe51": {
+      "business_discovery": {
+        "username": "cafe51",
+        "name": "Kafe A51",
+        "followers_count": 451,
+        "follows_count": 251,
+        "media_count": 3,
+        "biography": "Kafe — İlkadım. Kafe A51.",
+        "website": "https://www.instagram.com/cafe51/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000131"
+    },
+    "cafe52": {
+      "business_discovery": {
+        "username": "cafe52",
+        "name": "Kafe B52",
+        "followers_count": 1212,
+        "follows_count": 252,
+        "media_count": 7,
+        "biography": "Kafe — Canik. Kafe B52.",
+        "website": "https://www.instagram.com/cafe52/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013200",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 48,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1320/",
+              "media_url": "https://scontent.example.com/s132_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s132_0_thumb.jpg"
+            },
+            {
+              "id": "1790013201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 49,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1321/",
+              "media_url": "https://scontent.example.com/s132_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000132"
+    },
+    "cafe53": {
+      "business_discovery": {
+        "username": "cafe53",
+        "name": "Kafe C53",
+        "followers_count": 2030,
+        "follows_count": 253,
+        "media_count": 11,
+        "biography": "Kafe — Tekkeköy. Kafe C53.",
+        "website": "https://www.instagram.com/cafe53/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013300",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 182,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1330/",
+              "media_url": "https://scontent.example.com/s133_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s133_0_thumb.jpg"
+            },
+            {
+              "id": "1790013301",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 183,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1331/",
+              "media_url": "https://scontent.example.com/s133_1.jpg"
+            },
+            {
+              "id": "1790013302",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 184,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1332/",
+              "media_url": "https://scontent.example.com/s133_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s133_2_thumb.jpg"
+            },
+            {
+              "id": "1790013303",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 185,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1333/",
+              "media_url": "https://scontent.example.com/s133_3.jpg"
+            },
+            {
+              "id": "1790013304",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 186,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1334/",
+              "media_url": "https://scontent.example.com/s133_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s133_4_thumb.jpg"
+            },
+            {
+              "id": "1790013305",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 187,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1335/",
+              "media_url": "https://scontent.example.com/s133_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000133"
+    },
+    "cafe54": {
+      "business_discovery": {
+        "username": "cafe54",
+        "name": "Kafe D54",
+        "followers_count": 1224,
+        "follows_count": 254,
+        "media_count": 7,
+        "biography": "Kafe — Bafra. Kafe D54.",
+        "website": "https://www.instagram.com/cafe54/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013400",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 48,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1340/",
+              "media_url": "https://scontent.example.com/s134_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s134_0_thumb.jpg"
+            },
+            {
+              "id": "1790013401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 49,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1341/",
+              "media_url": "https://scontent.example.com/s134_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000134"
+    },
+    "cafe56": {},
+    "cafe57": {
+      "business_discovery": {
+        "username": "cafe57",
+        "name": "Kafe G57",
+        "followers_count": 1242,
+        "follows_count": 257,
+        "media_count": 7,
+        "biography": "Kafe — Canik. Kafe G57.",
+        "website": "https://www.instagram.com/cafe57/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013700",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 49,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1370/",
+              "media_url": "https://scontent.example.com/s137_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s137_0_thumb.jpg"
+            },
+            {
+              "id": "1790013701",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 50,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1371/",
+              "media_url": "https://scontent.example.com/s137_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000137"
+    },
+    "cafe58": {
+      "business_discovery": {
+        "username": "cafe58",
+        "name": "Kafe H58",
+        "followers_count": 2080,
+        "follows_count": 258,
+        "media_count": 11,
+        "biography": "Kafe — Tekkeköy. Kafe H58.",
+        "website": "https://www.instagram.com/cafe58/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013800",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 187,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1380/",
+              "media_url": "https://scontent.example.com/s138_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s138_0_thumb.jpg"
+            },
+            {
+              "id": "1790013801",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 188,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1381/",
+              "media_url": "https://scontent.example.com/s138_1.jpg"
+            },
+            {
+              "id": "1790013802",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 189,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1382/",
+              "media_url": "https://scontent.example.com/s138_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s138_2_thumb.jpg"
+            },
+            {
+              "id": "1790013803",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 190,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1383/",
+              "media_url": "https://scontent.example.com/s138_3.jpg"
+            },
+            {
+              "id": "1790013804",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 191,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1384/",
+              "media_url": "https://scontent.example.com/s138_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s138_4_thumb.jpg"
+            },
+            {
+              "id": "1790013805",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 192,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1385/",
+              "media_url": "https://scontent.example.com/s138_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000138"
+    },
+    "cafe59": {
+      "business_discovery": {
+        "username": "cafe59",
+        "name": "Kafe I59",
+        "followers_count": 1254,
+        "follows_count": 259,
+        "media_count": 7,
+        "biography": "Kafe — Bafra. Kafe I59.",
+        "website": "https://www.instagram.com/cafe59/",
+        "media": {
+          "data": [
+            {
+              "id": "1790013900",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 50,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1390/",
+              "media_url": "https://scontent.example.com/s139_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s139_0_thumb.jpg"
+            },
+            {
+              "id": "1790013901",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 51,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1391/",
+              "media_url": "https://scontent.example.com/s139_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000139"
+    },
+    "hairsalon61": {
+      "business_discovery": {
+        "username": "hairsalon61",
+        "name": "Kuaför A61",
+        "followers_count": 461,
+        "follows_count": 261,
+        "media_count": 3,
+        "biography": "Kuaför — İlkadım. Kuaför A61.",
+        "website": "https://www.instagram.com/hairsalon61/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000141"
+    },
+    "hairsalon62": {
+      "business_discovery": {
+        "username": "hairsalon62",
+        "name": "Kuaför B62",
+        "followers_count": 1272,
+        "follows_count": 262,
+        "media_count": 7,
+        "biography": "Kuaför — Canik. Kuaför B62.",
+        "website": "https://www.instagram.com/hairsalon62/",
+        "media": {
+          "data": [
+            {
+              "id": "1790014200",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 50,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1420/",
+              "media_url": "https://scontent.example.com/s142_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s142_0_thumb.jpg"
+            },
+            {
+              "id": "1790014201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 51,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1421/",
+              "media_url": "https://scontent.example.com/s142_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000142"
+    },
+    "hairsalon63": {},
+    "hairsalon64": {
+      "business_discovery": {
+        "username": "hairsalon64",
+        "name": "Kuaför D64",
+        "followers_count": 1284,
+        "follows_count": 264,
+        "media_count": 7,
+        "biography": "Kuaför — Bafra. Kuaför D64.",
+        "website": "https://www.instagram.com/hairsalon64/",
+        "media": {
+          "data": [
+            {
+              "id": "1790014400",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 51,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1440/",
+              "media_url": "https://scontent.example.com/s144_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s144_0_thumb.jpg"
+            },
+            {
+              "id": "1790014401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 52,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1441/",
+              "media_url": "https://scontent.example.com/s144_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000144"
+    },
+    "hairsalon66": {
+      "business_discovery": {
+        "username": "hairsalon66",
+        "name": "Kuaför F66",
+        "followers_count": 466,
+        "follows_count": 266,
+        "media_count": 3,
+        "biography": "Kuaför — İlkadım. Kuaför F66.",
+        "website": "https://www.instagram.com/hairsalon66/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000146"
+    },
+    "hairsalon67": {
+      "business_discovery": {
+        "username": "hairsalon67",
+        "name": "Kuaför G67",
+        "followers_count": 1302,
+        "follows_count": 267,
+        "media_count": 7,
+        "biography": "Kuaför — Canik. Kuaför G67.",
+        "website": "https://www.instagram.com/hairsalon67/",
+        "media": {
+          "data": [
+            {
+              "id": "1790014700",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 52,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1470/",
+              "media_url": "https://scontent.example.com/s147_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s147_0_thumb.jpg"
+            },
+            {
+              "id": "1790014701",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 53,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1471/",
+              "media_url": "https://scontent.example.com/s147_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000147"
+    },
+    "hairsalon68": {
+      "business_discovery": {
+        "username": "hairsalon68",
+        "name": "Kuaför H68",
+        "followers_count": 2180,
+        "follows_count": 268,
+        "media_count": 11,
+        "biography": "Kuaför — Tekkeköy. Kuaför H68.",
+        "website": "https://www.instagram.com/hairsalon68/",
+        "media": {
+          "data": [
+            {
+              "id": "1790014800",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 196,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1480/",
+              "media_url": "https://scontent.example.com/s148_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s148_0_thumb.jpg"
+            },
+            {
+              "id": "1790014801",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 197,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1481/",
+              "media_url": "https://scontent.example.com/s148_1.jpg"
+            },
+            {
+              "id": "1790014802",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 198,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1482/",
+              "media_url": "https://scontent.example.com/s148_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s148_2_thumb.jpg"
+            },
+            {
+              "id": "1790014803",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 199,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1483/",
+              "media_url": "https://scontent.example.com/s148_3.jpg"
+            },
+            {
+              "id": "1790014804",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 200,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1484/",
+              "media_url": "https://scontent.example.com/s148_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s148_4_thumb.jpg"
+            },
+            {
+              "id": "1790014805",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 201,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1485/",
+              "media_url": "https://scontent.example.com/s148_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000148"
+    },
+    "hairsalon69": {
+      "business_discovery": {
+        "username": "hairsalon69",
+        "name": "Kuaför I69",
+        "followers_count": 1314,
+        "follows_count": 269,
+        "media_count": 7,
+        "biography": "Kuaför — Bafra. Kuaför I69.",
+        "website": "https://www.instagram.com/hairsalon69/",
+        "media": {
+          "data": [
+            {
+              "id": "1790014900",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 52,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1490/",
+              "media_url": "https://scontent.example.com/s149_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s149_0_thumb.jpg"
+            },
+            {
+              "id": "1790014901",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 53,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1491/",
+              "media_url": "https://scontent.example.com/s149_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000149"
+    },
+    "restaurant71": {
+      "business_discovery": {
+        "username": "restaurant71",
+        "name": "Restoran A71",
+        "followers_count": 471,
+        "follows_count": 271,
+        "media_count": 3,
+        "biography": "Restoran — İlkadım. Restoran A71.",
+        "website": "https://www.instagram.com/restaurant71/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000151"
+    },
+    "restaurant72": {
+      "business_discovery": {
+        "username": "restaurant72",
+        "name": "Restoran B72",
+        "followers_count": 1332,
+        "follows_count": 272,
+        "media_count": 7,
+        "biography": "Restoran — Canik. Restoran B72.",
+        "website": "https://www.instagram.com/restaurant72/",
+        "media": {
+          "data": [
+            {
+              "id": "1790015200",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 53,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1520/",
+              "media_url": "https://scontent.example.com/s152_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s152_0_thumb.jpg"
+            },
+            {
+              "id": "1790015201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 54,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1521/",
+              "media_url": "https://scontent.example.com/s152_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000152"
+    },
+    "restaurant73": {
+      "business_discovery": {
+        "username": "restaurant73",
+        "name": "Restoran C73",
+        "followers_count": 2230,
+        "follows_count": 273,
+        "media_count": 11,
+        "biography": "Restoran — Tekkeköy. Restoran C73.",
+        "website": "https://www.instagram.com/restaurant73/",
+        "media": {
+          "data": [
+            {
+              "id": "1790015300",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 200,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1530/",
+              "media_url": "https://scontent.example.com/s153_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s153_0_thumb.jpg"
+            },
+            {
+              "id": "1790015301",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 201,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1531/",
+              "media_url": "https://scontent.example.com/s153_1.jpg"
+            },
+            {
+              "id": "1790015302",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 202,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1532/",
+              "media_url": "https://scontent.example.com/s153_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s153_2_thumb.jpg"
+            },
+            {
+              "id": "1790015303",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 203,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1533/",
+              "media_url": "https://scontent.example.com/s153_3.jpg"
+            },
+            {
+              "id": "1790015304",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 204,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1534/",
+              "media_url": "https://scontent.example.com/s153_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s153_4_thumb.jpg"
+            },
+            {
+              "id": "1790015305",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 205,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1535/",
+              "media_url": "https://scontent.example.com/s153_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000153"
+    },
+    "restaurant74": {
+      "business_discovery": {
+        "username": "restaurant74",
+        "name": "Restoran D74",
+        "followers_count": 1344,
+        "follows_count": 274,
+        "media_count": 7,
+        "biography": "Restoran — Bafra. Restoran D74.",
+        "website": "https://www.instagram.com/restaurant74/",
+        "media": {
+          "data": [
+            {
+              "id": "1790015400",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 53,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1540/",
+              "media_url": "https://scontent.example.com/s154_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s154_0_thumb.jpg"
+            },
+            {
+              "id": "1790015401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 54,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1541/",
+              "media_url": "https://scontent.example.com/s154_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000154"
+    },
+    "restaurant76": {
+      "business_discovery": {
+        "username": "restaurant76",
+        "name": "Restoran F76",
+        "followers_count": 476,
+        "follows_count": 276,
+        "media_count": 3,
+        "biography": "Restoran — İlkadım. Restoran F76.",
+        "website": "https://www.instagram.com/restaurant76/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000156"
+    },
+    "restaurant77": {},
+    "restaurant78": {
+      "business_discovery": {
+        "username": "restaurant78",
+        "name": "Restoran H78",
+        "followers_count": 2280,
+        "follows_count": 278,
+        "media_count": 11,
+        "biography": "Restoran — Tekkeköy. Restoran H78.",
+        "website": "https://www.instagram.com/restaurant78/",
+        "media": {
+          "data": [
+            {
+              "id": "1790015800",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 205,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1580/",
+              "media_url": "https://scontent.example.com/s158_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s158_0_thumb.jpg"
+            },
+            {
+              "id": "1790015801",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 206,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1581/",
+              "media_url": "https://scontent.example.com/s158_1.jpg"
+            },
+            {
+              "id": "1790015802",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 207,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1582/",
+              "media_url": "https://scontent.example.com/s158_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s158_2_thumb.jpg"
+            },
+            {
+              "id": "1790015803",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 208,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1583/",
+              "media_url": "https://scontent.example.com/s158_3.jpg"
+            },
+            {
+              "id": "1790015804",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 209,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1584/",
+              "media_url": "https://scontent.example.com/s158_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s158_4_thumb.jpg"
+            },
+            {
+              "id": "1790015805",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 210,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1585/",
+              "media_url": "https://scontent.example.com/s158_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000158"
+    },
+    "beautysalon79": {
+      "business_discovery": {
+        "username": "beautysalon79",
+        "name": "Güzellik Salonu A79",
+        "followers_count": 479,
+        "follows_count": 279,
+        "media_count": 3,
+        "biography": "Güzellik Salonu — Bafra. Güzellik Salonu A79.",
+        "website": "https://www.instagram.com/beautysalon79/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000159"
+    },
+    "beautysalon80": {
+      "business_discovery": {
+        "username": "beautysalon80",
+        "name": "Güzellik Salonu B80",
+        "followers_count": 1380,
+        "follows_count": 280,
+        "media_count": 7,
+        "biography": "Güzellik Salonu — Atakum. Güzellik Salonu B80.",
+        "website": "https://www.instagram.com/beautysalon80/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016000",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 55,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1600/",
+              "media_url": "https://scontent.example.com/s160_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s160_0_thumb.jpg"
+            },
+            {
+              "id": "1790016001",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 56,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1601/",
+              "media_url": "https://scontent.example.com/s160_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000160"
+    },
+    "beautysalon81": {
+      "business_discovery": {
+        "username": "beautysalon81",
+        "name": "Güzellik Salonu C81",
+        "followers_count": 2310,
+        "follows_count": 281,
+        "media_count": 11,
+        "biography": "Güzellik Salonu — İlkadım. Güzellik Salonu C81.",
+        "website": "https://www.instagram.com/beautysalon81/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016100",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 207,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1610/",
+              "media_url": "https://scontent.example.com/s161_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s161_0_thumb.jpg"
+            },
+            {
+              "id": "1790016101",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 208,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1611/",
+              "media_url": "https://scontent.example.com/s161_1.jpg"
+            },
+            {
+              "id": "1790016102",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 209,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1612/",
+              "media_url": "https://scontent.example.com/s161_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s161_2_thumb.jpg"
+            },
+            {
+              "id": "1790016103",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 210,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1613/",
+              "media_url": "https://scontent.example.com/s161_3.jpg"
+            },
+            {
+              "id": "1790016104",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 211,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1614/",
+              "media_url": "https://scontent.example.com/s161_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s161_4_thumb.jpg"
+            },
+            {
+              "id": "1790016105",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 212,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1615/",
+              "media_url": "https://scontent.example.com/s161_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000161"
+    },
+    "beautysalon82": {
+      "business_discovery": {
+        "username": "beautysalon82",
+        "name": "Güzellik Salonu D82",
+        "followers_count": 1392,
+        "follows_count": 282,
+        "media_count": 7,
+        "biography": "Güzellik Salonu — Canik. Güzellik Salonu D82.",
+        "website": "https://www.instagram.com/beautysalon82/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016200",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 55,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1620/",
+              "media_url": "https://scontent.example.com/s162_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s162_0_thumb.jpg"
+            },
+            {
+              "id": "1790016201",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 56,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1621/",
+              "media_url": "https://scontent.example.com/s162_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000162"
+    },
+    "beautysalon84": {},
+    "beautysalon85": {
+      "business_discovery": {
+        "username": "beautysalon85",
+        "name": "Güzellik Salonu G85",
+        "followers_count": 1410,
+        "follows_count": 285,
+        "media_count": 7,
+        "biography": "Güzellik Salonu — Atakum. Güzellik Salonu G85.",
+        "website": "https://www.instagram.com/beautysalon85/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016500",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 56,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1650/",
+              "media_url": "https://scontent.example.com/s165_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s165_0_thumb.jpg"
+            },
+            {
+              "id": "1790016501",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 57,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1651/",
+              "media_url": "https://scontent.example.com/s165_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000165"
+    },
+    "beautysalon86": {
+      "business_discovery": {
+        "username": "beautysalon86",
+        "name": "Güzellik Salonu H86",
+        "followers_count": 2360,
+        "follows_count": 286,
+        "media_count": 11,
+        "biography": "Güzellik Salonu — İlkadım. Güzellik Salonu H86.",
+        "website": "https://www.instagram.com/beautysalon86/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016600",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 212,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1660/",
+              "media_url": "https://scontent.example.com/s166_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s166_0_thumb.jpg"
+            },
+            {
+              "id": "1790016601",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 213,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1661/",
+              "media_url": "https://scontent.example.com/s166_1.jpg"
+            },
+            {
+              "id": "1790016602",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 214,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1662/",
+              "media_url": "https://scontent.example.com/s166_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s166_2_thumb.jpg"
+            },
+            {
+              "id": "1790016603",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 215,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1663/",
+              "media_url": "https://scontent.example.com/s166_3.jpg"
+            },
+            {
+              "id": "1790016604",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 216,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1664/",
+              "media_url": "https://scontent.example.com/s166_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s166_4_thumb.jpg"
+            },
+            {
+              "id": "1790016605",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 217,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1665/",
+              "media_url": "https://scontent.example.com/s166_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000166"
+    },
+    "gym87": {
+      "business_discovery": {
+        "username": "gym87",
+        "name": "Spor Salonu A87",
+        "followers_count": 487,
+        "follows_count": 287,
+        "media_count": 3,
+        "biography": "Spor Salonu — Canik. Spor Salonu A87.",
+        "website": "https://www.instagram.com/gym87/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000167"
+    },
+    "gym88": {
+      "business_discovery": {
+        "username": "gym88",
+        "name": "Spor Salonu B88",
+        "followers_count": 1428,
+        "follows_count": 288,
+        "media_count": 7,
+        "biography": "Spor Salonu — Tekkeköy. Spor Salonu B88.",
+        "website": "https://www.instagram.com/gym88/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016800",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 57,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1680/",
+              "media_url": "https://scontent.example.com/s168_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s168_0_thumb.jpg"
+            },
+            {
+              "id": "1790016801",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 58,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1681/",
+              "media_url": "https://scontent.example.com/s168_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000168"
+    },
+    "gym89": {
+      "business_discovery": {
+        "username": "gym89",
+        "name": "Spor Salonu C89",
+        "followers_count": 2390,
+        "follows_count": 289,
+        "media_count": 11,
+        "biography": "Spor Salonu — Bafra. Spor Salonu C89.",
+        "website": "https://www.instagram.com/gym89/",
+        "media": {
+          "data": [
+            {
+              "id": "1790016900",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 215,
+              "comments_count": 8,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1690/",
+              "media_url": "https://scontent.example.com/s169_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s169_0_thumb.jpg"
+            },
+            {
+              "id": "1790016901",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 216,
+              "comments_count": 9,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1691/",
+              "media_url": "https://scontent.example.com/s169_1.jpg"
+            },
+            {
+              "id": "1790016902",
+              "media_type": "VIDEO",
+              "caption": "Rezervasyon için bize ulaşın 📞",
+              "like_count": 217,
+              "comments_count": 10,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1692/",
+              "media_url": "https://scontent.example.com/s169_2.jpg",
+              "thumbnail_url": "https://scontent.example.com/s169_2_thumb.jpg"
+            },
+            {
+              "id": "1790016903",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 218,
+              "comments_count": 11,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1693/",
+              "media_url": "https://scontent.example.com/s169_3.jpg"
+            },
+            {
+              "id": "1790016904",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 219,
+              "comments_count": 12,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1694/",
+              "media_url": "https://scontent.example.com/s169_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s169_4_thumb.jpg"
+            },
+            {
+              "id": "1790016905",
+              "media_type": "IMAGE",
+              "caption": "Sipariş için profildeki linke tıklayın.",
+              "like_count": 220,
+              "comments_count": 8,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1695/",
+              "media_url": "https://scontent.example.com/s169_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000169"
+    },
+    "gym90": {
+      "business_discovery": {
+        "username": "gym90",
+        "name": "Spor Salonu D90",
+        "followers_count": 1440,
+        "follows_count": 290,
+        "media_count": 7,
+        "biography": "Spor Salonu — Atakum. Spor Salonu D90.",
+        "website": "https://www.instagram.com/gym90/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017000",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 57,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1700/",
+              "media_url": "https://scontent.example.com/s170_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s170_0_thumb.jpg"
+            },
+            {
+              "id": "1790017001",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 58,
+              "comments_count": 4,
+              "timestamp": "2026-05-28T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1701/",
+              "media_url": "https://scontent.example.com/s170_1.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000170"
+    },
+    "gym92": {
+      "business_discovery": {
+        "username": "gym92",
+        "name": "Spor Salonu F92",
+        "followers_count": 492,
+        "follows_count": 292,
+        "media_count": 3,
+        "biography": "Spor Salonu — Canik. Spor Salonu F92.",
+        "website": "https://www.instagram.com/gym92/",
+        "media": {
+          "data": []
+        }
+      },
+      "id": "17841400000172"
+    },
+    "florist93": {
+      "business_discovery": {
+        "username": "florist93",
+        "name": "Çiçekçi A93",
+        "followers_count": 979,
+        "follows_count": 293,
+        "media_count": 11,
+        "biography": "Çiçekçi — Tekkeköy. Çiçekçi A93.",
+        "website": "https://www.instagram.com/florist93/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017300",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1730/",
+              "media_url": "https://scontent.example.com/s173_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s173_0_thumb.jpg"
+            },
+            {
+              "id": "1790017301",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1731/",
+              "media_url": "https://scontent.example.com/s173_1.jpg"
+            },
+            {
+              "id": "1790017302",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1732/",
+              "media_url": "https://scontent.example.com/s173_2.jpg"
+            },
+            {
+              "id": "1790017303",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1733/",
+              "media_url": "https://scontent.example.com/s173_3.jpg"
+            },
+            {
+              "id": "1790017304",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1734/",
+              "media_url": "https://scontent.example.com/s173_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s173_4_thumb.jpg"
+            },
+            {
+              "id": "1790017305",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1735/",
+              "media_url": "https://scontent.example.com/s173_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000173"
+    },
+    "florist94": {
+      "business_discovery": {
+        "username": "florist94",
+        "name": "Çiçekçi B94",
+        "followers_count": 982,
+        "follows_count": 294,
+        "media_count": 11,
+        "biography": "Çiçekçi — Bafra. Çiçekçi B94.",
+        "website": "https://www.instagram.com/florist94/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017400",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1740/",
+              "media_url": "https://scontent.example.com/s174_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s174_0_thumb.jpg"
+            },
+            {
+              "id": "1790017401",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1741/",
+              "media_url": "https://scontent.example.com/s174_1.jpg"
+            },
+            {
+              "id": "1790017402",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1742/",
+              "media_url": "https://scontent.example.com/s174_2.jpg"
+            },
+            {
+              "id": "1790017403",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1743/",
+              "media_url": "https://scontent.example.com/s174_3.jpg"
+            },
+            {
+              "id": "1790017404",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1744/",
+              "media_url": "https://scontent.example.com/s174_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s174_4_thumb.jpg"
+            },
+            {
+              "id": "1790017405",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1745/",
+              "media_url": "https://scontent.example.com/s174_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000174"
+    },
+    "florist95": {
+      "business_discovery": {
+        "username": "florist95",
+        "name": "Çiçekçi C95",
+        "followers_count": 985,
+        "follows_count": 295,
+        "media_count": 11,
+        "biography": "Çiçekçi — Atakum. Çiçekçi C95.",
+        "website": "https://www.instagram.com/florist95/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017500",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1750/",
+              "media_url": "https://scontent.example.com/s175_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s175_0_thumb.jpg"
+            },
+            {
+              "id": "1790017501",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1751/",
+              "media_url": "https://scontent.example.com/s175_1.jpg"
+            },
+            {
+              "id": "1790017502",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1752/",
+              "media_url": "https://scontent.example.com/s175_2.jpg"
+            },
+            {
+              "id": "1790017503",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1753/",
+              "media_url": "https://scontent.example.com/s175_3.jpg"
+            },
+            {
+              "id": "1790017504",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1754/",
+              "media_url": "https://scontent.example.com/s175_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s175_4_thumb.jpg"
+            },
+            {
+              "id": "1790017505",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1755/",
+              "media_url": "https://scontent.example.com/s175_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000175"
+    },
+    "petstore96": {
+      "business_discovery": {
+        "username": "petstore96",
+        "name": "Pet Shop A96",
+        "followers_count": 988,
+        "follows_count": 296,
+        "media_count": 11,
+        "biography": "Pet Shop — İlkadım. Pet Shop A96.",
+        "website": "https://www.instagram.com/petstore96/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017600",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1760/",
+              "media_url": "https://scontent.example.com/s176_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s176_0_thumb.jpg"
+            },
+            {
+              "id": "1790017601",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1761/",
+              "media_url": "https://scontent.example.com/s176_1.jpg"
+            },
+            {
+              "id": "1790017602",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1762/",
+              "media_url": "https://scontent.example.com/s176_2.jpg"
+            },
+            {
+              "id": "1790017603",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1763/",
+              "media_url": "https://scontent.example.com/s176_3.jpg"
+            },
+            {
+              "id": "1790017604",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1764/",
+              "media_url": "https://scontent.example.com/s176_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s176_4_thumb.jpg"
+            },
+            {
+              "id": "1790017605",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1765/",
+              "media_url": "https://scontent.example.com/s176_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000176"
+    },
+    "petstore97": {
+      "business_discovery": {
+        "username": "petstore97",
+        "name": "Pet Shop B97",
+        "followers_count": 991,
+        "follows_count": 297,
+        "media_count": 11,
+        "biography": "Pet Shop — Canik. Pet Shop B97.",
+        "website": "https://www.instagram.com/petstore97/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017700",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1770/",
+              "media_url": "https://scontent.example.com/s177_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s177_0_thumb.jpg"
+            },
+            {
+              "id": "1790017701",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1771/",
+              "media_url": "https://scontent.example.com/s177_1.jpg"
+            },
+            {
+              "id": "1790017702",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1772/",
+              "media_url": "https://scontent.example.com/s177_2.jpg"
+            },
+            {
+              "id": "1790017703",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1773/",
+              "media_url": "https://scontent.example.com/s177_3.jpg"
+            },
+            {
+              "id": "1790017704",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1774/",
+              "media_url": "https://scontent.example.com/s177_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s177_4_thumb.jpg"
+            },
+            {
+              "id": "1790017705",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1775/",
+              "media_url": "https://scontent.example.com/s177_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000177"
+    },
+    "giftshop98": {},
+    "giftshop99": {
+      "business_discovery": {
+        "username": "giftshop99",
+        "name": "Hediyelik B99",
+        "followers_count": 997,
+        "follows_count": 299,
+        "media_count": 11,
+        "biography": "Hediyelik — Bafra. Hediyelik B99.",
+        "website": "https://www.instagram.com/giftshop99/",
+        "media": {
+          "data": [
+            {
+              "id": "1790017900",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 39,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1790/",
+              "media_url": "https://scontent.example.com/s179_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s179_0_thumb.jpg"
+            },
+            {
+              "id": "1790017901",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 40,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1791/",
+              "media_url": "https://scontent.example.com/s179_1.jpg"
+            },
+            {
+              "id": "1790017902",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 41,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1792/",
+              "media_url": "https://scontent.example.com/s179_2.jpg"
+            },
+            {
+              "id": "1790017903",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 42,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1793/",
+              "media_url": "https://scontent.example.com/s179_3.jpg"
+            },
+            {
+              "id": "1790017904",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 43,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1794/",
+              "media_url": "https://scontent.example.com/s179_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s179_4_thumb.jpg"
+            },
+            {
+              "id": "1790017905",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 44,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1795/",
+              "media_url": "https://scontent.example.com/s179_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000179"
+    },
+    "giftshop100": {
+      "business_discovery": {
+        "username": "giftshop100",
+        "name": "Hediyelik C100",
+        "followers_count": 1000,
+        "follows_count": 300,
+        "media_count": 11,
+        "biography": "Hediyelik — Atakum. Hediyelik C100.",
+        "website": "https://www.instagram.com/giftshop100/",
+        "media": {
+          "data": [
+            {
+              "id": "1790018000",
+              "media_type": "VIDEO",
+              "caption": "Randevu için DM'den yazın!",
+              "like_count": 40,
+              "comments_count": 3,
+              "timestamp": "2026-07-12T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1800/",
+              "media_url": "https://scontent.example.com/s180_0.jpg",
+              "thumbnail_url": "https://scontent.example.com/s180_0_thumb.jpg"
+            },
+            {
+              "id": "1790018001",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 41,
+              "comments_count": 4,
+              "timestamp": "2026-06-30T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1801/",
+              "media_url": "https://scontent.example.com/s180_1.jpg"
+            },
+            {
+              "id": "1790018002",
+              "media_type": "IMAGE",
+              "caption": "Ekibimizle birlikteyiz.",
+              "like_count": 42,
+              "comments_count": 5,
+              "timestamp": "2026-06-18T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1802/",
+              "media_url": "https://scontent.example.com/s180_2.jpg"
+            },
+            {
+              "id": "1790018003",
+              "media_type": "IMAGE",
+              "caption": "Detaylar için yorumlara bakın, hemen ara!",
+              "like_count": 43,
+              "comments_count": 3,
+              "timestamp": "2026-06-06T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1803/",
+              "media_url": "https://scontent.example.com/s180_3.jpg"
+            },
+            {
+              "id": "1790018004",
+              "media_type": "VIDEO",
+              "caption": "Bugün güzel bir gün.",
+              "like_count": 44,
+              "comments_count": 4,
+              "timestamp": "2026-05-25T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1804/",
+              "media_url": "https://scontent.example.com/s180_4.jpg",
+              "thumbnail_url": "https://scontent.example.com/s180_4_thumb.jpg"
+            },
+            {
+              "id": "1790018005",
+              "media_type": "IMAGE",
+              "caption": "Yeni gün, yeni başlangıç.",
+              "like_count": 45,
+              "comments_count": 5,
+              "timestamp": "2026-05-13T00:00:00+0000",
+              "permalink": "https://www.instagram.com/p/RadarS1805/",
+              "media_url": "https://scontent.example.com/s180_5.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000180"
+    }
   }
 }

@@ -26,10 +26,10 @@ from api.adapters.business_discovery import BusinessDiscoveryAdapter
 from api.adapters.places import PlacesAdapter
 from api.models import Business, Post, Snapshot
 from api.services import run_discovery
+from tests._fixture_facts import compute_facts
 from tests._mocks import CallCounter, apify_client, bd_client, places_client
 
 SEVEN_DAYS = 7 * 24 * 60 * 60
-FALLBACK_HANDLES = {"sahilkahveevi", "cadde19kafe"}
 
 
 @dataclass
@@ -85,6 +85,11 @@ def _fixtures(load_fixture: Any) -> tuple[dict[str, Any], dict[str, Any], dict[s
     )
 
 
+def _facts(load_fixture: Any) -> Any:
+    places_raw, bd, apify = _fixtures(load_fixture)
+    return compute_facts(places_raw, bd, apify)
+
+
 # --- Blok 4: 7 gün cache --------------------------------------------------------
 
 
@@ -95,6 +100,10 @@ async def test_ikinci_kosu_cache_isabeti_dis_profil_cagrisi_yok(
 ) -> None:
     """İlk koşu profil çeker; ikinci koşu cache'ten döner — 0 dış profil çağrısı, çift snapshot yok."""
     places_raw, bd, apify = _fixtures(load_fixture)
+    facts = _facts(load_fixture)
+    n_handles = len(facts.handles)  # her handle için BD denenir
+    n_snapshots = len(facts.resolvable)  # profil bulunan handle
+    n_fallback = len(facts.fallback)  # BD boş → Apify
 
     summary1, c1 = await _run(
         places_raw=places_raw,
@@ -103,15 +112,15 @@ async def test_ikinci_kosu_cache_isabeti_dis_profil_cagrisi_yok(
         session_factory=db_session_factory,
         redis=test_redis,
     )
-    assert summary1.discovered == 20
-    assert summary1.handles_matched == 14
-    assert summary1.snapshots_written == 14
-    assert summary1.fallback_used == 2  # sahilkahveevi + cadde19kafe
+    assert summary1.discovered == facts.n_places
+    assert summary1.handles_matched == n_handles
+    assert summary1.snapshots_written == n_snapshots
+    assert summary1.fallback_used == n_fallback
     # İlk koşuda profil çağrıları yapıldı.
-    assert c1.bd.count == 14  # her handle için BD denendi
-    assert c1.apify.count == 2  # iki fallback
+    assert c1.bd.count == n_handles  # her handle için BD denendi
+    assert c1.apify.count == n_fallback  # her fallback için Apify
     after1 = await _counts(db_session_factory)
-    assert after1["snapshots"] == 14
+    assert after1["snapshots"] == n_snapshots
 
     summary2, c2 = await _run(
         places_raw=places_raw,
@@ -123,12 +132,12 @@ async def test_ikinci_kosu_cache_isabeti_dis_profil_cagrisi_yok(
     # İKİNCİ KOŞU: tüm handle'lar cache'te → hiç dış profil çağrısı yok.
     assert c2.bd.count == 0
     assert c2.apify.count == 0
-    assert summary2.cache_skipped == 14
+    assert summary2.cache_skipped == n_snapshots
     assert summary2.snapshots_written == 0
     # Çift snapshot oluşmadı.
     after2 = await _counts(db_session_factory)
-    assert after2["snapshots"] == 14
-    assert after2["businesses"] == 20  # upsert, çift yok
+    assert after2["snapshots"] == n_snapshots
+    assert after2["businesses"] == facts.n_places  # upsert, çift yok
 
 
 async def test_cache_devre_disi_ikinci_kosu_cagri_yapar_karsi_kanit(
@@ -142,6 +151,7 @@ async def test_cache_devre_disi_ikinci_kosu_cagri_yapar_karsi_kanit(
     `test_ikinci_kosu_...` kırmızıya dönerdi.
     """
     places_raw, bd, apify = _fixtures(load_fixture)
+    facts = _facts(load_fixture)
     await _run(
         places_raw=places_raw,
         bd_profiles=bd,
@@ -161,8 +171,8 @@ async def test_cache_devre_disi_ikinci_kosu_cagri_yapar_karsi_kanit(
         redis=test_redis,
     )
     # Cache boş → ikinci koşu yeniden çağırdı.
-    assert c2.bd.count == 14
-    assert c2.apify.count == 2
+    assert c2.bd.count == len(facts.handles)
+    assert c2.apify.count == len(facts.fallback)
 
 
 async def test_cache_ttl_yedi_gun(
@@ -228,6 +238,7 @@ async def test_snapshot_source_fallbackte_apify_digerlerinde_bd(
     test_redis: Any,
 ) -> None:
     places_raw, bd, apify = _fixtures(load_fixture)
+    facts = _facts(load_fixture)
     await _run(
         places_raw=places_raw,
         bd_profiles=bd,
@@ -243,13 +254,14 @@ async def test_snapshot_source_fallbackte_apify_digerlerinde_bd(
         )
         source_by_handle = dict(rows.tuples().all())
 
+    # Bilinen örnekler (SEC-6'dan korunan hesaplar).
     assert source_by_handle["sahilkahveevi"] == "apify"
     assert source_by_handle["cadde19kafe"] == "apify"
     assert source_by_handle["atakumdisklinigi"] == "business_discovery"
     assert source_by_handle["elmaskuyumculuk"] == "business_discovery"
-    # Sadece fallback handle'ları apify olmalı.
+    # apify kaynaklı snapshot'lar tam olarak fallback handle'larıdır (türetilmiş).
     apify_handles = {h for h, s in source_by_handle.items() if s == "apify"}
-    assert apify_handles == FALLBACK_HANDLES
+    assert apify_handles == facts.fallback
 
 
 # --- Blok 5: gizlilik zinciri (persist sonrası DB) ------------------------------

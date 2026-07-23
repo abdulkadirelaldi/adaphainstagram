@@ -48,40 +48,51 @@ def test_places_en_az_bir_eksik_alanli_kayit_var(load_fixture: Any) -> None:
 
 
 def test_ig_business_discovery_ust_duzey_yapi(load_fixture: Any) -> None:
-    """SEC-6'da handle-anahtarlı yapı: profiles[<handle>] → ham BD yanıtı."""
+    """Handle-anahtarlı yapı: profiles[<handle>] → ham BD yanıtı.
+
+    NOT: 0 gönderili profil geçerlidir — SEC-8'de "dead" hesap arketipi (son 90 günde
+    gönderi yok → aktiflik 0 → rejected). Bu yüzden gönderi listesi boş OLABİLİR; boş
+    olmayan gönderiler alan şemasını taşımalı.
+    """
     data = load_fixture("ig_business_discovery")
     profiles = data["profiles"]
     assert profiles, "En az bir profil bekleniyordu"
-    # Veri taşıyan (boş olmayan) her profil şema alanlarını taşımalı.
     dolu = {h: v for h, v in profiles.items() if v}
     assert dolu, "En az bir dolu BD profili bekleniyordu"
+    toplam_gonderi = 0
     for handle, resp in dolu.items():
         bd = resp["business_discovery"]
         for key in ("followers_count", "follows_count", "media_count", "biography"):
             assert key in bd, f"{handle}: business_discovery.{key} eksik"
-        posts = bd["media"]["data"]
-        assert posts, f"{handle}: en az bir gönderi bekleniyordu"
+        posts = bd["media"]["data"]  # boş olabilir (dead hesap)
+        toplam_gonderi += len(posts)
         for post in posts:
             # Görev şartı: gönderiler like_count ve comments_count taşımalı.
             assert "like_count" in post
             assert "comments_count" in post
             assert "timestamp" in post
+    assert toplam_gonderi > 0, "Fixture genelinde en az bir gönderi bekleniyordu"
 
 
 def test_apify_ust_duzey_yapi(load_fixture: Any) -> None:
-    """SEC-6'da handle-anahtarlı yapı: profiles[<handle>] → ham Apify çıktısı."""
+    """Handle-anahtarlı yapı: profiles[<handle>] → ham Apify çıktısı.
+
+    0 gönderili Apify profili geçerlidir (dead hesap fallback yolunda da olabilir).
+    """
     data = load_fixture("apify_profile")
     profiles = data["profiles"]
     assert profiles, "En az bir Apify profili bekleniyordu"
+    toplam_gonderi = 0
     for handle, prof in profiles.items():
         for key in ("username", "followersCount", "followsCount", "postsCount"):
             assert key in prof, f"{handle}: apify profil alanı eksik: {key}"
-        posts = prof["latestPosts"]
-        assert posts, f"{handle}: en az bir gönderi bekleniyordu"
+        posts = prof["latestPosts"]  # boş olabilir
+        toplam_gonderi += len(posts)
         for post in posts:
             assert "id" in post
             assert "likesCount" in post
             assert "commentsCount" in post
+    assert toplam_gonderi > 0, "Fixture genelinde en az bir Apify gönderisi bekleniyordu"
 
 
 def test_ig_business_discovery_yasak_alan_icermiyor(load_fixture: Any) -> None:

@@ -14,17 +14,24 @@
       "profilePicUrl": "https://scontent.example.com/sahilkahve_pp.jpg",
       "private": false,
       "verified": false,
-
       "_comment_forbidden": "Aşağıdaki alanlar CLAUDE.md kural 7'nin yasakladığı metriklerdir. Apify bunları gerçekte döndürür; fixture'a BİLEREK konuldu ki normalize katmanının onları düşürdüğü kanıtlanabilsin. Hiçbiri normalize şemaya, DB'ye, rapora veya arayüze girmez.",
       "impressions": 15234,
       "reach": 12980,
       "saves": 418,
       "profileVisits": 1203,
       "followerDemographics": {
-        "ageRanges": { "13-17": 0.04, "18-24": 0.31, "25-34": 0.42, "35-44": 0.15, "45-64": 0.08 },
-        "gender": { "female": 0.58, "male": 0.42 }
+        "ageRanges": {
+          "13-17": 0.04,
+          "18-24": 0.31,
+          "25-34": 0.42,
+          "35-44": 0.15,
+          "45-64": 0.08
+        },
+        "gender": {
+          "female": 0.58,
+          "male": 0.42
+        }
       },
-
       "latestPosts": [
         {
           "id": "2890000000111201",
@@ -39,8 +46,14 @@
           "reach": 2890,
           "saved": 55,
           "latestComments": [
-            { "ownerUsername": "gezginfincan", "text": "Bugün uğrayacağım!" },
-            { "ownerUsername": "kahvekeyfi55", "text": "Fiyatlar ne kadar?" }
+            {
+              "ownerUsername": "gezginfincan",
+              "text": "Bugün uğrayacağım!"
+            },
+            {
+              "ownerUsername": "kahvekeyfi55",
+              "text": "Fiyatlar ne kadar?"
+            }
           ]
         },
         {
@@ -71,7 +84,10 @@
           "reach": 1310,
           "saved": 18,
           "latestComments": [
-            { "ownerUsername": "samsunlezzet", "text": "Harika görünüyor 👏" }
+            {
+              "ownerUsername": "samsunlezzet",
+              "text": "Harika görünüyor 👏"
+            }
           ]
         }
       ]
@@ -89,17 +105,23 @@
       "profilePicUrl": "https://scontent.example.com/cadde19_pp.jpg",
       "private": false,
       "verified": false,
-
       "_comment_forbidden": "Yasak metrikler (kural 7) — BİLEREK var, normalize düşürecek.",
       "impressions": 40210,
       "reach": 33150,
       "saves": 1204,
       "profileVisits": 5320,
       "followerDemographics": {
-        "ageRanges": { "18-24": 0.38, "25-34": 0.4, "35-44": 0.14, "45-64": 0.08 },
-        "gender": { "female": 0.61, "male": 0.39 }
+        "ageRanges": {
+          "18-24": 0.38,
+          "25-34": 0.4,
+          "35-44": 0.14,
+          "45-64": 0.08
+        },
+        "gender": {
+          "female": 0.61,
+          "male": 0.39
+        }
       },
-
       "latestPosts": [
         {
           "id": "2890000000119201",
@@ -115,7 +137,10 @@
           "reach": 19800,
           "saved": 610,
           "latestComments": [
-            { "ownerUsername": "brunchavcisi", "text": "Rezervasyon var mı?" }
+            {
+              "ownerUsername": "brunchavcisi",
+              "text": "Rezervasyon var mı?"
+            }
           ]
         },
         {
@@ -131,6 +156,1383 @@
           "reach": 10450,
           "saved": 288,
           "latestComments": []
+        }
+      ]
+    },
+    "dentalclinic21": {
+      "username": "dentalclinic21",
+      "fullName": "Diş Kliniği A21",
+      "biography": "Diş Kliniği — İlkadım. Diş Kliniği A21.",
+      "followersCount": 421,
+      "followsCount": 221,
+      "postsCount": 3,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Diş Kliniği",
+      "externalUrl": "https://linktr.ee/dentalclinic21.example",
+      "private": false,
+      "verified": false,
+      "impressions": 2105,
+      "reach": 1684,
+      "saves": 52,
+      "profileVisits": 140,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": []
+    },
+    "dentalclinic28": {
+      "username": "dentalclinic28",
+      "fullName": "Diş Kliniği H28",
+      "biography": "Diş Kliniği — Tekkeköy. Diş Kliniği H28.",
+      "followersCount": 1780,
+      "followsCount": 228,
+      "postsCount": 11,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Diş Kliniği",
+      "externalUrl": "https://linktr.ee/dentalclinic28.example",
+      "private": false,
+      "verified": false,
+      "impressions": 8900,
+      "reach": 7120,
+      "saves": 222,
+      "profileVisits": 593,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289010800",
+          "type": "Video",
+          "caption": "Randevu için DM'den yazın!",
+          "likesCount": 160,
+          "commentsCount": 8,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1080/",
+          "displayUrl": "https://scontent.example.com/a108_0.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4000
+        },
+        {
+          "id": "289010801",
+          "type": "Image",
+          "caption": "Sipariş için profildeki linke tıklayın.",
+          "likesCount": 160,
+          "commentsCount": 9,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1081/",
+          "displayUrl": "https://scontent.example.com/a108_1.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289010802",
+          "type": "Video",
+          "caption": "Rezervasyon için bize ulaşın 📞",
+          "likesCount": 160,
+          "commentsCount": 10,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1082/",
+          "displayUrl": "https://scontent.example.com/a108_2.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4000
+        },
+        {
+          "id": "289010803",
+          "type": "Image",
+          "caption": "Detaylar için yorumlara bakın, hemen ara!",
+          "likesCount": 160,
+          "commentsCount": 11,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1083/",
+          "displayUrl": "https://scontent.example.com/a108_3.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289010804",
+          "type": "Video",
+          "caption": "Randevu için DM'den yazın!",
+          "likesCount": 160,
+          "commentsCount": 12,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1084/",
+          "displayUrl": "https://scontent.example.com/a108_4.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4000
+        },
+        {
+          "id": "289010805",
+          "type": "Image",
+          "caption": "Sipariş için profildeki linke tıklayın.",
+          "likesCount": 160,
+          "commentsCount": 13,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1085/",
+          "displayUrl": "https://scontent.example.com/a108_5.jpg",
+          "impressions": 3200,
+          "reach": 2720,
+          "saved": 20,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici108",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "jewelrystore35": {
+      "username": "jewelrystore35",
+      "fullName": "Kuyumcu G35",
+      "biography": "Kuyumcu — Atakum. Kuyumcu G35.",
+      "followersCount": 4600,
+      "followsCount": 235,
+      "postsCount": 17,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Kuyumcu",
+      "externalUrl": "https://linktr.ee/jewelrystore35.example",
+      "private": false,
+      "verified": false,
+      "impressions": 23000,
+      "reach": 18400,
+      "saves": 575,
+      "profileVisits": 1533,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289011500",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1150/",
+          "displayUrl": "https://scontent.example.com/a115_0.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011501",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-07-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1151/",
+          "displayUrl": "https://scontent.example.com/a115_1.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011502",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1152/",
+          "displayUrl": "https://scontent.example.com/a115_2.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011503",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-06-24T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1153/",
+          "displayUrl": "https://scontent.example.com/a115_3.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011504",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1154/",
+          "displayUrl": "https://scontent.example.com/a115_4.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011505",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-06-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1155/",
+          "displayUrl": "https://scontent.example.com/a115_5.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011506",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1156/",
+          "displayUrl": "https://scontent.example.com/a115_6.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011507",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-05-31T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1157/",
+          "displayUrl": "https://scontent.example.com/a115_7.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011508",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1158/",
+          "displayUrl": "https://scontent.example.com/a115_8.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011509",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-05-19T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1159/",
+          "displayUrl": "https://scontent.example.com/a115_9.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011510",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 36,
+          "commentsCount": 0,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA11510/",
+          "displayUrl": "https://scontent.example.com/a115_10.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289011511",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 36,
+          "commentsCount": 1,
+          "timestamp": "2026-05-07T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA11511/",
+          "displayUrl": "https://scontent.example.com/a115_11.jpg",
+          "impressions": 720,
+          "reach": 612,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici115",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "cardealer42": {
+      "username": "cardealer42",
+      "fullName": "Oto Galeri G42",
+      "biography": "Oto Galeri — Canik. Oto Galeri G42.",
+      "followersCount": 4880,
+      "followsCount": 242,
+      "postsCount": 17,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Oto Galeri",
+      "externalUrl": "https://linktr.ee/cardealer42.example",
+      "private": false,
+      "verified": false,
+      "impressions": 24400,
+      "reach": 19520,
+      "saves": 610,
+      "profileVisits": 1626,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289012200",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1220/",
+          "displayUrl": "https://scontent.example.com/a122_0.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012201",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-07-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1221/",
+          "displayUrl": "https://scontent.example.com/a122_1.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012202",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1222/",
+          "displayUrl": "https://scontent.example.com/a122_2.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012203",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-06-24T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1223/",
+          "displayUrl": "https://scontent.example.com/a122_3.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012204",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1224/",
+          "displayUrl": "https://scontent.example.com/a122_4.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012205",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-06-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1225/",
+          "displayUrl": "https://scontent.example.com/a122_5.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012206",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1226/",
+          "displayUrl": "https://scontent.example.com/a122_6.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012207",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-05-31T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1227/",
+          "displayUrl": "https://scontent.example.com/a122_7.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012208",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1228/",
+          "displayUrl": "https://scontent.example.com/a122_8.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012209",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-05-19T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1229/",
+          "displayUrl": "https://scontent.example.com/a122_9.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012210",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 39,
+          "commentsCount": 0,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA12210/",
+          "displayUrl": "https://scontent.example.com/a122_10.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012211",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 39,
+          "commentsCount": 1,
+          "timestamp": "2026-05-07T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA12211/",
+          "displayUrl": "https://scontent.example.com/a122_11.jpg",
+          "impressions": 780,
+          "reach": 663,
+          "saved": 4,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici122",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "realestateagency49": {
+      "username": "realestateagency49",
+      "fullName": "Emlak G49",
+      "biography": "Emlak — Bafra. Emlak G49.",
+      "followersCount": 5160,
+      "followsCount": 249,
+      "postsCount": 17,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Emlak",
+      "externalUrl": "https://linktr.ee/realestateagency49.example",
+      "private": false,
+      "verified": false,
+      "impressions": 25800,
+      "reach": 20640,
+      "saves": 645,
+      "profileVisits": 1720,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289012900",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1290/",
+          "displayUrl": "https://scontent.example.com/a129_0.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012901",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-07-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1291/",
+          "displayUrl": "https://scontent.example.com/a129_1.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012902",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1292/",
+          "displayUrl": "https://scontent.example.com/a129_2.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012903",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-06-24T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1293/",
+          "displayUrl": "https://scontent.example.com/a129_3.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012904",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1294/",
+          "displayUrl": "https://scontent.example.com/a129_4.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012905",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-06-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1295/",
+          "displayUrl": "https://scontent.example.com/a129_5.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012906",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1296/",
+          "displayUrl": "https://scontent.example.com/a129_6.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012907",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-05-31T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1297/",
+          "displayUrl": "https://scontent.example.com/a129_7.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012908",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1298/",
+          "displayUrl": "https://scontent.example.com/a129_8.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012909",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-05-19T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1299/",
+          "displayUrl": "https://scontent.example.com/a129_9.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012910",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 41,
+          "commentsCount": 0,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA12910/",
+          "displayUrl": "https://scontent.example.com/a129_10.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289012911",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 41,
+          "commentsCount": 1,
+          "timestamp": "2026-05-07T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA12911/",
+          "displayUrl": "https://scontent.example.com/a129_11.jpg",
+          "impressions": 820,
+          "reach": 697,
+          "saved": 5,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici129",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "cafe56": {
+      "username": "cafe56",
+      "fullName": "Kafe F56",
+      "biography": "Kafe — İlkadım. Kafe F56.",
+      "followersCount": 456,
+      "followsCount": 256,
+      "postsCount": 3,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Kafe",
+      "externalUrl": "https://linktr.ee/cafe56.example",
+      "private": false,
+      "verified": false,
+      "impressions": 2280,
+      "reach": 1824,
+      "saves": 57,
+      "profileVisits": 152,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": []
+    },
+    "hairsalon63": {
+      "username": "hairsalon63",
+      "fullName": "Kuaför C63",
+      "biography": "Kuaför — Tekkeköy. Kuaför C63.",
+      "followersCount": 2130,
+      "followsCount": 263,
+      "postsCount": 11,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Kuaför",
+      "externalUrl": "https://linktr.ee/hairsalon63.example",
+      "private": false,
+      "verified": false,
+      "impressions": 10650,
+      "reach": 8520,
+      "saves": 266,
+      "profileVisits": 710,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289014300",
+          "type": "Video",
+          "caption": "Randevu için DM'den yazın!",
+          "likesCount": 191,
+          "commentsCount": 8,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1430/",
+          "displayUrl": "https://scontent.example.com/a143_0.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4775
+        },
+        {
+          "id": "289014301",
+          "type": "Image",
+          "caption": "Sipariş için profildeki linke tıklayın.",
+          "likesCount": 191,
+          "commentsCount": 9,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1431/",
+          "displayUrl": "https://scontent.example.com/a143_1.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289014302",
+          "type": "Video",
+          "caption": "Rezervasyon için bize ulaşın 📞",
+          "likesCount": 191,
+          "commentsCount": 10,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1432/",
+          "displayUrl": "https://scontent.example.com/a143_2.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4775
+        },
+        {
+          "id": "289014303",
+          "type": "Image",
+          "caption": "Detaylar için yorumlara bakın, hemen ara!",
+          "likesCount": 191,
+          "commentsCount": 11,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1433/",
+          "displayUrl": "https://scontent.example.com/a143_3.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289014304",
+          "type": "Video",
+          "caption": "Randevu için DM'den yazın!",
+          "likesCount": 191,
+          "commentsCount": 12,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1434/",
+          "displayUrl": "https://scontent.example.com/a143_4.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ],
+          "videoViewCount": 4775
+        },
+        {
+          "id": "289014305",
+          "type": "Image",
+          "caption": "Sipariş için profildeki linke tıklayın.",
+          "likesCount": 191,
+          "commentsCount": 13,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1435/",
+          "displayUrl": "https://scontent.example.com/a143_5.jpg",
+          "impressions": 3820,
+          "reach": 3247,
+          "saved": 23,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici143",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "restaurant77": {
+      "username": "restaurant77",
+      "fullName": "Restoran G77",
+      "biography": "Restoran — Canik. Restoran G77.",
+      "followersCount": 1362,
+      "followsCount": 277,
+      "postsCount": 7,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Restoran",
+      "externalUrl": "https://linktr.ee/restaurant77.example",
+      "private": false,
+      "verified": false,
+      "impressions": 6810,
+      "reach": 5448,
+      "saves": 170,
+      "profileVisits": 454,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289015700",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 10,
+          "commentsCount": 0,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1570/",
+          "displayUrl": "https://scontent.example.com/a157_0.jpg",
+          "impressions": 200,
+          "reach": 170,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici157",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289015701",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 10,
+          "commentsCount": 1,
+          "timestamp": "2026-05-28T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1571/",
+          "displayUrl": "https://scontent.example.com/a157_1.jpg",
+          "impressions": 200,
+          "reach": 170,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici157",
+              "text": "Güzel!"
+            }
+          ]
+        }
+      ]
+    },
+    "beautysalon84": {
+      "username": "beautysalon84",
+      "fullName": "Güzellik Salonu F84",
+      "biography": "Güzellik Salonu — Bafra. Güzellik Salonu F84.",
+      "followersCount": 484,
+      "followsCount": 284,
+      "postsCount": 3,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Güzellik Salonu",
+      "externalUrl": "https://linktr.ee/beautysalon84.example",
+      "private": false,
+      "verified": false,
+      "impressions": 2420,
+      "reach": 1936,
+      "saves": 60,
+      "profileVisits": 161,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": []
+    },
+    "giftshop98": {
+      "username": "giftshop98",
+      "fullName": "Hediyelik A98",
+      "biography": "Hediyelik — Tekkeköy. Hediyelik A98.",
+      "followersCount": 994,
+      "followsCount": 298,
+      "postsCount": 11,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Hediyelik",
+      "externalUrl": "https://linktr.ee/giftshop98.example",
+      "private": false,
+      "verified": false,
+      "impressions": 4970,
+      "reach": 3976,
+      "saves": 124,
+      "profileVisits": 331,
+      "followerDemographics": {
+        "ageRanges": {
+          "18-24": 0.3,
+          "25-34": 0.4,
+          "35-44": 0.2,
+          "45-64": 0.1
+        },
+        "gender": {
+          "female": 0.55,
+          "male": 0.45
+        }
+      },
+      "latestPosts": [
+        {
+          "id": "289017800",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 7,
+          "commentsCount": 0,
+          "timestamp": "2026-07-12T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1780/",
+          "displayUrl": "https://scontent.example.com/a178_0.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289017801",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 7,
+          "commentsCount": 1,
+          "timestamp": "2026-06-30T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1781/",
+          "displayUrl": "https://scontent.example.com/a178_1.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289017802",
+          "type": "Image",
+          "caption": "Ekibimizle birlikteyiz.",
+          "likesCount": 7,
+          "commentsCount": 0,
+          "timestamp": "2026-06-18T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1782/",
+          "displayUrl": "https://scontent.example.com/a178_2.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289017803",
+          "type": "Image",
+          "caption": "Güzel anlar.",
+          "likesCount": 7,
+          "commentsCount": 1,
+          "timestamp": "2026-06-06T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1783/",
+          "displayUrl": "https://scontent.example.com/a178_3.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289017804",
+          "type": "Image",
+          "caption": "Bugün güzel bir gün.",
+          "likesCount": 7,
+          "commentsCount": 0,
+          "timestamp": "2026-05-25T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1784/",
+          "displayUrl": "https://scontent.example.com/a178_4.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
+        },
+        {
+          "id": "289017805",
+          "type": "Image",
+          "caption": "Yeni gün, yeni başlangıç.",
+          "likesCount": 7,
+          "commentsCount": 1,
+          "timestamp": "2026-05-13T00:00:00.000Z",
+          "url": "https://www.instagram.com/p/RadarA1785/",
+          "displayUrl": "https://scontent.example.com/a178_5.jpg",
+          "impressions": 140,
+          "reach": 119,
+          "saved": 1,
+          "latestComments": [
+            {
+              "ownerUsername": "kullanici178",
+              "text": "Güzel!"
+            }
+          ]
         }
       ]
     }

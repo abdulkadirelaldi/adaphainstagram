@@ -10,10 +10,89 @@ adaptörün **girdisidir**. Eşleme aşağıda.
 
 ---
 
-## SEC-6 — keşif demo seti (20 işletme + handle eşleme)
+## SEC-8 — skorlama demo seti (100 hesap, skor sinyalleri çeşitli)
+
+Faz 3 bitiş kriteri "100 hesap taranıp panelde skorlarıyla listeleniyor" (SPEC §8) bu set
+üzerinden çalışır. Fixture 20→**100 işletme**ye büyüdü: **SEC-6'nın ilk 20 hesabı aynen
+korundu** (adaptör/cache/fallback testlerinin dayandığı bilinen değerler), üzerine 80 yeni
+hesap eklendi. Yeni hesaplar deterministik üretildi (indeks tabanlı, rastgelelik yok).
+
+### Referans zaman — SÖZLEŞME (BE-11 için)
+
+Tüm `posted_at`/`timestamp` değerleri **sabit ISO** tarihlerdir; göreli "bugün" **yoktur**
+(testler `currentDate`'e bağlı olmamalı). Skorlama motoru (BE-11) 90 gün aktiflik penceresini
+şu sabit referansa göre kurar:
+
+> **`REFERENCE_NOW = 2026-07-15T00:00:00+00:00`** → 90 gün penceresi: 2026-04-16 … 2026-07-15.
+
+Yeni hesapların gönderileri bu referanstan geriye sabit gün ofsetleriyle yerleştirildi.
+
+### 100 işletme, kategori dağılımı (kohort için)
+
+SPEC §4 kohort<5 kuralı test edilebilsin diye **hem ≥5 hem <5** kategori var. Dokuz kategori
+≥5 (kohort medyanı hesaplanır), üçü <5 (potansiyel hesaplanmaz → `watch`):
+
+| Kategori | Adet | Kohort | Kapasite (SPEC §4) |
+|---|---|---|---|
+| `cafe` | 15 | ≥5 | orta |
+| `hair_salon` | 15 | ≥5 | orta |
+| `real_estate_agency` | 11 | ≥5 | yüksek |
+| `jewelry_store` | 10 | ≥5 | yüksek |
+| `dental_clinic` | 10 | ≥5 | yüksek |
+| `car_dealer` | 9 | ≥5 | yüksek |
+| `restaurant` | 8 | ≥5 | orta |
+| `beauty_salon` | 8 | ≥5 | orta |
+| `gym` | 6 | ≥5 | orta |
+| `florist` | 3 | **<5 → watch** | düşük |
+| `gift_shop` | 3 | **<5 → watch** | düşük |
+| `pet_store` | 2 | **<5 → watch** | düşük |
+
+**Handle:** 83 işletme instagram URL'li (`raw.websiteUri` → snapshot yolu), **17 handle'sız**
+(`ig_handle=NULL`, taranmaz). SEC-6'nın 4 yanlış-pozitif tuzağı korundu; yeni NULL'lar da
+facebook/düz-site/websitesiz karışımı.
+
+**Profil eşleme:** `ig_business_discovery.json` → 71 dolu BD profili + 12 boş `{}` (fallback);
+`apify_profile.json` → 12 fallback profili (SEC-6'nın 2'si + 10 yeni), **hepsi yasak alanları
+korur** (kural 7, BE-9 düşürür, SEC-5 doğrular).
+
+### Skor sinyalleri — arketipler (SPEC §4)
+
+Yeni hesaplar skorların tüm bantlara yayılması için arketiplere göre kuruldu:
+
+- **Aktiflik** (`posted_at` yoğunluğu + en uzun sessizlik): `active` (≈2/hafta, kısa sessizlik
+  → yüksek), `moderate` (orta), `dormant` (uzun sessizlik → düşük), `dead` (**0 gönderi →
+  aktiflik 0 → çarpım çöker → `rejected`**).
+- **Potansiyel** (yüksek = kötü yönetim = bizim için iyi): `bad` yönetim = Reels yok (hep
+  IMAGE), düşük etkileşim (like/comment kategori medyanı altında), CTA'sız caption →
+  **yüksek potansiyel**. `good` yönetim = Reels + yüksek etkileşim + CTA'lı caption → düşük
+  potansiyel. `avg` = karışık.
+- **Kapasite** (ödeyebilir mi): kategori ağırlığı (yukarıdaki tablo) + `followersCount` +
+  `websiteUri` varlığı + `userRatingCount`. Yüksek-kapasite hesaplar yüksek takipçi + yüksek
+  rating taşır.
+
+### Skor-bandı hedefleri (tasarım niyeti — kesin skoru BE-11 hesaplar)
+
+Bunlar **yaklaşık** hedeftir; gerçek skor/durum BE-11'in motorundan çıkar. Fixture bu dağılımı
+üretecek biçimde kuruldu (SEC-7 skorlama testlerine zemin):
+
+| Bant | ≈ Hesap | Nasıl kuruldu |
+|---|---|---|
+| `rejected` (<40) | ~18 | `dead` aktiflik (0 gönderi) → çarpım çöker, kategori/kapasite fark etmez |
+| `qualified` (≥70) | ~8 | `active` + `bad` yönetim (yüksek potansiyel) + yüksek-kapasite kategori + yüksek takipçi/rating |
+| `watch` (40–69) | ~57 | `moderate`/`dormant` + `good`/`avg` yönetim (orta skor) **artı** 8 küçük-kohort hesabı (florist/pet/gift → kohort<5 → potansiyel hesaplanmaz → `watch`) |
+| skorlanmaz | 17 | handle'sız (NULL) — keşfedilir ama taranmaz, `triage_scores` satırı doğmaz |
+
+**Kohort<5 kanıtı:** `florist`(3)/`gift_shop`(3)/`pet_store`(2) hesaplarının hepsi handle'lı
+(snapshot alınır) ama kohortları 5'in altında → SPEC §4 gereği potansiyel alt skoru
+hesaplanmaz, bu hesaplar `watch` olur. SEC-7 bunu motorda doğrular.
+
+---
+
+## SEC-6 — keşif demo seti (ilk 20 hesap, SEC-8'de korundu)
 
 Faz 2 bitiş kriteri "tek komutla 20 işletme keşfedilip snapshot'ı alınıyor" (SPEC §8)
-bu set üzerinden çalışır. Fixture'lar `docs/TASKS.md` "IG handle eşleme sözleşmesi"ne uyar.
+bu 20-hesap çekirdeği üzerinden çalışır (SEC-8'de aynen korundu). Fixture'lar `docs/TASKS.md`
+"IG handle eşleme sözleşmesi"ne uyar.
 
 **20 işletme, kategori dağılımı** (SPEC §4 kohort testi için hem ≥5 hem <5 kategori var):
 

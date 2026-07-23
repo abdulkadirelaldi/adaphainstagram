@@ -15,34 +15,27 @@ from typing import Any
 import pytest
 
 from api.core import extract_ig_handle
-
-# SEC-6 fixture'ının handle→işletme eşlemesi (docs/fixtures README ile birebir).
-EXPECTED_HANDLES = {
-    "elmaskuyumculuk",
-    "atakumdisklinigi",
-    "sahilkahveevi",
-    "karadenizoto",
-    "samsunemlakofisi",
-    "bayramkuyumcu",
-    "denizkafe55",
-    "atakumkuafor",
-    "sactasarimstudio",
-    "mavideniz.emlak",
-    "cadde19kafe",
-    "glamkuafor",
-    "modakuafor.samsun",
-    "espressolab.samsun",
-}
+from tests._fixture_facts import ref_extract_handle
 
 
-def test_yirmi_isletmeden_ondort_handle_alti_null(load_fixture: Any) -> None:
+def test_production_cikarim_bagimsiz_referansla_uyusuyor(load_fixture: Any) -> None:
+    """`extract_ig_handle` (production) 100 işletmede bağımsız referans regex'le aynı sonucu vermeli.
+
+    Referans (`tests/_fixture_facts.ref_extract_handle`) production'ın kopyası değil, ayrı
+    yazılmış bir sözleşme uygulamasıdır. İkisinin her işletmede aynı handle'ı (veya NULL'ı)
+    üretmesi, production'ın sözleşmeye uyduğunu bağımsız kaynaktan doğrular.
+    """
     places = load_fixture("places_response")["places"]
+    for p in places:
+        assert extract_ig_handle(p) == ref_extract_handle(p), (
+            f"Uyumsuzluk: {p.get('websiteUri')!r} → "
+            f"production={extract_ig_handle(p)!r}, referans={ref_extract_handle(p)!r}"
+        )
+    # Fixture hem handle'lı hem NULL yolları içeriyor (ikisi de test edildi).
     handles = {h for p in places if (h := extract_ig_handle(p)) is not None}
     nulls = [p for p in places if extract_ig_handle(p) is None]
-    assert handles == EXPECTED_HANDLES, (
-        f"Fazla: {handles - EXPECTED_HANDLES}, Eksik: {EXPECTED_HANDLES - handles}"
-    )
-    assert len(nulls) == 6
+    assert handles, "handle'lı işletme bekleniyordu"
+    assert nulls, "NULL yollu işletme bekleniyordu"
 
 
 @pytest.mark.parametrize(

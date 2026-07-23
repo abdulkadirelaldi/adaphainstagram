@@ -41,7 +41,7 @@ async def test_places_adapter_fixturei_normalize_ediyor(load_fixture: Any) -> No
         await client.aclose()
 
     assert counter.count == 1  # tek POST
-    assert len(businesses) == 20
+    assert len(businesses) == len(raw["places"])  # tüm işletmeler normalize oldu
 
     elmas = next(b for b in businesses if b.place_id == "ChIJradar00kuyumcu0001")
     assert elmas.name == "Elmas Kuyumculuk"
