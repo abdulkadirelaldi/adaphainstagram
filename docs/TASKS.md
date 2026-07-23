@@ -41,12 +41,11 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-13 | backend | **Sözleşme önce:** `openapi.yaml`'a `POST /businesses/{id}/audit` + `GET /audits/{id}` + `Finding`/`Audit` şemaları (SPEC §7) | — |
-| BE-14 | backend | Deterministik bulgu kuralları (SPEC §5, üretilebilir 5 kural) + `audits` persist, LLM yok | BE-13 |
+| BE-14 | backend | Deterministik bulgu kuralları (SPEC §5, üretilebilir 5 kural) + `audits` persist, LLM yok | BE-13 ✅ |
 | BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 |
 | BE-16 | backend | Sonnet 5 sentez: rapor metni + `outreach` draft; sistem promptu cache; `llm_cost_usd` yaz | BE-15 |
 | SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 |
-| FE-6 | frontend | Audit tetikleme + rapor görünümü + `outreach` draft kopyalama | BE-13 (sözleşme), canlı: BE-16 |
+| FE-6 | frontend | Audit tetikleme + rapor görünümü + `outreach` draft kopyalama | BE-13 ✅ (sözleşme), canlı: BE-16 |
 
 ### Faz 4 karara bağlananlar (orkestra şefi — SPEC §5 ile veri gerçeği çatışması)
 
@@ -194,6 +193,8 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **BE-13** · Denetim sözleşmesi (`docs/openapi.yaml`, yalnız sözleşme — uygulama BE-14+). İki uç: `POST /businesses/{id}/audit` → `JobAccepted` (202, `/discovery/run` ile aynı job deseni; nitelikli-değil → **409**, işletme yok → 404), `GET /audits/{id}` → `Audit` (404). Beş yeni şema: `Severity` enum **SPEC §5 ile birebir** (`kritik|yüksek|orta|düşük`), `Finding` (deterministik `detail` ile LLM'in ürettiği `message` **ayrı alanlar** — LLM bulgu icat etmez), `OutreachStatus`/`OutreachDraft` (denetim yanıtında draft özeti, kopyalanabilsin), `Audit` (`visibility_score`+`findings`+`report_text`+`pdf_path`(null, PDF Faz 5)+`llm_cost_usd`+`outreach`). Bulgu listesi **açık uçlu** — Faz 4 dışı iki kural (yorum yanıtsız, görsel tutarsızlık) enum'da zorlanmıyor, ileride eklenebilir. redocly lint 0 hata; tüm gövdeler adlandırılmış şemaya `$ref` (inline yok); yasak alan yok; `security: []` korundu. **BE-14 + FE-6 başlayabilir.**
 
 - **FE-4 + FE-5** · Keşif tetikleme + `/jobs/{id}` yoklama UI'ı **canlı doğrulandı**; panel gerçek skorlanmış 100 hesabı gösteriyor. FE-4-B1 (uçlar DB'den — BE-12) ve FE-4-B2 (worker fixture modu — BE-10) birlikte kapandı. **Ortam:** backend fixture modda (`RADAR_FIXTURE_MODE=true`, anahtarsız, kural 6 uyumlu) uvicorn+arq worker+yerel pg/redis; 8000'de yabancı bir servis olduğu için API 8001'e alındı, panel `NEXT_PUBLIC_API_URL=:8001` ile build edildi, CORS temiz. **Uçtan uca headless kanıt:** boş DB → keşif çubuğundan "Tara" → gerçek `job_id` → `queued→running→done` ("Tarama bitti · 100 işletme, 83 snapshot") → tablo gerçek DB ile tazelendi (100 aday, ilk sayfa 50) → üst şerit gerçek `/stats` (Taranan **83**, Nitelikli **9**, Rapor 0, $0,00) → **poll `done`'da durdu** (/jobs 2→2). **İmza öğesi ilk kez tam gücüyle:** 100 skorla kohortlar doldu, her satırın skoru kategori kohortunun içindeki yeriyle (soluk çentikler + dolu çentik) okunuyor. Skor bantları üçü de doğru: `status=qualified`→nitelikli üstte azalan sıralı; `status=rejected`→elendi bandı (skorlar <40); **kohort<5** (florist/gift_shop/pet_store, 3'er kayıt)→çentiksiz ray + "—" + "İzlemede". **Küçük UI düzeltmesi (yalnız `web/`):** skor rakamı `Math.round`→`Math.floor` — round(39.6)="40" bir `rejected` satırı izlemede eşiğinde gösteriyordu; floor daima status bandıyla hizalı (39.6→"39"), gerçek eşik-sınırı verisiyle görülüp düzeltildi (DESIGN §2). `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik grep boş. **Faz 3 panel kutusu (100 hesap skorlarıyla listeleniyor) canlı kapandı.**
 

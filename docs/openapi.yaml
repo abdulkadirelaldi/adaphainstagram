@@ -32,6 +32,8 @@ tags:
     description: Keşif taraması
   - name: jobs
     description: Kuyruk işleri
+  - name: audits
+    description: Derin denetim
 
 paths:
   /health:
@@ -185,6 +187,77 @@ paths:
                 $ref: '#/components/schemas/JobStatus'
         '404':
           description: Böyle bir iş yok (bilinmeyen veya süresi dolmuş `job_id`)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /businesses/{id}/audit:
+    post:
+      tags: [audits]
+      summary: Derin denetimi kuyruğa al
+      description: |
+        Nitelikli bir işletme için derin denetimi kuyruğa alır (SPEC §1). Senkron
+        değil (SPEC §7): uç anında bir `job_id` döner, ilerleme `GET /jobs/{id}` ile
+        yoklanır — `/discovery/run` ile aynı iş deseni.
+
+        Yalnızca son triyaj durumu `qualified` olan hesap derin denetime girer
+        (SPEC §1). Nitelikli olmayan hesap `409` döner; hiç taranmamış/skorsuz hesap
+        da nitelikli sayılmaz.
+      operationId: runAudit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Denetlenecek işletmenin kimliği.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '202':
+          description: Denetim işi kuyruğa alındı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobAccepted'
+        '404':
+          description: Böyle bir işletme yok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '409':
+          description: İşletme derin denetime uygun değil (durumu `qualified` değil)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /audits/{id}:
+    get:
+      tags: [audits]
+      summary: Denetim sonucu
+      description: |
+        Bir denetimin bulgularını, görünürlük skorunu ve (üretildiyse) PDF yolunu ile
+        erişim mesajı taslağını döndürür (SPEC §7).
+      operationId: getAudit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Denetim kimliği.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Denetim bulguları ve skoru
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Audit'
+        '404':
+          description: Böyle bir denetim yok
           content:
             application/json:
               schema:
@@ -428,6 +501,130 @@ components:
         error:
           type: [string, 'null']
           description: Hata mesajı. Yalnızca `status` `error` olduğunda dolar, aksi halde null.
+
+    Severity:
+      type: string
+      title: Severity
+      description: |
+        Bulgu önemi = ceza ağırlığı (SPEC §5). Görünürlük skoru bu bulguların ağırlıklı
+        cezasının 100'den düşülmesiyle bulunur. Değerler SPEC §5 ile birebir.
+      enum: [kritik, yüksek, orta, düşük]
+
+    Finding:
+      type: object
+      title: Finding
+      description: |
+        Deterministik bir kuraldan doğan tek denetim bulgusu (SPEC §5). LLM bulgu
+        **icat etmez**: `detail` deterministik tetikten gelir (kural + eşik), `message`
+        ise LLM'in bu bulguyu ajans diline çevirdiği metindir. İki alan ayrı tutulur ki
+        neyin ölçülüp neyin yazıya döküldüğü karışmasın.
+      additionalProperties: false
+      required: [rule, title, severity, detail, message]
+      properties:
+        rule:
+          type: string
+          description: Kural makine kimliği, ör. `reels_yok`, `bio_donusum_yok`.
+        title:
+          type: string
+          description: Kuralın insan okunur adı, ör. "Reels yok".
+        severity:
+          $ref: '#/components/schemas/Severity'
+        detail:
+          type: string
+          description: Deterministik tetik açıklaması (ölçülen değer + eşik). LLM'siz üretilir.
+        message:
+          type: [string, 'null']
+          description: |
+            LLM'in (Sonnet) ürettiği ajans-dili metni. Sentez öncesi veya atlandıysa null;
+            deterministik `detail` daima doludur.
+
+    OutreachStatus:
+      type: string
+      title: OutreachStatus
+      description: |
+        Erişim kaydının durumu (SPEC §3). Kayıt daima `draft` doğar; sistem hiçbir
+        koşulda otomatik mesaj göndermez, ileri durumlara yalnız insan kararıyla geçilir.
+      enum: [draft, sent, opened, replied, meeting, won, lost]
+
+    OutreachDraft:
+      type: object
+      title: OutreachDraft
+      description: |
+        Denetime bağlı erişim mesajı taslağının özeti (SPEC §3 `outreach`). Denetim
+        yanıtında taşınır ki panel taslağı gösterip kopyalayabilsin; durum güncelleme
+        ayrı `PATCH /outreach/{id}` ucundadır (sonraki faz).
+      additionalProperties: false
+      required: [id, channel, draft, status]
+      properties:
+        id:
+          type: integer
+          format: int64
+        channel:
+          type: string
+          description: İletişim kanalı, ör. `instagram_dm`, `email`.
+        draft:
+          type: string
+          description: Üretilen mesaj taslağının metni.
+        status:
+          $ref: '#/components/schemas/OutreachStatus'
+
+    Audit:
+      type: object
+      title: Audit
+      description: |
+        Bir derin denetimin sonucu (SPEC §3 `audits` + §7). `findings` deterministik
+        kurallardan doğar; `report_text` LLM sentezidir; `pdf_path` PDF üretildiğinde
+        (Faz 5) dolar.
+      additionalProperties: false
+      required:
+        - id
+        - business_id
+        - visibility_score
+        - findings
+        - report_text
+        - pdf_path
+        - llm_cost_usd
+        - generated_at
+        - outreach
+      properties:
+        id:
+          type: integer
+          format: int64
+        business_id:
+          type: integer
+          format: int64
+          description: Denetlenen işletme.
+        visibility_score:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+          description: Bulguların ağırlıklı cezasının 100'den düşülmesiyle bulunan skor (SPEC §5).
+        findings:
+          type: array
+          description: Deterministik bulgular (SPEC §5). Boş olabilir (hiç kural tetiklenmediyse).
+          items:
+            $ref: '#/components/schemas/Finding'
+        report_text:
+          type: [string, 'null']
+          description: LLM'in (Sonnet) ürettiği rapor metni. Sentez tamamlanana kadar null.
+        pdf_path:
+          type: [string, 'null']
+          description: Üretilen PDF raporunun yolu/bağlantısı. PDF Faz 5 — o zamana kadar null.
+        llm_cost_usd:
+          type: number
+          format: double
+          minimum: 0
+          description: Bu denetimin gerçek LLM maliyeti (USD). Maliyet disiplini gereği boş kalamaz.
+        generated_at:
+          type: string
+          format: date-time
+          description: Denetimin üretildiği an (UTC).
+        outreach:
+          oneOf:
+            - $ref: '#/components/schemas/OutreachDraft'
+            - type: 'null'
+          description: Erişim mesajı taslağı. Sentez öncesi veya henüz üretilmediyse null.
 
     ErrorMessage:
       type: object
