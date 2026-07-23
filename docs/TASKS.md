@@ -9,47 +9,54 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 — iskelet. ✅ TAMAMLANDI** (SPEC §8) — dört çıkış kutusu da kapandı, Faz 2 açık.
+**Faz 1 — iskelet. ✅ TAMAMLANDI** · **Faz 2 — veri. ✅ TAMAMLANDI (SPEC bitiş kriteri)** ·
+**Faz 3 — skorlama açık** (SPEC §8).
 
-Bitiş kriteri kutusu:
+Faz 1 kutuları (4/4): `/health` + postgres/redis, `/stats`+`/businesses` sahte veri, panel
+gerçek istekle çiziyor, lint+tip+test lokal yeşil. Docker ve CI kutuları makine kısıtına göre
+dürüstçe daraltıldı (remote/Docker yok), bkz. `## Bloke`.
 
-- [x] Servisler ayağa kalkıyor, `GET /health` 200 dönüyor — yerel postgres@16 + redis ile
-      doğrulandı (sağlıklı yol + iki arıza yolu), CI'da servis konteyneriyle tekrarlanıyor.
-      **`docker compose` bu makinede doğrulanmadı**, bkz. `## Bloke` → Docker kararı.
-- [x] `GET /stats` ve `GET /businesses` sahte veriyle 200 dönüyor ve `docs/openapi.yaml` ile birebir uyuşuyor
-      — BE-4 ile kapandı; canlı curl'le doğrulandı, üretilen `/openapi.json` sözleşmedeki `required`/
-      `additionalProperties`/enum ile uyuşuyor, yasak alan yok.
-- [x] Panel üst şeridi `/stats` verisini, tablo `/businesses` boş listesini gerçek istekle çiziyor
-      — FE-3 ile kapandı; API `localhost:8000`, panel `localhost:3000` ayaktayken headless doğrulandı:
-      üst şerit gerçek `/stats` (Taranan 7), tablo `/businesses`, filtre değişince yeni query ile istek,
-      `?min_score=100&status=rejected`→boş durum, API kapatılınca hata durumu, CORS engeli yok.
-- [x] Lint+tip+test kapıları **lokal yeşil** (ruff 0.12.0, mypy 2.3.0, pytest 22/22) ve
-      `.github/workflows/ci.yml` yazıldı+doğrulandı (3 paralel job, postgres 16 + redis 7
-      servis konteyneri). **GitHub Actions koşusu bu makinede yapılmadı** — repoda remote yok;
-      gerçek Actions doğrulaması remote bağlanınca ilk push'ta olur. Docker kutusuyla aynı
-      dürüst daraltma, bkz. `## Bloke` → CI kararı.
+Faz 2 kutuları (4/4): adaptör protokolü + normalize şema, `/discovery/run`+`/jobs/{id}`
+sözleşmesi, keşif→snapshot+cache, tek komutla 20 işletme (`discover_demo`). **Panel-canlı
+entegrasyonu (FE-4 done) Faz 2 bitiş kutusunun *dışında*** — SPEC §8 Faz 2 panelde göstermeyi
+istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı, bkz. aşağıda.
 
 ## Açık
 
-### Faz 2 — veri (SPEC §8). Bitiş kriteri kutusu:
+### Faz 3 — skorlama (SPEC §4, §8). Bitiş kriteri kutusu:
 
-- [x] `SourceAdapter` protokolü + tek normalize çıktı şeması var; üç adaptör bu protokolü
-      uyguluyor, yeni kaynak eklemek tek dosya (SPEC §2)
-      — BE-6 ile kapandı. İki protokol seçildi (`DiscoverySource`/`ProfileSource`); üç iskelet
-      adaptör uyumu mypy'de kanıtlandı, kayıt (registry) tek-dosya desenini koruyor. Gerçek
-      HTTP gövdeleri BE-7/BE-8.
-- [x] `POST /discovery/run` ve `GET /jobs/{id}` `openapi.yaml`'da tanımlı; iş kuyruğa gidiyor,
-      uç anında `job_id` dönüyor (senkron scraping yok, SPEC §7)
-      — **sözleşme** BE-6 ile kapandı (iki uç + adlandırılmış şemalar, redocly temiz). Kuyruk
-      yürütücüsü (arq, gerçek `job_id` üretimi) **BE-9**'da; uç henüz FastAPI'de canlı değil.
-- [x] Places keşfi işletme kaydı yazıyor; IG/Apify snapshot + posts yazıyor; aynı hesap 7 gün
-      içinde tekrar kazınmıyor (Redis cache, `CLAUDE.md` maliyet disiplini)
-      — BE-9 ile kapandı; demo iki koşuda cache kanıtı (2. koşu dış profil çağrısı 0, çift snapshot yok).
-- [x] **Tek komutla 20 işletme keşfedilip snapshot'ı alınıyor** — hepsi fixture'la, canlı
-      IG/Apify çağrısı yok (`CLAUDE.md` kural 6)
-      — BE-9 `python -m api.discover_demo`: 20 işletme, 14 handle, 14 snapshot/29 post, MockTransport (canlı çağrı yok).
+- [ ] Triyaj motoru üç alt skoru (aktiflik, potansiyel, kapasite) ve ağırlıklı **çarpım**
+      birleşik skorunu hesaplıyor (SPEC §4). Mutlak etkileşim eşiği **yok** — kohort medyanı
+      kullanılıyor; kohort<5 → potansiyel hesaplanmaz, hesap `watch`.
+- [ ] Durum atama: skor<40 `rejected`, 40–69 `watch`, ≥70 `qualified`; `triage_scores`'a yazılıyor.
+- [ ] `/businesses` ve `/stats` **DB'den** okuyor (fake_data değil), son skoru/durumu gösteriyor
+      (FE-4-B1 kapanır).
+- [ ] **100 hesap taranıp panelde skorlarıyla listeleniyor** — fixture'la, LLM yok (SPEC §8).
 
-_(Faz 2'de açık güvenlik görevi kalmadı — SEC-5 Biten'e taşındı.)_
+| id | ajan | görev | bağımlı |
+|---|---|---|---|
+| BE-10 | backend | Worker'a env-bayraklı fixture/mock-transport modu (canlı `discovery/run`→done fixture'la test edilebilsin, kural 6 uyumlu) — FE-4-B2 | — |
+| SEC-8 | güvenlik | Fixture'ı ~100 hesaba genişlet, skor sinyallerini (SPEC §4) çeşitlendir (kategori/aktiflik/reels/CTA/kapasite) | — |
+| BE-11 | backend | Triyaj skorlama motoru (aktiflik/potansiyel/kapasite/çarpım + kohort medyanı + durum) + `triage_scores` persist + discovery job'a tetikleme fazı (SPEC §4) | — |
+| BE-12 | backend | `/businesses` + `/stats`'ı DB'ye bağla, son skoru göster (FE-4-B1) | BE-11 |
+| SEC-7 | güvenlik | Skorlama testleri: çarpım çökme davranışı, kohort<5→watch, eşikler, mutlak-eşik yokluğu | BE-11 |
+| FE-5 | frontend | FE-4 done canlı doğrulama (BE-10) + panel gerçek skorları gösteriyor (BE-12) | BE-10, BE-12 |
+
+### Triyaj tetikleme kararı (Faz 3 — orkestra şefi sabitledi)
+
+Skorlama *ne zaman* çalışır SPEC'te açık değil. İki ajanı (BE skorlama + FE panel) bağladığı
+için sabitleniyor: **triyaj skorlama, discovery job'unun snapshot yazımından sonraki son
+fazıdır.** Ayrı bir "skorla" ucu Faz 3'te yok — `POST /discovery/run` işi tamamlandığında DB'de
+skorlanmış işletmeler durur, panel `done` invalidate'inde onları gösterir. Bu FE-4-B1'i de
+kapatır: job biter → `/businesses` DB'den skorlu okur → tablo gerçek keşifle tazelenir.
+
+### Sıralama notu (Faz 3)
+
+BE-10 (worker fixture) ve SEC-8 (fixture 100) skorlamadan bağımsız, hemen paralel başlar.
+BE-11 skorlama motoru fixture içeriğinden bağımsız (SPEC §4'e bakar), o da paralel; 100-hesap
+demo'su SEC-8 fixture'ıyla birleşince kapanır. BE-12 uçları DB'ye bağlar (BE-11'in yazdığı
+skorları okur). SEC-7 skorlama motorunu bağımsız test eder. FE-5 en sonda: BE-10 ile canlı done,
+BE-12 ile gerçek skorlar.
 
 ### IG handle eşleme sözleşmesi (Faz 2 — orkestra şefi sabitledi)
 
@@ -110,6 +117,14 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 - **FE-4-B2** · `orta` · **backend/ortam** — Canlı keşif `done`'a hiç ulaşamıyor: arq worker gerçek `PlacesAdapter(api_key=…)` kuruyor ve `GOOGLE_PLACES_API_KEY` `.env`'de yok → iş **anında `error`**'a düşüyor ("Places API anahtarı yok"). Kural 6 canlı Places/IG/Apify çağrısını zaten yasakladığı için gerçek anahtarla da test edilmemeli. `discover_demo` MockTransport kullanıyor ama **worker'ı atlıyor** (job akışı yok); `api/worker.py`'de adaptör client'ını fixture'a çevirecek bir env bayrağı **yok**. Sonuç: gerçek `job` üzerinden `queued→running→done` doğrulaması bu makinede mümkün değil — done UI'ı yalnızca route-mock'ta kanıtlı. **Karar orkestra şefinin:** ya worker'a bir fixture/mock-transport modu (env flag) eklensin (BE), ya da FE-4'ün done doğrulaması için route-mock kanıtı kabul edilsin. `api/`'ye dokunmadım.
 
 ### Karara bağlananlar (orkestra şefi, dalga 1 sonu)
+
+- **FE-4-B2** (canlı `discovery/run`→done bu makinede doğrulanamıyor) → *worker fixture modu
+  eklenecek.* `BE-10` görevi açıldı: env-bayraklı fixture/mock-transport modu, kural 6 uyumlu.
+  Faz 6 e2e de bunu kullanacak. FE-4 done doğrulaması BE-10 + BE-12 (DB bağı) sonrası `FE-5`'te.
+- **FE-4-B1** (`/businesses`+`/stats` fake_data'dan okuyor, DB'den değil) → *Faz 3'e devredildi.*
+  `BE-12` görevi: skorlama `triage_scores` yazdıktan sonra uçlar DB'den skorlu okur. Şimdi
+  yarım bağlamak (skor NULL) yerine skorla birlikte tam bağlanır. FE-4 `## Devam eden`'de kaldı,
+  `FE-5` ile kapanacak.
 
 - **Docker** → *yerel servislerle kabul edildi.* Faz 1 çıkış kriteri yeniden yazıldı: doğrulama
   yerel postgres@16 + redis ve CI servis konteyneri üzerinden yapılır. `docker-compose.yml` ve
