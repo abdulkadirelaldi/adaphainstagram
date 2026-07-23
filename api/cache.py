@@ -5,14 +5,20 @@ Faz 1'de yalnızca sağlık yoklaması için kullanılır. Faz 2'de adaptör sev
 disiplini).
 """
 
+from typing import cast
+
 from redis.asyncio import Redis
 
 from api.config import Settings
 
 
 def create_redis(settings: Settings) -> Redis:
-    return Redis.from_url(
-        settings.redis_url,
-        decode_responses=True,
-        socket_connect_timeout=settings.health_timeout_seconds,
+    # from_url stub'ı Any döndürüyor (redis 5.x); açık cast warn_return_any'i susturur.
+    return cast(
+        Redis,
+        Redis.from_url(
+            settings.redis_url,
+            decode_responses=True,
+            socket_connect_timeout=settings.health_timeout_seconds,
+        ),
     )

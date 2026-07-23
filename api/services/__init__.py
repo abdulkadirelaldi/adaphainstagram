@@ -4,6 +4,7 @@ Adaptörler tek kaynağı bilir, persist tek tabloyu; orkestrasyon (ör. profil 
 Business Discovery → Apify fallback) buraya düşer.
 """
 
+from api.services.discovery import DiscoverySummary, run_discovery
 from api.services.profile import fetch_profile
 
-__all__ = ["fetch_profile"]
+__all__ = ["DiscoverySummary", "fetch_profile", "run_discovery"]

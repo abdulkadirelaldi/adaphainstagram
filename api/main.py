@@ -4,14 +4,17 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+from arq import create_pool
+from arq.connections import RedisSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.cache import create_redis
 from api.config import get_cors_settings, get_settings
 from api.db import create_engine, create_session_factory
-from api.routes import businesses, health, stats
+from api.routes import businesses, health, jobs, stats
 
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
@@ -32,9 +35,20 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.session_factory = create_session_factory(engine)
     app.state.redis = redis
 
+    # arq havuzu enqueue + job durumu için. create_pool bağlanmaya çalışır; redis
+    # inikse uygulama yine ayağa kalkmalı (/health durumu bildirebilsin), keşif
+    # uçları redis gelene kadar 503 döner.
+    try:
+        app.state.arq_pool = await create_pool(RedisSettings.from_dsn(settings.redis_url))
+    except Exception:
+        logger.warning("arq havuzu açılamadı; keşif uçları 503 dönecek", exc_info=True)
+        app.state.arq_pool = None
+
     try:
         yield
     finally:
+        if app.state.arq_pool is not None:
+            await app.state.arq_pool.aclose()
         await redis.aclose()
         await engine.dispose()
 
@@ -54,13 +68,14 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=get_cors_settings().origins(),
-        allow_methods=["GET"],
+        allow_methods=["GET", "POST"],
         allow_headers=["*"],
     )
 
     app.include_router(health.router)
     app.include_router(stats.router)
     app.include_router(businesses.router)
+    app.include_router(jobs.router)
     return app
 
 

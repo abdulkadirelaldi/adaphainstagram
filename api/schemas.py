@@ -5,7 +5,7 @@ buradaki bir alan değişecekse önce o dosya güncellenir (CLAUDE.md kural 3).
 """
 
 from datetime import datetime
-from enum import Enum
+from enum import Enum, StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -18,7 +18,13 @@ __all__ = [
     "Business",
     "BusinessList",
     "ComponentStatus",
+    "DiscoveryRequest",
     "Health",
+    "JobAccepted",
+    "JobProgress",
+    "JobResult",
+    "JobState",
+    "JobStatus",
     "Stats",
     "TriageStatus",
 ]
@@ -91,3 +97,60 @@ class BusinessList(BaseModel):
 
     items: list[Business]
     total: int = Field(ge=0, description="Filtreye uyan, sayfalama öncesi toplam kayıt.")
+
+
+class DiscoveryRequest(BaseModel):
+    """`POST /discovery/run` istek gövdesi."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = Field(min_length=1, description="Places arama sorgusu.")
+    region: str = Field(default="Samsun", min_length=1, description="Aranan bölge.")
+    limit: int | None = Field(default=None, ge=1, le=200, description="En fazla işletme.")
+
+
+class JobAccepted(BaseModel):
+    """`POST /discovery/run` yanıtı — kuyruğa alınan işin kimliği."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    job_id: str
+
+
+class JobState(StrEnum):
+    """Kuyruk işinin yaşam döngüsü (sözleşme `JobState`)."""
+
+    QUEUED = "queued"
+    RUNNING = "running"
+    DONE = "done"
+    ERROR = "error"
+
+
+class JobProgress(BaseModel):
+    """İşin ilerleme sayaçları."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    processed: int = Field(ge=0, description="İşlenen öğe sayısı.")
+    total: int | None = Field(ge=0, description="Beklenen toplam; bilinmiyorsa null.")
+
+
+class JobResult(BaseModel):
+    """İş tamamlandığında yazılanların özeti."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    businesses: int = Field(ge=0, description="Yazılan/güncellenen işletme sayısı.")
+    snapshots: int = Field(ge=0, description="Alınan snapshot sayısı.")
+
+
+class JobStatus(BaseModel):
+    """`GET /jobs/{id}` yanıtı."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    job_id: str
+    status: JobState
+    progress: JobProgress | None
+    result: JobResult | None
+    error: str | None

@@ -1,5 +1,6 @@
 """Keşfedilen işletmeleri `businesses` tablosuna yazar."""
 
+from sqlalchemy import select, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -47,3 +48,24 @@ async def upsert_businesses(
     result = await session.execute(stmt)
     await session.flush()
     return list(result.scalars())
+
+
+async def set_ig_handle(session: AsyncSession, place_id: str, ig_handle: str) -> None:
+    """Bir işletmenin `ig_handle`'ını set eder (handle eşleme, TASKS sözleşmesi).
+
+    Idempotent: aynı handle tekrar yazılınca değer değişmez. Handle çıkarımı NULL
+    dönen işletmeler için bu fonksiyon hiç çağrılmaz — `ig_handle` NULL kalır.
+    """
+    await session.execute(
+        update(Business).where(Business.place_id == place_id).values(ig_handle=ig_handle)
+    )
+
+
+async def place_id_to_id(session: AsyncSession, place_ids: list[str]) -> dict[str, int]:
+    """Verilen `place_id`'ler için `place_id → businesses.id` eşlemesi."""
+    if not place_ids:
+        return {}
+    rows = await session.execute(
+        select(Business.place_id, Business.id).where(Business.place_id.in_(place_ids))
+    )
+    return dict(rows.tuples().all())

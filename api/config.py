@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     )
     apify_token: str | None = Field(default=None, description="Apify API jetonu.")
 
+    # Maliyet disiplini (CLAUDE.md): aynı hesap 7 gün içinde tekrar kazınmaz. BE-9
+    # profil çekmeden önce bu TTL'li Redis anahtarına bakar. Varsayılan 7 gün.
+    snapshot_cache_ttl_seconds: int = Field(
+        default=7 * 24 * 60 * 60, ge=1, description="Snapshot tazelik cache'i TTL (saniye)."
+    )
+
     db_pool_size: int = Field(default=5, ge=1)
     health_timeout_seconds: float = Field(
         default=3.0,
