@@ -11,6 +11,7 @@ demo worker'ı atlar, fixture modu gerçek job/durum makinesini kullanır.
 
 import logging
 import os
+from datetime import UTC, datetime
 from typing import Any, ClassVar
 
 from arq.connections import RedisSettings
@@ -23,7 +24,7 @@ from api.adapters.business_discovery import BusinessDiscoveryAdapter
 from api.adapters.places import PlacesAdapter
 from api.config import get_settings
 from api.db import create_engine, create_session_factory
-from api.fixture_mode import fixture_adapters
+from api.fixture_mode import FIXTURE_REFERENCE_NOW, fixture_adapters
 from api.jobstate import write_progress
 from api.services import DiscoverySummary, run_discovery
 from api.services.discovery import ProgressCallback
@@ -42,6 +43,7 @@ async def _run(
 ) -> DiscoverySummary:
     """Keşif akışını fixture veya gerçek adaptörlerle yürütür (tek çağrı yeri)."""
     if fixture_mode:
+        # Fixture'lar sabit tarihli → skorlama sabit referansla deterministik.
         async with fixture_adapters() as (places, primary, fallback):
             return await run_discovery(
                 query,
@@ -51,6 +53,7 @@ async def _run(
                 session_factory=session_factory,
                 redis=redis,
                 cache_ttl_seconds=cache_ttl_seconds,
+                reference_now=FIXTURE_REFERENCE_NOW,
                 on_progress=on_progress,
             )
 
@@ -63,6 +66,7 @@ async def _run(
         session_factory=session_factory,
         redis=redis,
         cache_ttl_seconds=cache_ttl_seconds,
+        reference_now=datetime.now(UTC),
         on_progress=on_progress,
     )
 

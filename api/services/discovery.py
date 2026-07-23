@@ -12,6 +12,7 @@ sarılır — çağıranın bilmesi gerekmez.
 
 import logging
 from collections.abc import Awaitable, Callable
+from datetime import UTC, datetime
 
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -30,6 +31,7 @@ from api.persistence import (
     upsert_businesses,
 )
 from api.services.profile import fetch_profile
+from api.services.scoring import score_discovered
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +53,7 @@ class DiscoverySummary:
         self.cache_skipped = 0
         self.fallback_used = 0
         self.profile_unavailable = 0
+        self.scored = 0
 
     def as_dict(self) -> dict[str, int]:
         return {
@@ -60,6 +63,7 @@ class DiscoverySummary:
             "cache_skipped": self.cache_skipped,
             "fallback_used": self.fallback_used,
             "profile_unavailable": self.profile_unavailable,
+            "scored": self.scored,
         }
 
 
@@ -76,9 +80,16 @@ async def run_discovery(
     session_factory: async_sessionmaker[AsyncSession],
     redis: Redis,
     cache_ttl_seconds: int,
+    reference_now: datetime | None = None,
     on_progress: ProgressCallback | None = None,
 ) -> DiscoverySummary:
-    """Keşif akışını uçtan uca yürütür ve özet döndürür."""
+    """Keşif akışını uçtan uca yürütür ve özet döndürür.
+
+    `reference_now` skorlama fazına geçer (fixture/testte `REFERENCE_NOW`); verilmezse
+    üretim yolu `now(UTC)` kullanır. Saf skorlama motoru takvim gününe bağlı değil —
+    referansı buradan alır.
+    """
+    ref_now = reference_now if reference_now is not None else datetime.now(UTC)
     summary = DiscoverySummary()
 
     # 1) Keşif + upsert.
@@ -142,5 +153,10 @@ async def run_discovery(
 
         if on_progress is not None:
             await on_progress(processed, total)
+
+    # 4) Skorlama — snapshot yazımından sonraki SON faz (TASKS "Triyaj tetikleme
+    # kararı"). Job `done` olduğunda DB'de skorlanmış işletmeler durur; panel bunları
+    # gösterir. Ayrı bir "skorla" ucu yok.
+    summary.scored = await score_discovered(session_factory, ref_now)
 
     return summary

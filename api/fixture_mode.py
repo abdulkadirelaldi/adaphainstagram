@@ -12,6 +12,7 @@ import json
 import re
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,11 @@ from api.adapters.places import PlacesAdapter
 
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
 _USERNAME_RE = re.compile(r"username\(([^)]+)\)")
+
+# Fixture'ların `posted_at` değerleri bu sabit referansa göre yerleştirildi
+# (tests/fixtures/README.md — skorlama 90 gün penceresi buradan kurulur). Fixture
+# modu ve demo skorlamayı bununla çalıştırır; üretim `datetime.now(UTC)` kullanır.
+FIXTURE_REFERENCE_NOW = datetime(2026, 7, 15, tzinfo=UTC)
 
 # Çağrı kancası: her sahte istekte çağrılır (demo çağrı sayacı için). None ise yok.
 OnCall = Callable[[], None] | None

@@ -25,18 +25,22 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 ### Faz 3 — skorlama (SPEC §4, §8). Bitiş kriteri kutusu:
 
-- [ ] Triyaj motoru üç alt skoru (aktiflik, potansiyel, kapasite) ve ağırlıklı **çarpım**
+- [x] Triyaj motoru üç alt skoru (aktiflik, potansiyel, kapasite) ve ağırlıklı **çarpım**
       birleşik skorunu hesaplıyor (SPEC §4). Mutlak etkileşim eşiği **yok** — kohort medyanı
       kullanılıyor; kohort<5 → potansiyel hesaplanmaz, hesap `watch`.
-- [ ] Durum atama: skor<40 `rejected`, 40–69 `watch`, ≥70 `qualified`; `triage_scores`'a yazılıyor.
+      — BE-11 ile kapandı (`api/core/scoring.py` saf motor). Potansiyel **3 sinyal** (yorum-yanıt
+      ölçülemez, kural 7). Kohort<5 (florist/gift/pet) → potansiyel None + watch, doğrulandı.
+- [x] Durum atama: skor<40 `rejected`, 40–69 `watch`, ≥70 `qualified`; `triage_scores`'a yazılıyor.
+      — BE-11; iki geçişli kohort medyanı, delete+insert idempotent (işletme başına tek satır).
 - [ ] `/businesses` ve `/stats` **DB'den** okuyor (fake_data değil), son skoru/durumu gösteriyor
-      (FE-4-B1 kapanır).
-- [ ] **100 hesap taranıp panelde skorlarıyla listeleniyor** — fixture'la, LLM yok (SPEC §8).
+      (FE-4-B1 kapanır). _(BE-12)_
+- [x] **100 hesap taranıp panelde skorlarıyla listeleniyor** — fixture'la, LLM yok (SPEC §8).
+      — BE-11 motor + tetikleme; fixture-mode demo/job: 100 keşif, 83 skorlu (17 handle'sız taranmaz),
+      bantlar rejected 21 / watch 53 / qualified 9 (README hedefine yakın). Panel gösterimi BE-12'de.
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-11 | backend | Triyaj skorlama motoru (aktiflik/potansiyel/kapasite/çarpım + kohort medyanı + durum) + `triage_scores` persist + discovery job'a tetikleme fazı (SPEC §4) | — |
-| BE-12 | backend | `/businesses` + `/stats`'ı DB'ye bağla, son skoru göster (FE-4-B1) | BE-11 |
+| BE-12 | backend | `/businesses` + `/stats`'ı DB'ye bağla, son skoru göster (FE-4-B1) | BE-11 ✅ |
 | SEC-7 | güvenlik | Skorlama testleri: çarpım çökme davranışı, kohort<5→watch, eşikler, mutlak-eşik yokluğu | BE-11 |
 | FE-5 | frontend | FE-4 done canlı doğrulama (BE-10) + panel gerçek skorları gösteriyor (BE-12) | BE-10, BE-12 |
 
@@ -163,6 +167,8 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **BE-11** · Triyaj skorlama motoru + tetikleme (Faz 3 kutu #1/#2/#4). Saf motor `api/core/scoring.py` (dataclass→dataclass, httpx/SQLAlchemy yok, `now()` yok — referans enjekte). **Potansiyel dört değil ÜÇ sinyal:** yorum-yanıt oranı bu sistemde ölçülemez (`posts` yalnız `comment_count`, "kim yanıtladı" yok — SPEC §3), kural 7 gereği skora sokulmadı (Faz 4 Apify yorum çekiminde eklenir); potansiyel = Reels-yokluğu + kohort-medyanına-göre-etkileşim-düşüklüğü + CTA-yokluğu ortalaması. Etkileşim **mutlak eşiksiz**, kategori kohort medyanına göre (iki geçişli batch). **Kohort<5 → potansiyel None + watch**, birleşik skor yok. Birleşik skor ağırlıklı **çarpım** (SPEC §4) — alt skor 0 → çöker. Durum <40/40-69/≥70. `triage_scores` **idempotent**: işletme başına tek/en-güncel satır (delete+insert). Tetikleme: `run_discovery`'nin snapshot sonrası **son fazı** (ayrı uç yok); fixture modu skorlamayı `REFERENCE_NOW=2026-07-15` ile deterministik çalıştırır, üretim `now()`. Doğrulandı (pg16, fixture demo): 100 keşif → 83 skorlu, bantlar **rejected 21 / watch 53 / qualified 9** (README ~18/57/8'e yakın, üçü de mevcut); florist/gift/pet 8 hesap watch+potential NULL; dead (0-post) → activity 0 → score 0 → rejected; 2. koşu idempotent (83 satır, çift yok). `reference_now` opsiyonel eklendi (SEC entegrasyon testi kırılmadı). ruff 0.12.0+mypy 2.3.0+pytest 94/94 yeşil, grep boş. Panel gösterimi BE-12'de.
 
 - **SEC-8** · Skorlama fixture'ı 20→100 hesap; SEC-6'nın ilk 20'si aynen korundu, 80 yeni deterministik eklendi. Kategori dağılımı 12 kategori (9× ≥5 kohort medyanı; florist/gift_shop/pet_store <5 → **kohort<5 watch** yolu). **83 handle / 17 NULL** (4 tuzak korundu). Skor sinyalleri arketiplerle çeşitli (SPEC §4): aktiflik dead(0 gönderi→rejected)/active/moderate/dormant, potansiyel bad(reels yok+düşük etkileşim+CTA yok→yüksek)/good/avg, kapasite kategori+takipçi+rating. **Referans zaman sözleşmesi: `REFERENCE_NOW=2026-07-15`** (tüm tarihler sabit ISO, göreli "bugün" yok) — BE-11 90 gün penceresini buna göre kurar, README'de. Skor-bandı hedefleri README'de (≈18 rejected/8 qualified/57 watch/17 skorlanmaz; yaklaşık, kesin skor BE-11'den). Apify yasak alanları (12 profil) korundu. **Sayı-tabanlı testler `tests/_fixture_facts.py`'den türetilir** (magic number yok; fixture büyüyünce uyar); handle sözleşme testi production'ı bağımsız referans regex'le 100 işletmede karşılaştırır. Yeni test dosyaları: `_fixture_facts.py`, `test_discovery_fixture.py` (100'e güncellendi). ruff+mypy(49 dosya)+pytest(94) yeşil, BD/places yasak-metrik taraması boş, gerçek anahtar yok. **BE-11: fixture 100 hesap, referans zaman README'de, skorlamayı 100 ile doğrulayabilir.** Detay: `docs/REVIEW.md` SEC-8.
 - **BE-10** · Worker fixture modu (FE-4-B2 çözüldü). `RADAR_FIXTURE_MODE` ayar bayrağı (pydantic-settings, üretimde `false`): açıkken worker keşif job'u adaptörlere `tests/fixtures/`-besleyen MockTransport client enjekte eder (kural 6, anahtar gerekmez), kapalıyken gerçek client (üretim yolu). Mock-client mantığı tek kaynağa çıkarıldı (`api/fixture_mode.py`); `discover_demo` de oradan kullanıyor (kopya yok). Worker **atlanmıyor** — `discover_demo`'dan farkı bu: gerçek arq job + durum makinesi çalışıyor. Doğrulama (yerel pg16+redis, **anahtar unset**): gerçek `WorkerSettings` burst + `POST /discovery/run` → job_id anında (0.007s); `GET /jobs/{id}` worker öncesi `queued`, sonrası `done`, sonuç `{businesses:20, snapshots:14}`, progress `14/14` (running fazı ilerleme yazdı). Bayrak kapalı + anahtar yok → `PlacesAdapter` beklenen `RuntimeError` (üretim yolu sağlam). Demo refactor sonrası hâlâ çalışıyor (cache kanıtı korunuyor). ruff 0.12.0+mypy 2.3.0+pytest 93/93 yeşil, `.env.example`'da bayrak `false`, grep boş, sızıntı yok. **FE-5 canlı done'u bununla doğrulayabilir** (BE-12 DB bağından sonra tam tazeleme).

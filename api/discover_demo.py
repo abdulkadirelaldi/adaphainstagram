@@ -24,6 +24,7 @@ from api.cache import create_redis
 from api.config import get_settings
 from api.db import create_engine, create_session_factory
 from api.fixture_mode import (
+    FIXTURE_REFERENCE_NOW,
     load_fixture,
     make_apify_client,
     make_bd_client,
@@ -88,6 +89,7 @@ async def main() -> None:
                 session_factory=session_factory,
                 redis=redis,
                 cache_ttl_seconds=settings.snapshot_cache_ttl_seconds,
+                reference_now=FIXTURE_REFERENCE_NOW,
             )
         finally:
             await places_c.aclose()
