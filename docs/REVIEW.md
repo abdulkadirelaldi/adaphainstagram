@@ -350,3 +350,77 @@ BE-9 başlayabilir.** Handle çıkarımı `raw.websiteUri`'deki `instagram.com/{
 (host tam olarak `(www.)instagram.com`); 4 tuzak linki handle üretmemeli. Fallback:
 `sahilkahveevi`+`cadde19kafe` BD'de `{}` → Apify. Cache (SEC-5): `atakumdisklinigi` tekrar-çekim
 handle'ı, persist idempotent kalmalı.
+
+---
+
+## SEC-5 · Faz 2 — entegrasyon + cache + gizlilik denetimi (bağımsız doğrulama)
+
+**Tarih:** 2026-07-23
+**Denetlenen ağaç:** `3cc67f6` + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict), pytest — 93 test (33 yeni), yerel pg16 + redis
+
+BE-7/BE-8/BE-9'un iddiaları (normalize, fallback, 7 gün cache, yasak-alan düşürme)
+backend'in elle doğrulamasından **bağımsız** olarak, güvenlik ajanının kendi testleriyle
+makineye bağlandı. DB testleri yalnız **yerel** postgres/redis kullanır (kural 6 dış
+Instagram/Apify/Places'i yasaklar, yerel altyapıyı değil); erişilemezse SKIP, CI'da servis
+konteyneriyle koşar.
+
+### Beş blok — kabul kriterleri
+
+| Blok | Durum | Kanıt (test) |
+|---|---|---|
+| 1. Adaptör→normalize (alan eşlemesi) | **PASS** | `test_adapter_integration.py`: Places→20, None yolu; BD `comments_count→comment_count`, `view_count=None`; Apify `type→media_type`, `videoViewCount→view_count`, yasak düşüyor |
+| 2. Handle sözleşmesi + regresyon | **PASS** | `test_handle_contract.py`: 14 handle/6 NULL, 4 tuzak NULL, ad-tahmini regresyon testi |
+| 3. Fallback (BD→Apify) | **PASS** | `test_adapter_integration.py` + DB'de `snapshots.source`: fallback→apify, diğerleri business_discovery; HTTP hatası **yükseliyor**, sessiz düşüş yok |
+| 4. 7 gün cache | **PASS** | `test_discovery_integration.py`: 2. koşu 0 profil çağrısı, çift snapshot yok; TTL≈7 gün; süre dolunca yeniden çekiliyor |
+| 5. Gizlilik zinciri (kural 7) | **PASS** | aşağıda, 5 aşama |
+
+### Yasak-alan gizlilik zinciri — ham → normalize → persist → sütun → API
+
+Apify fixture'ı yasak metrik taşıyor (`impressions`/`reach`/`saves`/`profileVisits`/
+`followerDemographics` + gönderi `impressions`/`reach`/`saved`). Zincirin her aşamasında
+bu alanların normalize yüzeye, DB sütununa veya API yanıtına çıkmadığı, yalnız
+`snapshots.raw` JSONB'de arşivlendiği doğrulandı:
+
+| Aşama | Durum | Kanıt |
+|---|---|---|
+| ① ham fixture | **PASS (yasak var)** | `apify_profile.json` yasak alanları taşıyor (SEC-6, kasıtlı) |
+| ② normalize | **PASS** | `test_apify_normalize_yasak_alanlari_dusuruyor`: `model_dump(exclude raw)` içinde yasak yok; `raw["impressions"]=15234` |
+| ③ persist → snapshots | **PASS** | `test_yasak_metrik_yalnizca_raw_jsonda...`: `snap.raw["impressions"]=15234` (arşiv) ama tipli sütunlar (`followers`/`media_count`) yalnız SPEC §3 |
+| ④ snapshots/posts sütunları | **PASS** | `test_privacy_chain.py`: `Snapshot.__table__`/`Post.__table__` sütun adlarında yasak token yok; posts yalnız `like_count`/`comment_count`/`view_count` |
+| ⑤ `/businesses` yanıtı | **PASS** | `test_businesses_yaniti_yasak_anahtar_icermiyor` + `Business`/`BusinessList`/`JobResult`/`JobStatus`/`Stats` şema alanlarında yasak yok |
+
+**Sonuç:** yasak metrikler zincirin hiçbir aşamasında yüzeye çıkmıyor; yalnız denetim izi
+olarak `snapshots.raw` JSONB'de kalıyor. Kural 7 uçtan uca korunuyor.
+
+### İki testin gerçekten ölçtüğü — karşı-kanıt
+
+- **Cache testi:** `test_cache_devre_disi_ikinci_kosu_cagri_yapar_karsi_kanit` — cache
+  anahtarları silinince (cache devre dışı gibi) ikinci koşu 14 BD + 2 Apify çağrısı yapıyor.
+  Yani cache sarmalı çalışmasaydı `test_ikinci_kosu...` kırmızı olurdu. Cache testi bir
+  davranışı ölçüyor, varsaymıyor.
+- **Handle sözleşmesi:** `test_ad_benzerligi_tahmin_edilmiyor_regresyon` — adı 'Elmas
+  Kuyumculuk', elinde yalnız `facebook.com/elmaskuyumculuk` ve metinde ad geçen bir işletme
+  → NULL. Çıkarım ad-tahminine açılırsa (regex gevşetilir) bu test kırmızıya döner. "Ad
+  tahmini yok" (hukuki sınır) makineye bağlı.
+
+### `.env.example` + sır denetimi
+
+| Kontrol | Durum | Kanıt |
+|---|---|---|
+| Yeni anahtarlar değersiz | **PASS** | `GOOGLE_PLACES_API_KEY=`, `IG_BUSINESS_DISCOVERY_TOKEN=`, `APIFY_TOKEN=` boş; `SNAPSHOT_CACHE_TTL_SECONDS` yorumlu; `CORS_ALLOW_ORIGINS=` boş (`.env.example:26-37`) |
+| `api/` sabit kodlanmış sır | **PASS** | anahtar-değer ve bilinen önek (`sk-ant-`/`AIza`/`apify_api_`/`AKIA`/`ghp_`) taraması boş; tüm kimlikler `pydantic-settings` ile ortamdan |
+| Opus çağrısı | **PASS (yok)** | `api/`'de `claude-opus`/`opus-4` yok (LLM katmanı Faz 4) |
+
+### Ağ muhafızı — DB testleri kural 6'ya aykırı değil
+
+DB/redis testleri yalnız `localhost:5432`/`localhost:6379`'a bağlanır; `conftest.py` ağ
+muhafızı localhost'a izin verir, dış dünyaya değil. Adaptör çağrıları `httpx.MockTransport`
+ile karşılanır (soket açılmaz). 93 test ağ muhafızı altında geçti. Yerelde postgres/redis
+yoksa DB testleri SKIP olur — süit yeşil kalır, ama CI'da (servis konteyneri + env) ve DB'li
+makinede gerçekten koşar (skip yok, kanıtlandı).
+
+### Bu turda yeni bulgu yok
+
+Faz 2 backend'i (BE-7/BE-8/BE-9) beş kritere göre bağımsız doğrulandı; gizlilik/maliyet/sır
+ihlali bulunmadı. SEC-6-N1 (websiteUri handle taşıyıcısı) hâlâ geçerli bir kayıt, bulgu değil.
