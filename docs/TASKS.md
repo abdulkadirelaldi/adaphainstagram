@@ -32,16 +32,17 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
       ölçülemez, kural 7). Kohort<5 (florist/gift/pet) → potansiyel None + watch, doğrulandı.
 - [x] Durum atama: skor<40 `rejected`, 40–69 `watch`, ≥70 `qualified`; `triage_scores`'a yazılıyor.
       — BE-11; iki geçişli kohort medyanı, delete+insert idempotent (işletme başına tek satır).
-- [ ] `/businesses` ve `/stats` **DB'den** okuyor (fake_data değil), son skoru/durumu gösteriyor
-      (FE-4-B1 kapanır). _(BE-12)_
+- [x] `/businesses` ve `/stats` **DB'den** okuyor (fake_data değil), son skoru/durumu gösteriyor
+      (FE-4-B1 kapanır). — BE-12; `fake_data` silindi, filtre/sayfalama SQL'de, son triyaj LEFT
+      JOIN. Doğrulandı: fixture demo sonrası `/businesses` total=100 (sahte 8 yok), `/stats` gerçek
+      (scanned 83, qualified 9), skorsuz 25 kayıt (17 handle'sız + 8 kohort<5) score=null.
 - [x] **100 hesap taranıp panelde skorlarıyla listeleniyor** — fixture'la, LLM yok (SPEC §8).
       — BE-11 motor + tetikleme; fixture-mode demo/job: 100 keşif, 83 skorlu (17 handle'sız taranmaz),
       bantlar rejected 21 / watch 53 / qualified 9 (README hedefine yakın). Panel gösterimi BE-12'de.
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-12 | backend | `/businesses` + `/stats`'ı DB'ye bağla, son skoru göster (FE-4-B1) | BE-11 ✅ |
-| SEC-7 | güvenlik | Skorlama testleri: çarpım çökme davranışı, kohort<5→watch, eşikler, mutlak-eşik yokluğu | BE-11 |
+| SEC-7 | güvenlik | Skorlama testleri: çarpım çökme davranışı, kohort<5→watch, eşikler, mutlak-eşik yokluğu | BE-11 ✅ |
 | FE-5 | frontend | FE-4 done canlı doğrulama (BE-10) + panel gerçek skorları gösteriyor (BE-12) | BE-10, BE-12 |
 
 ### Triyaj tetikleme kararı (Faz 3 — orkestra şefi sabitledi)
@@ -115,7 +116,7 @@ _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)
 
 _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
-- **FE-4-B1** · `orta` · **backend** — `GET /businesses` ve `GET /stats` hâlâ **fake_data'dan** okuyor, gerçek DB'den değil. Kanıt: `python -m api.discover_demo` DB'ye 20 işletme + 14 snapshot + 29 post yazdıktan sonra bile `/businesses?limit=200` **total=8** ve "Atakum Diş Kliniği" (score 82.4) gibi fake_data kayıtlarını döndürüyor; `businesses` tablosunda ise demo'nun yazdığı 20 gerçek kayıt duruyor. Sonuç: keşif işi DB'ye yazsa bile panel gerçek keşfi göremiyor → **FE-4 kabul kriteri 5 (iş bitince tablo ~20 gerçek işletmeyle tazeleniyor) doğrulanamıyor.** FE tarafı doğru: `done`'da `/businesses`/`/stats`/kohort invalidate edip yeniden çekiyor — ama backend DB yerine sabit listeyi döndürüyor. BE bu iki ucu DB'ye bağlamalı (muhtemelen Faz 3 skorlama ile birlikte; ama FE-4 canlı done doğrulaması buna bağımlı). `api/`'ye dokunmadım.
+- **FE-4-B1** · `orta` · **backend** — `GET /businesses` ve `GET /stats` hâlâ **fake_data'dan** okuyor, gerçek DB'den değil. Kanıt: `python -m api.discover_demo` DB'ye 20 işletme + 14 snapshot + 29 post yazdıktan sonra bile `/businesses?limit=200` **total=8** ve "Atakum Diş Kliniği" (score 82.4) gibi fake_data kayıtlarını döndürüyor; `businesses` tablosunda ise demo'nun yazdığı 20 gerçek kayıt duruyor. Sonuç: keşif işi DB'ye yazsa bile panel gerçek keşfi göremiyor → **FE-4 kabul kriteri 5 (iş bitince tablo ~20 gerçek işletmeyle tazeleniyor) doğrulanamıyor.** FE tarafı doğru: `done`'da `/businesses`/`/stats`/kohort invalidate edip yeniden çekiyor — ama backend DB yerine sabit listeyi döndürüyor. BE bu iki ucu DB'ye bağlamalı (muhtemelen Faz 3 skorlama ile birlikte; ama FE-4 canlı done doğrulaması buna bağımlı). `api/`'ye dokunmadım. → **BE-12 ile çözüldü** (`fake_data` silindi, uçlar DB'den skorlu okuyor; FE-5 canlı done + gerçek ~100 işletme tazelemesini doğrulayabilir).
 - **FE-4-B2** · `orta` · **backend/ortam** — Canlı keşif `done`'a hiç ulaşamıyor: arq worker gerçek `PlacesAdapter(api_key=…)` kuruyor ve `GOOGLE_PLACES_API_KEY` `.env`'de yok → iş **anında `error`**'a düşüyor ("Places API anahtarı yok"). Kural 6 canlı Places/IG/Apify çağrısını zaten yasakladığı için gerçek anahtarla da test edilmemeli. `discover_demo` MockTransport kullanıyor ama **worker'ı atlıyor** (job akışı yok); `api/worker.py`'de adaptör client'ını fixture'a çevirecek bir env bayrağı **yok**. Sonuç: gerçek `job` üzerinden `queued→running→done` doğrulaması bu makinede mümkün değil — done UI'ı yalnızca route-mock'ta kanıtlı. **Karar orkestra şefinin:** ya worker'a bir fixture/mock-transport modu (env flag) eklensin (BE), ya da FE-4'ün done doğrulaması için route-mock kanıtı kabul edilsin. `api/`'ye dokunmadım. → **BE-10 ile çözüldü** (`RADAR_FIXTURE_MODE`; gerçek worker anahtarsız fixture'la `queued→running→done`, sonuç 20 işletme — FE-5 canlı done'u bununla doğrulayabilir).
 
 ### Karara bağlananlar (orkestra şefi, dalga 1 sonu)
@@ -167,6 +168,8 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **BE-12** · `/businesses` + `/stats` DB'ye bağlandı (Faz 3 kutu #3, FE-4-B1 çözüldü). `api/fake_data.py` **silindi** (üretim yolunda kullanılmıyordu, test de kullanmıyordu). Sorgular `api/services/dashboard.py`'de: `/businesses` → `businesses` LEFT JOIN son `triage_scores` (DISTINCT ON); filtre (`status`/`category`/`min_score`) + sayfalama (`limit`/`offset`/`total`) **SQL'de**; skorsuz kayıt `score`/`status`=null (sözleşme nullable). `min_score` NULL skoru otomatik eler (NULL>=x→NULL). Skora göre azalan sıralı (nitelikli üstte). `/stats` → gerçek sayaç: `scanned`=triyajlı işletme, `qualified`=durum sayısı, `reports`/`monthly_cost_usd`=`audits`'tan (Faz 4'e kadar boş→0, uydurma yok). Route'lar ince (HTTP): session `app.state.session_factory`'den; lifespan yoksa (hermetik test) boş/sıfır döner — üretimde daima kurulu. Doğrulandı (pg16, fixture demo→100 skorlu): `/businesses` total=100 (sahte 8 yok), skora göre sıralı (üst 91.69 qualified); `status=qualified`→9 hepsi qualified; `min_score=70`→9 hepsi≥70; `?min_score=100&status=rejected`→boş; `category=florist`(kohort<5)→3 score=null; 25 skorsuz (17 handle'sız + 8 kohort<5). `/stats`={scanned 83, qualified 9, reports 0, cost 0}. Üretilen `/openapi.json` sözleşmeyle uyumlu (Business 12 required, additionalProperties false), yasak alan yok. `openapi.yaml`'a dokunulmadı (sözleşme sabitti). ruff 0.12.0+mypy 2.3.0+pytest 94/94 yeşil. **SEC-5 privacy testi uyumu:** `/businesses` DB'siz (lifespan'sız) çağrıda artık boş liste dönüyor (200) — test kırılmadı; populated yasak-alan kontrolü zaten `test_discovery_integration`'da gerçek DB ile.
 
 - **BE-11** · Triyaj skorlama motoru + tetikleme (Faz 3 kutu #1/#2/#4). Saf motor `api/core/scoring.py` (dataclass→dataclass, httpx/SQLAlchemy yok, `now()` yok — referans enjekte). **Potansiyel dört değil ÜÇ sinyal:** yorum-yanıt oranı bu sistemde ölçülemez (`posts` yalnız `comment_count`, "kim yanıtladı" yok — SPEC §3), kural 7 gereği skora sokulmadı (Faz 4 Apify yorum çekiminde eklenir); potansiyel = Reels-yokluğu + kohort-medyanına-göre-etkileşim-düşüklüğü + CTA-yokluğu ortalaması. Etkileşim **mutlak eşiksiz**, kategori kohort medyanına göre (iki geçişli batch). **Kohort<5 → potansiyel None + watch**, birleşik skor yok. Birleşik skor ağırlıklı **çarpım** (SPEC §4) — alt skor 0 → çöker. Durum <40/40-69/≥70. `triage_scores` **idempotent**: işletme başına tek/en-güncel satır (delete+insert). Tetikleme: `run_discovery`'nin snapshot sonrası **son fazı** (ayrı uç yok); fixture modu skorlamayı `REFERENCE_NOW=2026-07-15` ile deterministik çalıştırır, üretim `now()`. Doğrulandı (pg16, fixture demo): 100 keşif → 83 skorlu, bantlar **rejected 21 / watch 53 / qualified 9** (README ~18/57/8'e yakın, üçü de mevcut); florist/gift/pet 8 hesap watch+potential NULL; dead (0-post) → activity 0 → score 0 → rejected; 2. koşu idempotent (83 satır, çift yok). `reference_now` opsiyonel eklendi (SEC entegrasyon testi kırılmadı). ruff 0.12.0+mypy 2.3.0+pytest 94/94 yeşil, grep boş. Panel gösterimi BE-12'de.
 

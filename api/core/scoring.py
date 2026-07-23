@@ -23,6 +23,7 @@ Etkileşim için **mutlak eşik yok** (SPEC §4): karşılaştırma daima aynı 
 taranmış hesapların medyanına göre. Kohort<5 → potansiyel hesaplanmaz, hesap `watch`.
 """
 
+from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -298,7 +299,11 @@ def score_accounts(accounts: Sequence[AccountData], reference_now: datetime) -> 
             rates_by_category.setdefault(account.category, []).append(rate)
 
     median_by_category = {category: median(rates) for category, rates in rates_by_category.items()}
-    cohort_size = {category: len(rates) for category, rates in rates_by_category.items()}
+    # Kohort = kategorideki **taranmış hesap** sayısı (SPEC §4 "aynı kategorideki
+    # taranmış hesaplar"). Etkileşimi hesaplanabilen sayı DEĞİL: ölü (0 gönderi)
+    # hesaplar kategoriyi küçültüp büyük kategorileri yanlışlıkla kohort<5'e itmesin.
+    # Medyan yine yalnız hesaplanabilir oranlardan çıkar.
+    cohort_size = Counter(account.category for account in accounts)
 
     # 2. geçiş: her hesabı skorla.
     results: list[ScoreResult] = []
