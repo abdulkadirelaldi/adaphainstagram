@@ -484,3 +484,64 @@ Arketip mekaniği ve referans zaman README'de belgelidir; bir hesabın hangi ban
 README'de — BE-11 skorlamayı 100 ile doğrulayabilir.** 90 gün penceresini bu sabit referansa
 göre kur. Kohort<5 kategorileri: florist/gift_shop/pet_store (potansiyel hesaplanmaz → watch).
 Skor-bandı hedefleri README'de (yaklaşık; kesin skor senin motorundan).
+
+---
+
+## SEC-7 · Faz 3 — triyaj skorlama motoru bağımsız doğrulama
+
+**Tarih:** 2026-07-23
+**Denetlenen ağaç:** `bf543a7` + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict), pytest — 110 test (16 yeni), yerel pg16 + redis
+
+BE-11'in skorlama iddiaları (çarpım çökme, kohort<5→watch, eşikler, mutlak-eşik yokluğu,
+referans zaman, persist idempotent) backend'in elle doğrulamasından **bağımsız** olarak
+16 yeni testle makineye bağlandı. `tests/test_scoring.py` (12 saf motor testi) +
+`tests/test_scoring_persist.py` (4 DB testi, fixture'a bağlı).
+
+### Kabul kriterleri — altı başlık
+
+| Başlık | Durum | Kanıt (test) |
+|---|---|---|
+| Çarpım çökme (karşı-kanıtlı) | **PASS** | `test_carpim_cokme_bir_alt_skor_sifir`, `test_carpim_dusuk_aktiflik_...`, `test_olu_hesap_yuksek_kapasiteyle_bile_rejected` |
+| Kohort<5 → watch | **PASS** | saf: `test_kohort_bes_altinda_potansiyel_none_watch`; DB fixture-türetilmiş: `test_kohort_bes_alti_kategoriler_watch_potansiyel_none` |
+| Durum eşikleri (off-by-one) | **PASS** | `test_durum_esikleri_sinir_degerleri`: 39.99→rejected, 40.0→watch, 69.99→watch, 70.0→qualified |
+| Mutlak eşik yokluğu (karşı-kanıtlı) | **PASS** | `test_mutlak_esik_yok_ayni_etkilesim_farkli_medyanda_farkli_potansiyel` |
+| Referans zaman | **PASS** | `test_aktiflik_referans_zamana_bagli_deterministik`: referans +200g → aktiflik 0 |
+| Persist + idempotent | **PASS** | `test_triage_persist_ve_idempotent`, `test_triage_satiri_tum_alanlari_tasiyor` |
+
+Ek: `test_bantlar_ucune_de_yayiliyor` — SEC-8 fixture'ı skorları üç banda da yayıyor
+(rejected/watch/qualified hepsi DB'de mevcut), skor sinyali çeşitliliğini uçtan uca doğrular.
+
+### İki testin gerçekten ölçtüğü — karşı-kanıt
+
+- **Çarpım çökme:** `combined_score(1, 95, 95) = 24.23` (<40 → rejected). Aynı değerlerin
+  aritmetik ortalaması **63.67** (≥60 → watch/üstü). Formül toplama/ortalamaya çevrilseydi
+  `score < 40` assert'i kırmızıya dönerdi. Test bir davranışı ölçüyor, varsaymıyor.
+- **Mutlak eşik yok:** aynı ham etkileşim (0.05) kohort medyanı 0.10'da potansiyel **83.3**,
+  medyan 0.02'de **66.7**. Mutlak eşik olsaydı ikisi eşit çıkardı → `p_high > p_low` assert'i
+  kırmızı olurdu. Karşılaştırmanın kohort-göreli olduğu (SPEC §4) böyle kanıtlandı.
+
+### Magic number yok — fixture/DB'den türetme
+
+DB testleri kohort<5 kategori kümesini **DB'deki taranmış sayıdan** hesaplar (`MIN_COHORT`
+sabitiyle), sabit "florist/gift/pet" listesi gömmez — fixture yeniden boyutlanınca uyar.
+İdempotency "toplam satır == farklı işletme sayısı" ile doğrulanır (sabit sayı değil).
+
+### Denetim — motor temiz, yeni bulgu yok
+
+- **LLM/maliyet:** `api/core/scoring.py` saf ve deterministik — `anthropic`/`claude-opus`/
+  `httpx` import etmiyor, `datetime.now()` çağırmıyor (referans enjekte). SPEC §8 "triyaj LLM
+  kullanmaz" korunuyor. Maliyet kaçağı yok.
+- **Yasak veri (kural 7):** skorlama girdisi (`PostData`/`AccountData`) yalnız SPEC §3
+  alanları (like/comment/followers/category…); erişim/gösterim/kaydetme/demografi yok.
+  **BE-11 kararı doğru:** potansiyel dört değil **üç** sinyalden hesaplanıyor — dördüncü
+  (yorum-yanıt oranı) Faz 2'de çekilmediği için (SPEC §3'te "kim yanıtladı" yok) skora
+  sokulmamış. Bu, kural 7'ye (ölçmediğini iddia etme) **uyum**dur, bulgu değil.
+- **Ağ:** skorlama testleri ağ muhafızı altında geçti (16/16); DB testleri yalnız yerel
+  pg/redis, erişilemezse SKIP.
+
+### Backend'e not
+
+Skorlama motoru altı kritere göre bağımsız doğrulandı; gizlilik/maliyet/LLM ihlali yok.
+Yorum-yanıt sinyalinin Faz 4'te (Apify yorum çekimi) eklenmesi planı doğru — o gün potansiyel
+dört sinyale çıkarken bu testler güncellenecek.
