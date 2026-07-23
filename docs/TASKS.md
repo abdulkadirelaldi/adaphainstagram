@@ -9,8 +9,13 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 — iskelet. ✅ TAMAMLANDI** · **Faz 2 — veri. ✅ TAMAMLANDI (SPEC bitiş kriteri)** ·
-**Faz 3 — skorlama açık** (SPEC §8).
+**Faz 1 ✅** · **Faz 2 ✅ (SPEC bitiş kriteri)** · **Faz 3 — skorlama ✅ TAMAMLANDI** ·
+**Faz 4 — denetim açık** (SPEC §8).
+
+Faz 3 kutuları (4/4): triyaj motoru üç alt skor + çarpım (potansiyel 3 sinyal — yorum-yanıt
+ölçülemez, kural 7), kohort<5→watch, durum atama + `triage_scores`, `/businesses`+`/stats`
+DB'den, 100 hesap skorlu (rejected 21 / watch 53 / qualified 9). SEC-7 çarpım çökme ve
+mutlak-eşik-yokluğunu karşı-kanıtla doğruladı. FE-4/FE-5 ile panel canlı gerçek skorları çiziyor.
 
 Faz 1 kutuları (4/4): `/health` + postgres/redis, `/stats`+`/businesses` sahte veri, panel
 gerçek istekle çiziyor, lint+tip+test lokal yeşil. Docker ve CI kutuları makine kısıtına göre
@@ -23,26 +28,51 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 ## Açık
 
-### Faz 3 — skorlama (SPEC §4, §8). Bitiş kriteri kutusu:
+### Faz 4 — denetim (SPEC §5, §6, §8). Bitiş kriteri kutusu:
 
-- [x] Triyaj motoru üç alt skoru (aktiflik, potansiyel, kapasite) ve ağırlıklı **çarpım**
-      birleşik skorunu hesaplıyor (SPEC §4). Mutlak etkileşim eşiği **yok** — kohort medyanı
-      kullanılıyor; kohort<5 → potansiyel hesaplanmaz, hesap `watch`.
-      — BE-11 ile kapandı (`api/core/scoring.py` saf motor). Potansiyel **3 sinyal** (yorum-yanıt
-      ölçülemez, kural 7). Kohort<5 (florist/gift/pet) → potansiyel None + watch, doğrulandı.
-- [x] Durum atama: skor<40 `rejected`, 40–69 `watch`, ≥70 `qualified`; `triage_scores`'a yazılıyor.
-      — BE-11; iki geçişli kohort medyanı, delete+insert idempotent (işletme başına tek satır).
-- [x] `/businesses` ve `/stats` **DB'den** okuyor (fake_data değil), son skoru/durumu gösteriyor
-      (FE-4-B1 kapanır). — BE-12; `fake_data` silindi, filtre/sayfalama SQL'de, son triyaj LEFT
-      JOIN. Doğrulandı: fixture demo sonrası `/businesses` total=100 (sahte 8 yok), `/stats` gerçek
-      (scanned 83, qualified 9), skorsuz 25 kayıt (17 handle'sız + 8 kohort<5) score=null.
-- [x] **100 hesap taranıp panelde skorlarıyla listeleniyor** — fixture'la, LLM yok (SPEC §8).
-      — BE-11 motor + tetikleme; fixture-mode demo/job: 100 keşif, 83 skorlu (17 handle'sız taranmaz),
-      bantlar rejected 21 / watch 53 / qualified 9 (README hedefine yakın). Panel gösterimi BE-12'de.
+- [ ] Deterministik bulgu kuralları (SPEC §5) bir hesap için bulgu listesi üretiyor; LLM bulgu
+      **icat etmiyor**, yalnız var olanı ajans diline çeviriyor/önceliklendiriyor
+- [ ] Haiku 4.5 tek çağrıda ≤30 gönderi sınıflandırıyor (içerik sütunu/ton/görsel not/CTA);
+      çıktı katı JSON, Pydantic doğrulamalı; **gönderi başına ayrı çağrı YASAK** (batch)
+- [ ] Sonnet 5 metrik + bulgu + kohort istatistiğinden rapor metni + erişim mesajı taslağı
+      üretiyor; sistem promptu **cache'leniyor**; `outreach` kaydı `draft` doğuyor
+- [ ] Her denetim `audits.llm_cost_usd`'ye **gerçek** maliyetini yazıyor (alan boş kalamaz);
+      testler LLM'i mock'luyor, **canlı Anthropic çağrısı yok** (kural 6)
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| _(frontend Faz 3 açık görevi yok — FE-5 bitti)_ | | | |
+| BE-13 | backend | **Sözleşme önce:** `openapi.yaml`'a `POST /businesses/{id}/audit` + `GET /audits/{id}` + `Finding`/`Audit` şemaları (SPEC §7) | — |
+| BE-14 | backend | Deterministik bulgu kuralları (SPEC §5, üretilebilir 5 kural) + `audits` persist, LLM yok | BE-13 |
+| BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 |
+| BE-16 | backend | Sonnet 5 sentez: rapor metni + `outreach` draft; sistem promptu cache; `llm_cost_usd` yaz | BE-15 |
+| SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 |
+| FE-6 | frontend | Audit tetikleme + rapor görünümü + `outreach` draft kopyalama | BE-13 (sözleşme), canlı: BE-16 |
+
+### Faz 4 karara bağlananlar (orkestra şefi — SPEC §5 ile veri gerçeği çatışması)
+
+SPEC §5'te 7 bulgu kuralı var; **ikisi mevcut veriyle üretilemez** — kural 7 "ölçmediğini iddia
+etme" gereği Faz 4'te **üretilmez**, şeffafça belgelenir:
+
+- **"Yorum yanıtsız" (yüksek)** — yanıtsız yorum oranı ister; yorum-düzeyi "kim yanıtladı"
+  verisi sistemde yok (BE-11 potansiyelde de aynı sebeple bu sinyali çıkardı). Faz 5+ Apify
+  yorum çekimi gelince eklenir.
+- **"Görsel tutarsızlık" (düşük)** — baskın renk kümesi analizi gerçek görüntü indirmeyi ister;
+  fixture'da görüntü yok, canlı indirme kural 6'ya aykırı. Ertelenir (Haiku "görsel kalite notu"
+  ayrı bir sinyal, bu deterministik renk kuralının yerini tutmaz).
+
+Faz 4 **üretilebilir 5 kuralla** tamamlanır: Reels yok (kritik), Bio'da dönüşüm yolu yok
+(yüksek), Kadans düzensiz (orta), CTA'sız caption (orta), Hashtag tekrarı (düşük). Görünürlük
+skoru bu 5 kuralın ağırlıklı cezası. Kaç kuralın neden dışarıda kaldığı rapora/`REVIEW.md`'ye yazılır.
+
+### LLM disiplini (Faz 4 — CLAUDE.md maliyet + kural 6)
+
+- Model id'leri: sınıflandırma **`claude-haiku-4-5`**, sentez **`claude-sonnet-5`**. Anthropic SDK.
+- Gönderi başına ayrı LLM çağrısı **yasak** — tek çağrıda batch (≤30 post). Sistem promptu +
+  benchmark tablosu **prompt caching** ile sabitlenir.
+- Promptlar `api/llm/prompts/` altında **versiyonlu dosyalar**, koda gömülmez (SPEC §6).
+- Her audit `audits.llm_cost_usd`'ye gerçek maliyeti yazar (Numeric, NOT NULL — BE-2).
+- **Testte canlı Anthropic çağrısı yok** (kural 6): LLM istemcisi mock'lanır, fixture yanıtlarıyla.
+- `outreach` kaydı **`draft`** doğar; sistem hiçbir koşulda otomatik mesaj göndermez (CLAUDE.md).
 
 ### Triyaj tetikleme kararı (Faz 3 — orkestra şefi sabitledi)
 
