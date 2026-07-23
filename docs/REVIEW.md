@@ -281,3 +281,72 @@ bir yasak alan düşerse test uyarır, kontrat hayali değil gerçek ham veriyi 
   bütün ham nesneyi `raw`'a göm. `extra="forbid"` zaten reddeder ama yükü sen düşürmelisin.
 - Alan adı farklarına dikkat: BD `comments_count`→`comment_count`, Apify `type`→`media_type`,
   `videoViewCount`→`view_count`.
+
+---
+
+## SEC-6 · Faz 2 — keşif demo fixture'ı (20 işletme + handle eşleme)
+
+**Tarih:** 2026-07-23
+**Denetlenen ağaç:** `a291c9e` + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict), pytest — 60 test (8 yeni)
+
+Places fixture'ı 4→20 işletmeye genişledi, iki profil fixture'ı handle-anahtarlı yapıya
+geçti, handle eşleme sözleşmesine (docs/TASKS.md) uygun bağlantılar yerleştirildi.
+
+### Kabul kriterleri
+
+| Kriter | Durum | Kanıt |
+|---|---|---|
+| ~20 işletme, kategori çeşitliliği, geçerli JSON | **PASS** | 20 işletme, 6 kategori (2×5 + 4×<5); `test_yirmi_isletme_var`, `test_kategori_cesitliligi_kohort_icin_yeterli` |
+| Handle çıkarımı test edilebilir (açık/yok/tuzak) | **PASS** | 14 handle'lı, 6 handle'sız (3 tuzak + 1 düz + 2 alansız); `test_handle_tasiyan_ve_tasimayan_isletmeler`, `test_tuzak_linkler_handle_uretmiyor` |
+| Handle→profil eşleme README'de belgeli + tutarlı | **PASS** | `profiles` sözlüğü; `test_her_handle_bir_profille_cozulebiliyor` |
+| Fallback + cache işaretli handle'lar | **PASS** | fallback: `sahilkahveevi`+`cadde19kafe` (BD boş → Apify); cache: `atakumdisklinigi` README'de işaretli |
+| `pytest` yeşil (genişletilmiş fixture'la) + ağ kapalı | **PASS** | 60 passed; ağ muhafızı altında geçti |
+| `ruff` + `mypy` temiz | **PASS** | `All checks passed!` / `no issues in 35 source files` |
+
+### Fixture ↔ gerçek adaptör tutarlılığı (elle, api/'ye yazmadan)
+
+Fixture'ı teslim etmeden önce backend'in saf normalize fonksiyonlarını **import edip**
+çağırarak (yalnız okuma/çalıştırma; `api/`'ye yazma yok) tutarlılığı doğruladım:
+- `normalize_places(places_response)` → 20 `NormalizedBusiness`; website `None`=2, phone `None`=2.
+- `normalize_business_discovery` her BD profiline → 12 dolu, 2 `ProfileUnavailableError`
+  (fallback tetikleyici). Sözleşmeyle birebir.
+- `normalize_apify` her Apify profiline → yasak alanlar (`impressions`/`reach`/`saves`/
+  `profileVisits`/`followerDemographics` + gönderi `impressions`/`reach`/`saved`) normalize
+  çıktıda **yok**, `raw`'da **korunuyor**. (Bunun resmi entegrasyon kanıtı SEC-5'te.)
+
+### Bulgu
+
+#### SEC-6-N1 · `düşük` · **bilgi — sahibi: backend (BE-9)**
+
+**Handle yalnızca `websiteUri`'den türetilebiliyor.** Handle eşleme sözleşmesi "website veya
+sosyal bağlantılardan" der, ama Places (New) alan maskesi (`api/adapters/places.py:_FIELD_MASK`)
+ayrı bir sosyal-bağlantı alanı istemiyor — ham `place` nesnesinde URL taşıyan tek alan
+`websiteUri`. Sonuç: handle'lı işletmelerin instagram URL'si `websiteUri`'de duruyor ve
+fixture buna göre kuruldu. BE-9 çıkarımı `raw` içindeki instagram URL'sini (pratikte
+`websiteUri`) taramalı.
+
+Bu bir **kısıt, bulgu değil** — sözleşme yine sağlanıyor (açık URL var, ad tahmini yok).
+Ama BE-9 gelecekte Places'ten sosyal bağlantı da çekmek isterse alan maskesine ekleme
+gerekir; o gün fixture da genişletilir. Kayıt için.
+
+### Denetim — yeni gizlilik/sır bulgusu yok
+
+- **Sır:** Fixture'larda gerçek anahtar deseni taraması boş; tüm veri uydurma Samsun örneği,
+  `example.com`/`example` alan adları, sahte `place_id`/handle/IG `id`.
+- **Yasak veri (kural 7):** Apify fixture'ı yasak alanları **bilerek** korudu (BE-9 düşürecek,
+  SEC-5 doğrulayacak); `test_apify_fallback_profilleri_yasak_alanlari_koruyor` bunu güvenceye
+  aldı. BD fixture'ı **temiz**: `impressions|reach|saves|profilevisits|demographic` taraması
+  boş; `test_ig_business_discovery_yasak_alan_icermiyor` bekçi.
+- **Yanlış-pozitif tuzağı:** 4 tuzak link (facebook ad-eşleşme, `help.instagram.com` alt alan
+  adı, `instagramm` benzer alan adı, düz site) `test_tuzak_linkler_handle_uretmiyor` ile
+  handle üretmediği doğrulandı — sözleşmenin "ad benzerliğinden tahmin yok" maddesinin makine hali.
+- **Ağ:** Yeni testlerin hiçbiri dış çağrı yapmıyor; muhafız devrede.
+
+### Backend'e not
+
+**Fixture 20 işletmeye genişledi, handle→profil eşlemesi `tests/fixtures/README.md`'de,
+BE-9 başlayabilir.** Handle çıkarımı `raw.websiteUri`'deki `instagram.com/{handle}` URL'sinden
+(host tam olarak `(www.)instagram.com`); 4 tuzak linki handle üretmemeli. Fallback:
+`sahilkahveevi`+`cadde19kafe` BD'de `{}` → Apify. Cache (SEC-5): `atakumdisklinigi` tekrar-çekim
+handle'ı, persist idempotent kalmalı.

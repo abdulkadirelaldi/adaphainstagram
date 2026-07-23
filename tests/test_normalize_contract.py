@@ -206,9 +206,11 @@ def test_yasak_alan_adlari_fixturede_gercekten_var(load_fixture: object) -> None
     Fixture yasak alanı içermeyi bırakırsa (ör. biri 'temizleyip' sildi) bu test
     uyarır. Böylece kontrat testi hayali bir alanı değil, gerçek ham veriyi kovalar.
     """
+    # Fixture SEC-6'da handle-anahtarlı yapıya geçti: profiles[<handle>] altında.
     data = load_fixture("apify_profile")  # type: ignore[operator]
+    profile = data["profiles"]["sahilkahveevi"]
     for field in FORBIDDEN_PROFILE_FIELDS:
-        assert field in data, f"apify_profile.json profil düzeyinde {field!r} bekleniyordu"
-    first_post = data["latestPosts"][0]
+        assert field in profile, f"apify sahilkahveevi profilinde {field!r} bekleniyordu"
+    first_post = profile["latestPosts"][0]
     for field in FORBIDDEN_POST_FIELDS:
-        assert field in first_post, f"apify_profile.json gönderisinde {field!r} bekleniyordu"
+        assert field in first_post, f"apify sahilkahveevi gönderisinde {field!r} bekleniyordu"

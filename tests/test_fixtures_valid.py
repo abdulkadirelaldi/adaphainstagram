@@ -48,29 +48,40 @@ def test_places_en_az_bir_eksik_alanli_kayit_var(load_fixture: Any) -> None:
 
 
 def test_ig_business_discovery_ust_duzey_yapi(load_fixture: Any) -> None:
+    """SEC-6'da handle-anahtarlı yapı: profiles[<handle>] → ham BD yanıtı."""
     data = load_fixture("ig_business_discovery")
-    bd = data["business_discovery"]
-    for key in ("followers_count", "follows_count", "media_count", "biography"):
-        assert key in bd, f"business_discovery.{key} eksik"
-    posts = bd["media"]["data"]
-    assert posts, "En az bir gönderi bekleniyordu"
-    for post in posts:
-        # Görev şartı: gönderiler like_count ve comments_count taşımalı.
-        assert "like_count" in post
-        assert "comments_count" in post
-        assert "timestamp" in post
+    profiles = data["profiles"]
+    assert profiles, "En az bir profil bekleniyordu"
+    # Veri taşıyan (boş olmayan) her profil şema alanlarını taşımalı.
+    dolu = {h: v for h, v in profiles.items() if v}
+    assert dolu, "En az bir dolu BD profili bekleniyordu"
+    for handle, resp in dolu.items():
+        bd = resp["business_discovery"]
+        for key in ("followers_count", "follows_count", "media_count", "biography"):
+            assert key in bd, f"{handle}: business_discovery.{key} eksik"
+        posts = bd["media"]["data"]
+        assert posts, f"{handle}: en az bir gönderi bekleniyordu"
+        for post in posts:
+            # Görev şartı: gönderiler like_count ve comments_count taşımalı.
+            assert "like_count" in post
+            assert "comments_count" in post
+            assert "timestamp" in post
 
 
 def test_apify_ust_duzey_yapi(load_fixture: Any) -> None:
+    """SEC-6'da handle-anahtarlı yapı: profiles[<handle>] → ham Apify çıktısı."""
     data = load_fixture("apify_profile")
-    for key in ("username", "followersCount", "followsCount", "postsCount"):
-        assert key in data, f"apify profil alanı eksik: {key}"
-    posts = data["latestPosts"]
-    assert posts, "En az bir gönderi bekleniyordu"
-    for post in posts:
-        assert "id" in post
-        assert "likesCount" in post
-        assert "commentsCount" in post
+    profiles = data["profiles"]
+    assert profiles, "En az bir Apify profili bekleniyordu"
+    for handle, prof in profiles.items():
+        for key in ("username", "followersCount", "followsCount", "postsCount"):
+            assert key in prof, f"{handle}: apify profil alanı eksik: {key}"
+        posts = prof["latestPosts"]
+        assert posts, f"{handle}: en az bir gönderi bekleniyordu"
+        for post in posts:
+            assert "id" in post
+            assert "likesCount" in post
+            assert "commentsCount" in post
 
 
 def test_ig_business_discovery_yasak_alan_icermiyor(load_fixture: Any) -> None:

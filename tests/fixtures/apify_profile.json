@@ -1,75 +1,138 @@
 {
-  "username": "sahilkahveevi",
-  "fullName": "Sahil Kahve Evi",
-  "biography": "İlkadım sahilde üçüncü nesil kahve. Her gün 08.00-23.00.",
-  "followersCount": 3120,
-  "followsCount": 845,
-  "postsCount": 194,
-  "isBusinessAccount": true,
-  "businessCategoryName": "Coffee Shop",
-  "externalUrl": "https://linktr.ee/sahilkahveevi.example",
-  "profilePicUrl": "https://scontent.example.com/sahilkahve_pp.jpg",
-  "private": false,
-  "verified": false,
+  "_schema": "Handle-anahtarlı Apify Instagram Scraper çıktıları. Anahtar = handle, değer = o handle için ham Apify profil nesnesi. Apify yalnızca fallback yolunda (BD boş dönünce) veya BD hiç denenmeyen handle'larda kullanılır. Bu fixture'daki iki handle (sahilkahveevi, cadde19kafe) BD'de {} olduğu için Apify'a düşer. Değerler CLAUDE.md kural 7'nin yasakladığı alanları BİLEREK taşır (impressions/reach/saves/profileVisits/demografi + gönderi düzeyinde impressions/reach/saved) — normalize katmanının bunları düşürdüğü SEC-5'te kanıtlanacak. BE-9'un sahte client'ı handle'a göre buradan seçer. Yapı README.md'de.",
+  "profiles": {
+    "sahilkahveevi": {
+      "username": "sahilkahveevi",
+      "fullName": "Sahil Kahve Evi",
+      "biography": "İlkadım sahilde üçüncü nesil kahve. Her gün 08.00-23.00.",
+      "followersCount": 3120,
+      "followsCount": 845,
+      "postsCount": 194,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Coffee Shop",
+      "externalUrl": "https://linktr.ee/sahilkahveevi.example",
+      "profilePicUrl": "https://scontent.example.com/sahilkahve_pp.jpg",
+      "private": false,
+      "verified": false,
 
-  "_comment_forbidden": "Aşağıdaki alanlar CLAUDE.md kural 7'nin yasakladığı metriklerdir. Apify bunları gerçekte döndürür; fixture'a BİLEREK konuldu ki normalize katmanının onları düşürdüğü kanıtlanabilsin. Hiçbiri normalize şemaya, DB'ye, rapora veya arayüze girmez.",
-  "impressions": 15234,
-  "reach": 12980,
-  "saves": 418,
-  "profileVisits": 1203,
-  "followerDemographics": {
-    "ageRanges": { "13-17": 0.04, "18-24": 0.31, "25-34": 0.42, "35-44": 0.15, "45-64": 0.08 },
-    "gender": { "female": 0.58, "male": 0.42 }
-  },
+      "_comment_forbidden": "Aşağıdaki alanlar CLAUDE.md kural 7'nin yasakladığı metriklerdir. Apify bunları gerçekte döndürür; fixture'a BİLEREK konuldu ki normalize katmanının onları düşürdüğü kanıtlanabilsin. Hiçbiri normalize şemaya, DB'ye, rapora veya arayüze girmez.",
+      "impressions": 15234,
+      "reach": 12980,
+      "saves": 418,
+      "profileVisits": 1203,
+      "followerDemographics": {
+        "ageRanges": { "13-17": 0.04, "18-24": 0.31, "25-34": 0.42, "35-44": 0.15, "45-64": 0.08 },
+        "gender": { "female": 0.58, "male": 0.42 }
+      },
 
-  "latestPosts": [
-    {
-      "id": "2890000000111201",
-      "type": "Image",
-      "caption": "Yeni sezon filtre kahvelerimiz geldi. ☕️ #samsun #kahve",
-      "likesCount": 176,
-      "commentsCount": 9,
-      "timestamp": "2026-06-20T06:30:00.000Z",
-      "url": "https://www.instagram.com/p/Radar111201/",
-      "displayUrl": "https://scontent.example.com/111201.jpg",
-      "impressions": 3201,
-      "reach": 2890,
-      "saved": 55,
-      "latestComments": [
-        { "ownerUsername": "gezginfincan", "text": "Bugün uğrayacağım!" },
-        { "ownerUsername": "kahvekeyfi55", "text": "Fiyatlar ne kadar?" }
+      "latestPosts": [
+        {
+          "id": "2890000000111201",
+          "type": "Image",
+          "caption": "Yeni sezon filtre kahvelerimiz geldi. ☕️ #samsun #kahve",
+          "likesCount": 176,
+          "commentsCount": 9,
+          "timestamp": "2026-07-20T06:30:00.000Z",
+          "url": "https://www.instagram.com/p/Radar111201/",
+          "displayUrl": "https://scontent.example.com/111201.jpg",
+          "impressions": 3201,
+          "reach": 2890,
+          "saved": 55,
+          "latestComments": [
+            { "ownerUsername": "gezginfincan", "text": "Bugün uğrayacağım!" },
+            { "ownerUsername": "kahvekeyfi55", "text": "Fiyatlar ne kadar?" }
+          ]
+        },
+        {
+          "id": "2890000000111202",
+          "type": "Video",
+          "caption": "Baristamızdan cortado tarifi.",
+          "likesCount": 402,
+          "commentsCount": 31,
+          "videoViewCount": 8710,
+          "timestamp": "2026-07-14T15:10:00.000Z",
+          "url": "https://www.instagram.com/reel/Radar111202/",
+          "displayUrl": "https://scontent.example.com/111202.jpg",
+          "impressions": 9120,
+          "reach": 8004,
+          "saved": 143,
+          "latestComments": []
+        },
+        {
+          "id": "2890000000111203",
+          "type": "Sidecar",
+          "caption": "Sahil manzarası eşliğinde hafta sonu.",
+          "likesCount": 88,
+          "commentsCount": 2,
+          "timestamp": "2026-07-02T12:00:00.000Z",
+          "url": "https://www.instagram.com/p/Radar111203/",
+          "displayUrl": "https://scontent.example.com/111203.jpg",
+          "impressions": 1450,
+          "reach": 1310,
+          "saved": 18,
+          "latestComments": [
+            { "ownerUsername": "samsunlezzet", "text": "Harika görünüyor 👏" }
+          ]
+        }
       ]
     },
-    {
-      "id": "2890000000111202",
-      "type": "Video",
-      "caption": "Baristamızdan cortado tarifi.",
-      "likesCount": 402,
-      "commentsCount": 31,
-      "videoViewCount": 8710,
-      "timestamp": "2026-06-14T15:10:00.000Z",
-      "url": "https://www.instagram.com/reel/Radar111202/",
-      "displayUrl": "https://scontent.example.com/111202.jpg",
-      "impressions": 9120,
-      "reach": 8004,
-      "saved": 143,
-      "latestComments": []
-    },
-    {
-      "id": "2890000000111203",
-      "type": "Sidecar",
-      "caption": "Sahil manzarası eşliğinde hafta sonu.",
-      "likesCount": 88,
-      "commentsCount": 2,
-      "timestamp": "2026-06-02T12:00:00.000Z",
-      "url": "https://www.instagram.com/p/Radar111203/",
-      "displayUrl": "https://scontent.example.com/111203.jpg",
-      "impressions": 1450,
-      "reach": 1310,
-      "saved": 18,
-      "latestComments": [
-        { "ownerUsername": "samsunlezzet", "text": "Harika görünüyor 👏" }
+    "cadde19kafe": {
+      "username": "cadde19kafe",
+      "fullName": "Cadde 19 Kafe",
+      "biography": "Bahçelievler'de kahvaltı & üçüncü nesil kahve.",
+      "followersCount": 6400,
+      "followsCount": 530,
+      "postsCount": 388,
+      "isBusinessAccount": true,
+      "businessCategoryName": "Cafe",
+      "externalUrl": "https://linktr.ee/cadde19kafe.example",
+      "profilePicUrl": "https://scontent.example.com/cadde19_pp.jpg",
+      "private": false,
+      "verified": false,
+
+      "_comment_forbidden": "Yasak metrikler (kural 7) — BİLEREK var, normalize düşürecek.",
+      "impressions": 40210,
+      "reach": 33150,
+      "saves": 1204,
+      "profileVisits": 5320,
+      "followerDemographics": {
+        "ageRanges": { "18-24": 0.38, "25-34": 0.4, "35-44": 0.14, "45-64": 0.08 },
+        "gender": { "female": 0.61, "male": 0.39 }
+      },
+
+      "latestPosts": [
+        {
+          "id": "2890000000119201",
+          "type": "Video",
+          "caption": "Hafta sonu brunch menümüz.",
+          "likesCount": 720,
+          "commentsCount": 54,
+          "videoViewCount": 21400,
+          "timestamp": "2026-07-19T08:00:00.000Z",
+          "url": "https://www.instagram.com/reel/Radar119201/",
+          "displayUrl": "https://scontent.example.com/119201.jpg",
+          "impressions": 24010,
+          "reach": 19800,
+          "saved": 610,
+          "latestComments": [
+            { "ownerUsername": "brunchavcisi", "text": "Rezervasyon var mı?" }
+          ]
+        },
+        {
+          "id": "2890000000119202",
+          "type": "Image",
+          "caption": "Yeni tatlı: San Sebastian.",
+          "likesCount": 415,
+          "commentsCount": 22,
+          "timestamp": "2026-07-10T13:30:00.000Z",
+          "url": "https://www.instagram.com/p/Radar119202/",
+          "displayUrl": "https://scontent.example.com/119202.jpg",
+          "impressions": 12300,
+          "reach": 10450,
+          "saved": 288,
+          "latestComments": []
+        }
       ]
     }
-  ]
+  }
 }

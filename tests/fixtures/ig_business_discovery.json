@@ -1,47 +1,443 @@
 {
-  "business_discovery": {
-    "username": "atakumdisklinigi",
-    "name": "Atakum Diş Kliniği",
-    "followers_count": 4820,
-    "follows_count": 312,
-    "media_count": 287,
-    "biography": "Atakum'da ağız ve diş sağlığı. Randevu için DM.",
-    "website": "https://atakumdisklinigi.example.com",
-    "media": {
-      "data": [
-        {
-          "id": "17920000000111001",
-          "media_type": "IMAGE",
-          "caption": "Gülüş tasarımı öncesi ve sonrası. Randevu için bize ulaşın.",
-          "like_count": 142,
-          "comments_count": 11,
-          "timestamp": "2026-06-18T09:12:00+0000",
-          "permalink": "https://www.instagram.com/p/Radar111001/",
-          "media_url": "https://scontent.example.com/111001.jpg"
-        },
-        {
-          "id": "17920000000111002",
-          "media_type": "VIDEO",
-          "caption": "İmplant tedavisi nasıl uygulanır? #dişhekimi",
-          "like_count": 208,
-          "comments_count": 24,
-          "timestamp": "2026-06-11T14:40:00+0000",
-          "permalink": "https://www.instagram.com/reel/Radar111002/",
-          "media_url": "https://scontent.example.com/111002.mp4",
-          "thumbnail_url": "https://scontent.example.com/111002_thumb.jpg"
-        },
-        {
-          "id": "17920000000111003",
-          "media_type": "CAROUSEL_ALBUM",
-          "caption": "Klinik ekibimizle tanışın.",
-          "like_count": 97,
-          "comments_count": 4,
-          "timestamp": "2026-05-29T07:05:00+0000",
-          "permalink": "https://www.instagram.com/p/Radar111003/",
-          "media_url": "https://scontent.example.com/111003.jpg"
+  "_schema": "Handle-anahtarlı IG Business Discovery yanıtları. Anahtar = places raw'daki instagram URL'sinden çıkarılan handle. Değer = o handle için ham Graph API BD yanıtı. Boş {} = BD veri veremedi (hesap işletme hesabı değil / gizli) → profil servisi Apify'a düşer (fallback, SPEC §2). BE-9'un enjekte ettiği sahte client handle'a göre buradan seçer. Yapı README.md'de belgeli.",
+  "profiles": {
+    "elmaskuyumculuk": {
+      "business_discovery": {
+        "username": "elmaskuyumculuk",
+        "name": "Elmas Kuyumculuk",
+        "followers_count": 3200,
+        "follows_count": 180,
+        "media_count": 240,
+        "biography": "Samsun'da 40 yıllık kuyumculuk. Nişan, alyans, pırlanta.",
+        "website": "https://www.instagram.com/elmaskuyumculuk/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000001001",
+              "media_type": "IMAGE",
+              "caption": "Yeni pırlanta koleksiyonu vitrinde. Randevu için DM.",
+              "like_count": 96,
+              "comments_count": 7,
+              "timestamp": "2026-07-14T10:20:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar1001/",
+              "media_url": "https://scontent.example.com/1001.jpg"
+            },
+            {
+              "id": "17920000001002",
+              "media_type": "CAROUSEL_ALBUM",
+              "caption": "Alyans modellerimiz.",
+              "like_count": 74,
+              "comments_count": 3,
+              "timestamp": "2026-06-28T13:05:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar1002/",
+              "media_url": "https://scontent.example.com/1002.jpg"
+            }
+          ]
         }
-      ]
-    }
-  },
-  "id": "17841400000000000"
+      },
+      "id": "17841400000001001"
+    },
+    "atakumdisklinigi": {
+      "business_discovery": {
+        "username": "atakumdisklinigi",
+        "name": "Atakum Diş Kliniği",
+        "followers_count": 4820,
+        "follows_count": 312,
+        "media_count": 287,
+        "biography": "Atakum'da ağız ve diş sağlığı. Randevu için DM.",
+        "website": "https://www.instagram.com/atakumdisklinigi",
+        "media": {
+          "data": [
+            {
+              "id": "17920000002001",
+              "media_type": "IMAGE",
+              "caption": "Gülüş tasarımı öncesi ve sonrası.",
+              "like_count": 142,
+              "comments_count": 11,
+              "timestamp": "2026-07-18T09:12:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar2001/",
+              "media_url": "https://scontent.example.com/2001.jpg"
+            },
+            {
+              "id": "17920000002002",
+              "media_type": "VIDEO",
+              "caption": "İmplant tedavisi nasıl uygulanır? #dişhekimi",
+              "like_count": 208,
+              "comments_count": 24,
+              "timestamp": "2026-07-05T14:40:00+0000",
+              "permalink": "https://www.instagram.com/reel/Radar2002/",
+              "media_url": "https://scontent.example.com/2002.mp4",
+              "thumbnail_url": "https://scontent.example.com/2002_thumb.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000002001"
+    },
+    "karadenizoto": {
+      "business_discovery": {
+        "username": "karadenizoto",
+        "name": "Karadeniz Oto Galeri",
+        "followers_count": 1180,
+        "follows_count": 640,
+        "media_count": 96,
+        "biography": "İkinci el araç alım satım. Takas olur.",
+        "website": "https://www.instagram.com/karadenizoto/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000004001",
+              "media_type": "IMAGE",
+              "caption": "2019 model, 78.000 km, hatasız.",
+              "like_count": 34,
+              "comments_count": 5,
+              "timestamp": "2026-05-02T08:30:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar4001/",
+              "media_url": "https://scontent.example.com/4001.jpg"
+            },
+            {
+              "id": "17920000004002",
+              "media_type": "IMAGE",
+              "caption": "Galeri içi güncel stok.",
+              "like_count": 21,
+              "comments_count": 1,
+              "timestamp": "2026-04-11T16:10:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar4002/",
+              "media_url": "https://scontent.example.com/4002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000004001"
+    },
+    "samsunemlakofisi": {
+      "business_discovery": {
+        "username": "samsunemlakofisi",
+        "name": "Samsun Emlak Ofisi",
+        "followers_count": 2040,
+        "follows_count": 410,
+        "media_count": 155,
+        "biography": "Atakum ve çevresinde satılık/kiralık. 0362 502 33 21.",
+        "website": "https://www.instagram.com/samsunemlakofisi/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000005001",
+              "media_type": "CAROUSEL_ALBUM",
+              "caption": "Denize sıfır 3+1 satılık daire.",
+              "like_count": 58,
+              "comments_count": 9,
+              "timestamp": "2026-07-09T11:00:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar5001/",
+              "media_url": "https://scontent.example.com/5001.jpg"
+            },
+            {
+              "id": "17920000005002",
+              "media_type": "IMAGE",
+              "caption": "Kiralık ofis, merkezi konum.",
+              "like_count": 31,
+              "comments_count": 2,
+              "timestamp": "2026-06-20T15:45:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar5002/",
+              "media_url": "https://scontent.example.com/5002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000005001"
+    },
+    "bayramkuyumcu": {
+      "business_discovery": {
+        "username": "bayramkuyumcu",
+        "name": "Bayram Kuyumculuk",
+        "followers_count": 1560,
+        "follows_count": 220,
+        "media_count": 130,
+        "biography": "Saathane'de güvenilir kuyumcu.",
+        "website": "https://www.instagram.com/bayramkuyumcu/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000006001",
+              "media_type": "IMAGE",
+              "caption": "Gram altın günün fiyatıyla.",
+              "like_count": 47,
+              "comments_count": 4,
+              "timestamp": "2026-07-01T09:00:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar6001/",
+              "media_url": "https://scontent.example.com/6001.jpg"
+            },
+            {
+              "id": "17920000006002",
+              "media_type": "IMAGE",
+              "caption": "Bilezik çeşitleri.",
+              "like_count": 39,
+              "comments_count": 0,
+              "timestamp": "2026-06-05T12:30:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar6002/",
+              "media_url": "https://scontent.example.com/6002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000006001"
+    },
+    "denizkafe55": {
+      "business_discovery": {
+        "username": "denizkafe55",
+        "name": "Deniz Kafe",
+        "followers_count": 2760,
+        "follows_count": 305,
+        "media_count": 198,
+        "biography": "Atakum sahilde kahvaltı ve kahve.",
+        "website": "https://www.instagram.com/denizkafe55/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000007001",
+              "media_type": "IMAGE",
+              "caption": "Serpme kahvaltımız hafta sonu hazır.",
+              "like_count": 121,
+              "comments_count": 14,
+              "timestamp": "2026-07-19T07:40:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar7001/",
+              "media_url": "https://scontent.example.com/7001.jpg"
+            },
+            {
+              "id": "17920000007002",
+              "media_type": "VIDEO",
+              "caption": "Gün batımı manzaramız.",
+              "like_count": 187,
+              "comments_count": 9,
+              "timestamp": "2026-07-11T18:20:00+0000",
+              "permalink": "https://www.instagram.com/reel/Radar7002/",
+              "media_url": "https://scontent.example.com/7002.mp4",
+              "thumbnail_url": "https://scontent.example.com/7002_thumb.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000007001"
+    },
+    "atakumkuafor": {
+      "business_discovery": {
+        "username": "atakumkuafor",
+        "name": "Atakum Kuaför",
+        "followers_count": 940,
+        "follows_count": 512,
+        "media_count": 88,
+        "biography": "Saç, bakım, gelin başı. Randevulu çalışıyoruz.",
+        "website": "https://www.instagram.com/atakumkuafor/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000008001",
+              "media_type": "IMAGE",
+              "caption": "Balyaj uygulaması.",
+              "like_count": 52,
+              "comments_count": 6,
+              "timestamp": "2026-07-16T13:15:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar8001/",
+              "media_url": "https://scontent.example.com/8001.jpg"
+            },
+            {
+              "id": "17920000008002",
+              "media_type": "IMAGE",
+              "caption": "Gelin saçı denemesi.",
+              "like_count": 63,
+              "comments_count": 3,
+              "timestamp": "2026-06-30T10:50:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar8002/",
+              "media_url": "https://scontent.example.com/8002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000008001"
+    },
+    "sactasarimstudio": {
+      "business_discovery": {
+        "username": "sactasarimstudio",
+        "name": "Saç Tasarım Studio",
+        "followers_count": 5200,
+        "follows_count": 280,
+        "media_count": 410,
+        "biography": "Renk uzmanı ekip. İlkadım merkez.",
+        "website": "https://www.instagram.com/sactasarimstudio/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000009001",
+              "media_type": "VIDEO",
+              "caption": "Renk geçişi videosu.",
+              "like_count": 340,
+              "comments_count": 28,
+              "timestamp": "2026-07-20T15:00:00+0000",
+              "permalink": "https://www.instagram.com/reel/Radar9001/",
+              "media_url": "https://scontent.example.com/9001.mp4",
+              "thumbnail_url": "https://scontent.example.com/9001_thumb.jpg"
+            },
+            {
+              "id": "17920000009002",
+              "media_type": "CAROUSEL_ALBUM",
+              "caption": "Kesim ve şekillendirme.",
+              "like_count": 210,
+              "comments_count": 12,
+              "timestamp": "2026-07-08T11:30:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar9002/",
+              "media_url": "https://scontent.example.com/9002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000009001"
+    },
+    "mavideniz.emlak": {
+      "business_discovery": {
+        "username": "mavideniz.emlak",
+        "name": "Mavi Deniz Emlak",
+        "followers_count": 610,
+        "follows_count": 380,
+        "media_count": 52,
+        "biography": "Canik bölgesi gayrimenkul danışmanlığı.",
+        "website": "https://www.instagram.com/mavideniz.emlak/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000010001",
+              "media_type": "IMAGE",
+              "caption": "Yatırımlık arsa fırsatı.",
+              "like_count": 12,
+              "comments_count": 1,
+              "timestamp": "2026-03-14T09:20:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar10001/",
+              "media_url": "https://scontent.example.com/10001.jpg"
+            },
+            {
+              "id": "17920000010002",
+              "media_type": "IMAGE",
+              "caption": "Kiralık dükkan.",
+              "like_count": 8,
+              "comments_count": 0,
+              "timestamp": "2026-02-02T14:00:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar10002/",
+              "media_url": "https://scontent.example.com/10002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000010001"
+    },
+    "glamkuafor": {
+      "business_discovery": {
+        "username": "glamkuafor",
+        "name": "Glam Kuaför",
+        "followers_count": 1320,
+        "follows_count": 460,
+        "media_count": 175,
+        "biography": "Atakum'da güzellik ve bakım.",
+        "website": "https://www.instagram.com/glamkuafor/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000012001",
+              "media_type": "IMAGE",
+              "caption": "Keratin bakımı sonrası.",
+              "like_count": 71,
+              "comments_count": 5,
+              "timestamp": "2026-07-13T12:10:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar12001/",
+              "media_url": "https://scontent.example.com/12001.jpg"
+            },
+            {
+              "id": "17920000012002",
+              "media_type": "IMAGE",
+              "caption": "Ombre çalışması.",
+              "like_count": 64,
+              "comments_count": 2,
+              "timestamp": "2026-06-24T16:40:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar12002/",
+              "media_url": "https://scontent.example.com/12002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000012001"
+    },
+    "modakuafor.samsun": {
+      "business_discovery": {
+        "username": "modakuafor.samsun",
+        "name": "Moda Kuaför",
+        "followers_count": 780,
+        "follows_count": 340,
+        "media_count": 63,
+        "biography": "Kılıçdede'de erkek kuaförü.",
+        "website": "https://www.instagram.com/modakuafor.samsun/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000013001",
+              "media_type": "IMAGE",
+              "caption": "Saç sakal bakımı.",
+              "like_count": 29,
+              "comments_count": 3,
+              "timestamp": "2026-07-06T17:00:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar13001/",
+              "media_url": "https://scontent.example.com/13001.jpg"
+            },
+            {
+              "id": "17920000013002",
+              "media_type": "IMAGE",
+              "caption": "Randevusuz gelene de bakıyoruz.",
+              "like_count": 18,
+              "comments_count": 0,
+              "timestamp": "2026-06-15T11:20:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar13002/",
+              "media_url": "https://scontent.example.com/13002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000013001"
+    },
+    "espressolab.samsun": {
+      "business_discovery": {
+        "username": "espressolab.samsun",
+        "name": "EspressoLab Samsun",
+        "followers_count": 8900,
+        "follows_count": 120,
+        "media_count": 520,
+        "biography": "Piazza AVM içi. Üçüncü nesil kahve zinciri.",
+        "website": "https://www.instagram.com/espressolab.samsun/",
+        "media": {
+          "data": [
+            {
+              "id": "17920000014001",
+              "media_type": "VIDEO",
+              "caption": "Yeni sezon soğuk kahveler.",
+              "like_count": 512,
+              "comments_count": 33,
+              "timestamp": "2026-07-21T09:30:00+0000",
+              "permalink": "https://www.instagram.com/reel/Radar14001/",
+              "media_url": "https://scontent.example.com/14001.mp4",
+              "thumbnail_url": "https://scontent.example.com/14001_thumb.jpg"
+            },
+            {
+              "id": "17920000014002",
+              "media_type": "IMAGE",
+              "caption": "Piazza şubemiz sizi bekliyor.",
+              "like_count": 288,
+              "comments_count": 10,
+              "timestamp": "2026-07-12T14:15:00+0000",
+              "permalink": "https://www.instagram.com/p/Radar14002/",
+              "media_url": "https://scontent.example.com/14002.jpg"
+            }
+          ]
+        }
+      },
+      "id": "17841400000014001"
+    },
+    "sahilkahveevi": {},
+    "cadde19kafe": {}
+  }
 }
