@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     google_places_api_key: str | None = Field(
         default=None, description="Google Places API (New) anahtarı."
     )
+    ig_business_discovery_token: str | None = Field(
+        default=None, description="IG Graph API Business Discovery erişim jetonu."
+    )
+    apify_token: str | None = Field(default=None, description="Apify API jetonu.")
 
     db_pool_size: int = Field(default=5, ge=1)
     health_timeout_seconds: float = Field(

@@ -6,5 +6,6 @@ sayesinde normalize mantığı DB olmadan, persist mantığı HTTP olmadan test 
 """
 
 from api.persistence.businesses import upsert_businesses
+from api.persistence.profiles import persist_profile
 
-__all__ = ["upsert_businesses"]
+__all__ = ["persist_profile", "upsert_businesses"]
