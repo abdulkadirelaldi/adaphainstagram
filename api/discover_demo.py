@@ -12,13 +12,8 @@ Gerekli ortam: `DATABASE_URL`, `REDIS_URL`. Migration uygulanmış olmalı.
 """
 
 import asyncio
-import json
-import re
 import sys
-from pathlib import Path
-from typing import Any
 
-import httpx
 from sqlalchemy import func, select, text
 
 from api.adapters.apify import ApifyAdapter
@@ -28,15 +23,14 @@ from api.adapters.places import PlacesAdapter
 from api.cache import create_redis
 from api.config import get_settings
 from api.db import create_engine, create_session_factory
+from api.fixture_mode import (
+    load_fixture,
+    make_apify_client,
+    make_bd_client,
+    make_places_client,
+)
 from api.models import Business, Post, Snapshot
 from api.services import run_discovery
-
-_FIXTURES = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
-_USERNAME_RE = re.compile(r"username\(([^)]+)\)")
-
-
-def _load(name: str) -> Any:
-    return json.loads((_FIXTURES / name).read_text(encoding="utf-8"))
 
 
 def _emit(message: str) -> None:
@@ -45,7 +39,7 @@ def _emit(message: str) -> None:
 
 
 class _CallCounter:
-    """Sahte client çağrılarını sayar — cache kanıtı için."""
+    """Sahte client çağrılarını sayar — cache kanıtı için. `on_call` olarak geçilir."""
 
     def __init__(self) -> None:
         self.count = 0
@@ -53,35 +47,8 @@ class _CallCounter:
     def reset(self) -> None:
         self.count = 0
 
-
-def _places_client(raw: dict[str, Any], counter: _CallCounter) -> httpx.AsyncClient:
-    def handler(_: httpx.Request) -> httpx.Response:
-        counter.count += 1
-        return httpx.Response(200, json=raw)
-
-    return httpx.AsyncClient(transport=httpx.MockTransport(handler))
-
-
-def _bd_client(profiles: dict[str, Any], counter: _CallCounter) -> httpx.AsyncClient:
-    def handler(request: httpx.Request) -> httpx.Response:
-        counter.count += 1
-        match = _USERNAME_RE.search(request.url.params.get("fields", ""))
-        handle = match.group(1) if match else ""
-        # profiles[handle] boş {} olabilir → normalize ProfileUnavailableError → fallback.
-        return httpx.Response(200, json=profiles.get(handle, {}))
-
-    return httpx.AsyncClient(transport=httpx.MockTransport(handler))
-
-
-def _apify_client(profiles: dict[str, Any], counter: _CallCounter) -> httpx.AsyncClient:
-    def handler(request: httpx.Request) -> httpx.Response:
-        counter.count += 1
-        payload = json.loads(request.content)
-        handle = payload["usernames"][0]
-        item = profiles.get(handle)
-        return httpx.Response(200, json=[item] if item is not None else [])
-
-    return httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    def __call__(self) -> None:
+        self.count += 1
 
 
 async def main() -> None:
@@ -90,9 +57,9 @@ async def main() -> None:
     session_factory = create_session_factory(engine)
     redis = create_redis(settings)
 
-    places_raw = _load("places_response.json")
-    bd_profiles = _load("ig_business_discovery.json")["profiles"]
-    apify_profiles = _load("apify_profile.json")["profiles"]
+    places_raw = load_fixture("places_response.json")
+    bd_profiles = load_fixture("ig_business_discovery.json")["profiles"]
+    apify_profiles = load_fixture("apify_profile.json")["profiles"]
 
     places_calls = _CallCounter()
     bd_calls = _CallCounter()
@@ -109,9 +76,9 @@ async def main() -> None:
         places_calls.reset()
         bd_calls.reset()
         apify_calls.reset()
-        places_c = _places_client(places_raw, places_calls)
-        bd_c = _bd_client(bd_profiles, bd_calls)
-        apify_c = _apify_client(apify_profiles, apify_calls)
+        places_c = make_places_client(places_raw, places_calls)
+        bd_c = make_bd_client(bd_profiles, bd_calls)
+        apify_c = make_apify_client(apify_profiles, apify_calls)
         try:
             summary = await run_discovery(
                 DiscoveryQuery(query="samsun işletmeleri"),

@@ -46,6 +46,13 @@ class Settings(BaseSettings):
         default=7 * 24 * 60 * 60, ge=1, description="Snapshot tazelik cache'i TTL (saniye)."
     )
 
+    # Açıkken worker keşif job'u canlı API yerine tests/fixtures/ ile çalışır (kural 6).
+    # ÜRETİMDE KAPALI olmalı — açık kalırsa sahte veri sunar. Yerel/test/CI'da açılır.
+    radar_fixture_mode: bool = Field(
+        default=False,
+        description="Keşif job'unu fixture'la yürüt (canlı çağrı yok). Üretimde False.",
+    )
+
     db_pool_size: int = Field(default=5, ge=1)
     health_timeout_seconds: float = Field(
         default=3.0,
