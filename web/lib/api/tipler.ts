@@ -18,3 +18,9 @@ export type IsDurumu = components["schemas"]["JobStatus"];
 export type IsHali = components["schemas"]["JobState"];
 export type IsIlerleme = components["schemas"]["JobProgress"];
 export type IsSonuc = components["schemas"]["JobResult"];
+
+export type Denetim = components["schemas"]["Audit"];
+export type Bulgu = components["schemas"]["Finding"];
+export type Onem = components["schemas"]["Severity"];
+export type ErisimTaslagi = components["schemas"]["OutreachDraft"];
+export type ErisimDurumu = components["schemas"]["OutreachStatus"];

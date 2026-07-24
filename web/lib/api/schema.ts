@@ -106,6 +106,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/businesses/{id}/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Derin denetimi kuyruğa al
+         * @description Nitelikli bir işletme için derin denetimi kuyruğa alır (SPEC §1). Senkron
+         *     değil (SPEC §7): uç anında bir `job_id` döner, ilerleme `GET /jobs/{id}` ile
+         *     yoklanır — `/discovery/run` ile aynı iş deseni.
+         *
+         *     Yalnızca son triyaj durumu `qualified` olan hesap derin denetime girer
+         *     (SPEC §1). Nitelikli olmayan hesap `409` döner; hiç taranmamış/skorsuz hesap
+         *     da nitelikli sayılmaz.
+         */
+        post: operations["runAudit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/audits/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Denetim sonucu
+         * @description Bir denetimin bulgularını, görünürlük skorunu ve (üretildiyse) PDF yolunu ile
+         *     erişim mesajı taslağını döndürür (SPEC §7).
+         */
+        get: operations["getAudit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -243,13 +290,20 @@ export interface components {
         };
         /**
          * JobResult
-         * @description İş tamamlandığında yazılanların özeti.
+         * @description İş tamamlandığında yazılanların özeti. Keşif işi `businesses`/`snapshots`
+         *     doldurur; denetim işi `audit_id` doldurur (diğerleri 0). Arayüz denetim işi
+         *     `done` olunca `audit_id` ile `GET /audits/{id}`'ye gider.
          */
         JobResult: {
-            /** @description Yazılan/güncellenen işletme kaydı sayısı. */
+            /** @description Yazılan/güncellenen işletme kaydı sayısı (keşif işi). */
             businesses: number;
-            /** @description Alınan snapshot sayısı. */
+            /** @description Alınan snapshot sayısı (keşif işi). */
             snapshots: number;
+            /**
+             * Format: int64
+             * @description Üretilen denetimin kimliği (denetim işi). Keşif işinde null.
+             */
+            audit_id: number | null;
         };
         /**
          * JobStatus
@@ -265,6 +319,94 @@ export interface components {
             result: components["schemas"]["JobResult"] | null;
             /** @description Hata mesajı. Yalnızca `status` `error` olduğunda dolar, aksi halde null. */
             error: string | null;
+        };
+        /**
+         * Severity
+         * @description Bulgu önemi = ceza ağırlığı (SPEC §5). Görünürlük skoru bu bulguların ağırlıklı
+         *     cezasının 100'den düşülmesiyle bulunur. Değerler SPEC §5 ile birebir.
+         * @enum {string}
+         */
+        Severity: "kritik" | "yüksek" | "orta" | "düşük";
+        /**
+         * Finding
+         * @description Deterministik bir kuraldan doğan tek denetim bulgusu (SPEC §5). LLM bulgu
+         *     **icat etmez**: `detail` deterministik tetikten gelir (kural + eşik), `message`
+         *     ise LLM'in bu bulguyu ajans diline çevirdiği metindir. İki alan ayrı tutulur ki
+         *     neyin ölçülüp neyin yazıya döküldüğü karışmasın.
+         */
+        Finding: {
+            /** @description Kural makine kimliği, ör. `reels_yok`, `bio_donusum_yok`. */
+            rule: string;
+            /** @description Kuralın insan okunur adı, ör. "Reels yok". */
+            title: string;
+            severity: components["schemas"]["Severity"];
+            /** @description Deterministik tetik açıklaması (ölçülen değer + eşik). LLM'siz üretilir. */
+            detail: string;
+            /**
+             * @description LLM'in (Sonnet) ürettiği ajans-dili metni. Sentez öncesi veya atlandıysa null;
+             *     deterministik `detail` daima doludur.
+             */
+            message: string | null;
+        };
+        /**
+         * OutreachStatus
+         * @description Erişim kaydının durumu (SPEC §3). Kayıt daima `draft` doğar; sistem hiçbir
+         *     koşulda otomatik mesaj göndermez, ileri durumlara yalnız insan kararıyla geçilir.
+         * @enum {string}
+         */
+        OutreachStatus: "draft" | "sent" | "opened" | "replied" | "meeting" | "won" | "lost";
+        /**
+         * OutreachDraft
+         * @description Denetime bağlı erişim mesajı taslağının özeti (SPEC §3 `outreach`). Denetim
+         *     yanıtında taşınır ki panel taslağı gösterip kopyalayabilsin; durum güncelleme
+         *     ayrı `PATCH /outreach/{id}` ucundadır (sonraki faz).
+         */
+        OutreachDraft: {
+            /** Format: int64 */
+            id: number;
+            /** @description İletişim kanalı, ör. `instagram_dm`, `email`. */
+            channel: string;
+            /** @description Üretilen mesaj taslağının metni. */
+            draft: string;
+            status: components["schemas"]["OutreachStatus"];
+        };
+        /**
+         * Audit
+         * @description Bir derin denetimin sonucu (SPEC §3 `audits` + §7). `findings` deterministik
+         *     kurallardan doğar; `report_text` LLM sentezidir; `pdf_path` PDF üretildiğinde
+         *     (Faz 5) dolar.
+         */
+        Audit: {
+            /** Format: int64 */
+            id: number;
+            /**
+             * Format: int64
+             * @description Denetlenen işletme.
+             */
+            business_id: number;
+            /**
+             * Format: double
+             * @description Bulguların ağırlıklı cezasının 100'den düşülmesiyle bulunan skor (SPEC §5).
+             */
+            visibility_score: number;
+            /** @description Deterministik bulgular (SPEC §5). Boş olabilir (hiç kural tetiklenmediyse). */
+            findings: components["schemas"]["Finding"][];
+            /** @description LLM'in (Sonnet) ürettiği rapor metni. Sentez tamamlanana kadar null. */
+            report_text: string | null;
+            /** @description Üretilen PDF raporunun yolu/bağlantısı. PDF Faz 5 — o zamana kadar null. */
+            pdf_path: string | null;
+            /**
+             * Format: double
+             * @description Bu denetimin gerçek LLM maliyeti (USD). Maliyet disiplini gereği boş kalamaz.
+             */
+            llm_cost_usd: number;
+            /**
+             * Format: date-time
+             * @description Denetimin üretildiği an (UTC).
+             */
+            generated_at: string;
+            /** @description Erişim mesajı taslağı. Sentez öncesi veya henüz üretilmediyse null. */
+            outreach: components["schemas"]["OutreachDraft"] | null;
         };
         /**
          * ErrorMessage
@@ -443,6 +585,79 @@ export interface operations {
                 };
             };
             /** @description Böyle bir iş yok (bilinmeyen veya süresi dolmuş `job_id`) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+        };
+    };
+    runAudit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Denetlenecek işletmenin kimliği. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Denetim işi kuyruğa alındı */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobAccepted"];
+                };
+            };
+            /** @description Böyle bir işletme yok */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+            /** @description İşletme derin denetime uygun değil (durumu `qualified` değil) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+        };
+    };
+    getAudit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Denetim kimliği. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Denetim bulguları ve skoru */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Audit"];
+                };
+            };
+            /** @description Böyle bir denetim yok */
             404: {
                 headers: {
                     [name: string]: unknown;

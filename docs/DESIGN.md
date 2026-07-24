@@ -226,6 +226,43 @@ ve filtre varsa “Filtreleri temizle”.
 İki skorun ters yönü metinle uyarılır: filtre etiketi “En düşük **triyaj** skoru” — hangi skor
 olduğu ve yönü (yüksek = iyi aday) baştan bellidir.
 
+### Denetim paneli (drawer)
+
+Bir satır seçilince sağdan bir **denetim paneli** açılır: gölge/karartma yok (§6 disiplini),
+sol kenarında saç teli çizgi, kağıt zemin, üstte Kapat (Esc de kapatır). Tablo arkada görünür
+kalır — panel onu karartmaz, yalnızca üstüne biner. Ayrı sayfa/route değil; denetim akışı
+seçili işletmenin yanında, bağlamı kaybetmeden yaşar.
+
+**Denetim yalnız nitelikli hesaba üretilir** (SPEC §1). Nitelikli olmayan satırda panel yine
+açılır ama "Derin denetim" düğmesi **yoktur**; yerine sebep durur ("henüz nitelikli değil;
+triyaj skoru 70'e ulaştığında"). Düğmeyi gizleyip sebebi yazmak, pasif bir düğme bırakıp
+kullanıcıyı tıklatıp reddetmekten dürüsttür.
+
+**Görünürlük skoru ≠ triyaj skoru.** Panelde büyük mono bir "Görünürlük skoru N/100" durur ve
+hemen altında **yönü metinle** söylenir: "düşük skor hesabın kötü yönetildiğini gösterir — fırsat
+bu; tablodaki triyaj skorunun tersi yönde okunur." İki skor asla aynı isimle anılmaz (§5) ve
+görünürlük skoruna **kohort rayı verilmez** — o form triyaj skoruna aittir, ters yönlü iki
+ölçeği aynı görsele koymak imza öğesinin uyardığı hatadır.
+
+### Bulgu önem hiyerarşisi
+
+Bulgular **öneme göre sıralı**, kritik üstte (SPEC §5). Önem dört seviye: kritik · yüksek ·
+orta · düşük. Renk kararı §1'de sabitlendi ve burada uygulanır: **yalnızca kritik oksit alır**
+(tek kritik sinyal); kalan üç seviye sıralama + önem etiketiyle ayrışır, kromatik kodlama yok.
+Dört önemi dört renge dağıtmak "renkli olan tek şey skordur"u bozardı.
+
+Her bulgu **iki katman** taşır ve bunlar ayrı gösterilir (sözleşme `Finding`): `detail`
+deterministik tetiktir (ölçülen değer + eşik, ör. "Reels oranı %0, eşik <%10") ve **daima
+doludur**; `message` LLM'in ajans-dili çevirisidir ve **null olabilir** (sentez öncesi). LLM
+bulgu icat etmez — ölçülen ile yazıya dökülen karışmasın diye iki alan hiç birleştirilmez.
+
+### Erişim taslağı — kopyalanır, gönderilmez
+
+Erişim mesajı taslağının tek eylemi **kopyalamaktır**. "Gönder" düğmesi **bilinçle yoktur**:
+CLAUDE.md hukuki sınırı, sistem hiçbir koşulda otomatik mesaj göndermez, kayıt `draft` doğar,
+gönderme kararı insandadır. "Taslak" etiketi her bakışta bunu hatırlatır. Kopyala düğmesi
+"Kopyala → Kopyalandı" ile aynı fiili korur.
+
 ### Gazete tuzağı
 
 Verilen yön (saç teli ayraç, sıfır yarıçap, gölgesiz) kaçınılacaklar listesindeki "hairline
@@ -291,6 +328,21 @@ karşılığı budur.
 **Hata rengi yok.** Keşif/yoklama hataları mürekkeple yazılır, oksitle değil — oksit yalnızca
 kritik denetim bulgusuna ayrılmıştır (§1). Operasyon hatası bir bulgu değildir; renkli olan tek
 şey skordur.
+
+### Denetim işi ve yarım-üretilmiş rapor
+
+Denetim de aynı job desenini yoklar (`POST /businesses/{id}/audit` → `queued/running/done/error`,
+poll `done`'da durur); done'da `result.audit_id` ile `GET /audits/{id}` çekilir. Denetim
+**iki fazda** üretilir: önce deterministik bulgular + görünürlük skoru (LLM'siz), sonra LLM
+sentezi (rapor metni + erişim taslağı). Panel yarım-üretilmiş denetimi **hata gibi göstermez**:
+`report_text`/`outreach`/bulgu `message`'ı null geldiğinde "yapay zekâ sentezi tamamlanınca
+burada görünür; henüz üretilmedi" der. Deterministik kısım (skor + bulgu `detail`'leri) zaten
+tam ve gösterilir. Null bir alan eksik değil, henüz-gelmemiş bir aşamadır — ton bunu yansıtır.
+
+**Olmayan bulgu = hata değil.** Faz 4'te yalnızca üretilebilir 5 kural çalışır; iki kural
+(yorum yanıtsız, görsel tutarsızlık) veri gerçeği gereği üretilmez (SPEC §5 ↔ kural 7). Panel
+tetiklenmeyen bir kuralı "eksik" diye işaretlemez; boş bulgu listesi bile "ölçülen bir eksik
+bulunmadı" diye olumlu okunur.
 
 ---
 

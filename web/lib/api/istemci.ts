@@ -1,4 +1,5 @@
 import type {
+  Denetim,
   IsDurumu,
   IsKabul,
   IsletmeListesi,
@@ -91,4 +92,23 @@ export function runDiscovery(
 /** Kuyruk işinin güncel durumu. Bilinmeyen/süresi dolmuş id → 404 (ApiHatasi 404). */
 export function getJob(id: string, imza?: AbortSignal): Promise<IsDurumu> {
   return istek<IsDurumu>(`/jobs/${encodeURIComponent(id)}`, { imza });
+}
+
+/**
+ * Nitelikli bir işletme için derin denetimi kuyruğa alır. Anında `job_id` döner.
+ * Nitelikli değil → 409, işletme yok → 404 (ikisi de ApiHatasi ilgili durumla).
+ */
+export function runAudit(
+  businessId: number,
+  imza?: AbortSignal,
+): Promise<IsKabul> {
+  return istek<IsKabul>(`/businesses/${businessId}/audit`, {
+    metod: "POST",
+    imza,
+  });
+}
+
+/** Denetim sonucu: görünürlük skoru + bulgular + (varsa) rapor metni + taslak. */
+export function getAudit(id: number, imza?: AbortSignal): Promise<Denetim> {
+  return istek<Denetim>(`/audits/${id}`, { imza });
 }

@@ -31,10 +31,13 @@ const SUTUNLAR = [
 export function AdayTablosu({
   durum,
   kohortKaynagi = [],
+  onSec,
 }: {
   durum: Durum;
   /** Kohort rayının filtresiz dağılım kaynağı (bkz. useKohortKaynagi). */
   kohortKaynagi?: readonly Isletme[];
+  /** Bir satır seçilince (denetim paneli açmak için). */
+  onSec?: (isletme: Isletme) => void;
 }) {
   return (
     <table className="w-full border-collapse text-govde">
@@ -87,7 +90,12 @@ export function AdayTablosu({
             </tr>
           ) : (
             durum.kayitlar.map((k) => (
-              <Satir key={k.id} isletme={k} kohortKaynagi={kohortKaynagi} />
+              <Satir
+                key={k.id}
+                isletme={k}
+                kohortKaynagi={kohortKaynagi}
+                onSec={onSec}
+              />
             ))
           ))}
       </tbody>
@@ -98,13 +106,34 @@ export function AdayTablosu({
 function Satir({
   isletme,
   kohortKaynagi,
+  onSec,
 }: {
   isletme: Isletme;
   kohortKaynagi: readonly Isletme[];
+  onSec?: (isletme: Isletme) => void;
 }) {
   const kohort = kategoriKohortu(isletme.category, kohortKaynagi);
+  const secilebilir = onSec !== undefined;
   return (
-    <tr className="border-b border-cizgi align-middle" style={{ height: "var(--olcu-satir)" }}>
+    <tr
+      className={
+        "border-b border-cizgi align-middle " +
+        (secilebilir ? "cursor-pointer" : "")
+      }
+      style={{ height: "var(--olcu-satir)" }}
+      tabIndex={secilebilir ? 0 : undefined}
+      onClick={secilebilir ? () => onSec(isletme) : undefined}
+      onKeyDown={
+        secilebilir
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSec(isletme);
+              }
+            }
+          : undefined
+      }
+    >
       <td className="px-6">
         <div className="flex flex-col">
           <span className="truncate">{isletme.name}</span>

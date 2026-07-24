@@ -47,7 +47,6 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 | BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 ✅ |
 | BE-16 | backend | Sonnet 5 sentez: rapor metni + `outreach` draft; sistem promptu cache; `llm_cost_usd` yaz | BE-15 |
 | SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 ✅ |
-| FE-6 | frontend | Audit tetikleme + rapor görünümü + `outreach` draft kopyalama | BE-13 ✅ (sözleşme), canlı: BE-16 |
 
 ### Faz 4 karara bağlananlar (orkestra şefi — SPEC §5 ile veri gerçeği çatışması)
 
@@ -137,7 +136,9 @@ Aynı dosyaya iki ajan yazmasın diye kesin ayrım:
 
 _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)_
 
-_(frontend: açık/devam eden görev yok)_
+- **FE-6** · frontend · Audit tetikleme + rapor görünümü + outreach draft kopyalama. **UI + tip + poll tam; deterministik denetim canlı doğrulandı; rapor metni + taslak METNİ BE-16 bekliyor.** `gen:api` ile audit tipleri (`Audit`/`Finding`/`Severity`/`OutreachDraft`); `runAudit` (mutation) + `useAudit` (query), poll FE-4'ün `useJob`'unu yeniden kullanıyor (kopya yok). Aday satırı tıklanınca sağdan **denetim paneli** (drawer, gölgesiz, Esc/Kapat/tık-kapat). Yalnız `qualified`'da "Derin denetim" düğmesi; değilse düğme yok + sebep. Bulgular **öneme sıralı** (kritik üstte), **detail (deterministik) ve message (LLM) ayrı** gösteriliyor; kritik oksit, gerisi mürekkep (DESIGN §1). Görünürlük skoru triyaj skorunun **tersi yönde** — panel yönü metinle uyarıyor (DESIGN §5), kohort rayı verilmiyor. Erişim taslağı **yalnız kopyalanabilir**, "gönder" eylemi hiçbir yerde yok; report/outreach null → "henüz üretilmedi" (hata değil). `NEXT_PUBLIC_API_URL`; `gen:api`+build+`tsc`+lint sıfır; hex boş; yasak-metrik grep kelime-sınırlı temiz (yalnız `outreach` yanlış-pozitifi); gönder/send grep temiz (yalnız yorum). **Küçük düzeltme (web/):** görünürlük skoru da `Math.floor` (FE-5 eşik-hizası kararıyla tutarlı).
+  - **Gerçek backend'e karşı doğrulanan** (fixture modda uvicorn+arq worker, 8001; panel `:8001` build): satır tıkla→panel; qualified→"Derin denetim"→**gerçek `POST /businesses/362/audit`**→job `queued→running→done`→`result.audit_id`→**gerçek `GET /audits/{id}`**→görünürlük skoru **53** + **2 bulgu öneme sıralı** (Reels yok KRİTİK oksit rgb(166,64,46) → CTA'sız ORTA); poll done'da durdu; `/stats` reports arttı (3). `watch` hesap→düğme yok + "nitelikli değil"; watch'ta uç 409 (curl). report_text/outreach/message null→"henüz üretilmedi" (hata değil), Kopyala/Gönder yok.
+  - **Kalan (BE-16):** gerçek rapor metni + gerçek erişim taslağı üretilince panel onları gösterip taslağı kopyalatır (UI hazır, yalnız veri null). O canlı doğrulama BE-16 ayağa kalkınca; görev o zaman `## Biten`'e taşınır.
 
 ## Bloke
 

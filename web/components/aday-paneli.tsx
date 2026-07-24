@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AdayTablosu } from "@/components/aday-tablosu";
+import { DenetimPaneli } from "@/components/denetim-paneli";
 import { Filtreler } from "@/components/filtreler";
 import { KesifCubugu } from "@/components/kesif-cubugu";
 import { Sayfalama } from "@/components/sayfalama";
 import { UstSerit } from "@/components/ust-serit";
+import type { Isletme } from "@/lib/api/tipler";
 import { useBusinesses, useKohortKaynagi, useStats } from "@/lib/api/sorgular";
 import { kategoriler as benzersizKategoriler } from "@/lib/kohort";
 import { sorguCoz } from "@/lib/sorgu-durumu";
@@ -26,6 +28,8 @@ export function AdayPaneli() {
     () => sorguCoz(new URLSearchParams(params.toString())),
     [params],
   );
+
+  const [secili, setSecili] = useState<Isletme | null>(null);
 
   const stats = useStats();
   const liste = useBusinesses(sorgu);
@@ -51,12 +55,19 @@ export function AdayPaneli() {
       <KesifCubugu />
       <UstSerit istatistik={stats.data} />
       <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
-      <AdayTablosu durum={durum} kohortKaynagi={kohortKaynagi} />
+      <AdayTablosu
+        durum={durum}
+        kohortKaynagi={kohortKaynagi}
+        onSec={setSecili}
+      />
       <Sayfalama
         offset={sorgu.offset}
         limit={sorgu.limit}
         toplam={liste.data?.total ?? 0}
       />
+      {secili && (
+        <DenetimPaneli isletme={secili} onKapat={() => setSecili(null)} />
+      )}
     </div>
   );
 }

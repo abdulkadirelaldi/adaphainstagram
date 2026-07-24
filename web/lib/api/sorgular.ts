@@ -5,9 +5,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  getAudit,
   getBusinesses,
   getJob,
   getStats,
+  runAudit,
   runDiscovery,
   type IsletmeSorgusu,
 } from "@/lib/api/istemci";
@@ -60,6 +62,26 @@ const VERI_ANAHTARLARI = [["businesses"], ["stats"], ["kohort-kaynagi"]] as cons
 export function useRunDiscovery() {
   return useMutation({
     mutationFn: (govde: KesifIstegi) => runDiscovery(govde),
+  });
+}
+
+/**
+ * Derin denetimi başlatır (mutation). Başarıda `job_id` döner; iş `useJob` ile
+ * yoklanır, `done`'da `result.audit_id` ile denetim çekilir. Nitelikli olmayan
+ * hesapta uç 409 döner (UI düğmeyi zaten pasif tutar; bu son savunma).
+ */
+export function useRunAudit() {
+  return useMutation({
+    mutationFn: (businessId: number) => runAudit(businessId),
+  });
+}
+
+/** Denetim sonucu — `audit_id` gelince çekilir. */
+export function useAudit(auditId: number | null) {
+  return useQuery({
+    queryKey: ["audit", auditId],
+    queryFn: ({ signal }) => getAudit(auditId as number, signal),
+    enabled: auditId !== null,
   });
 }
 
