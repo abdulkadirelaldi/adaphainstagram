@@ -12,8 +12,9 @@ from arq import ArqRedis
 from fastapi import APIRouter, HTTPException, Request, status
 
 from api.models import Audit as AuditModel
-from api.persistence import get_audit
-from api.schemas import Audit, Finding, JobAccepted, Severity
+from api.models import Outreach as OutreachModel
+from api.persistence import get_audit, get_outreach_for_audit
+from api.schemas import Audit, Finding, JobAccepted, OutreachDraft, OutreachStatus, Severity
 from api.services import NotAuditableError, assert_auditable
 
 router = APIRouter(tags=["audits"])
@@ -71,18 +72,28 @@ def _to_finding(raw: dict[str, Any]) -> Finding:
     )
 
 
-def _to_audit(model: AuditModel) -> Audit:
+def _to_outreach(model: OutreachModel | None) -> OutreachDraft | None:
+    if model is None:
+        return None
+    return OutreachDraft(
+        id=model.id,
+        channel=model.channel,
+        draft=model.draft,
+        status=OutreachStatus(model.status.value),
+    )
+
+
+def _to_audit(model: AuditModel, outreach: OutreachModel | None) -> Audit:
     return Audit(
         id=model.id,
         business_id=model.business_id,
         visibility_score=float(model.visibility_score),
         findings=[_to_finding(f) for f in model.findings],
-        # report_text/outreach BE-16'da doldurulacak; audits tablosunda henüz yok.
-        report_text=None,
+        report_text=model.report_text,
         pdf_path=model.pdf_path,
         llm_cost_usd=float(model.llm_cost_usd),
         generated_at=model.generated_at,
-        outreach=None,
+        outreach=_to_outreach(outreach),
     )
 
 
@@ -99,4 +110,5 @@ async def get_audit_endpoint(id: int, request: Request) -> Audit:  # noqa: A002 
         audit = await get_audit(session, id)
         if audit is None:
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Denetim bulunamadı: {id}")
-        return _to_audit(audit)
+        outreach = await get_outreach_for_audit(session, id)
+        return _to_audit(audit, outreach)

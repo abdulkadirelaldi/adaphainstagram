@@ -35,17 +35,20 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
       — BE-14 ile kapandı. 5 kural (Reels/Bio/Kadans/CTA/Hashtag), görünürlük skoru = ağırlıklı
       ceza; `POST /businesses/{id}/audit`+`GET /audits/{id}` canlı; `llm_cost_usd=0` (LLM yok).
       `message` alanı boş — BE-16 dolduracak.
-- [ ] Haiku 4.5 tek çağrıda ≤30 gönderi sınıflandırıyor (içerik sütunu/ton/görsel not/CTA);
+- [x] Haiku 4.5 tek çağrıda ≤30 gönderi sınıflandırıyor (içerik sütunu/ton/görsel not/CTA);
       çıktı katı JSON, Pydantic doğrulamalı; **gönderi başına ayrı çağrı YASAK** (batch)
-- [ ] Sonnet 5 metrik + bulgu + kohort istatistiğinden rapor metni + erişim mesajı taslağı
+      — BE-15 ile kapandı. N=5→1 çağrı, N=65→3 grup [30,30,5]; bozuk JSON retry+reddi.
+- [x] Sonnet 5 metrik + bulgu + kohort istatistiğinden rapor metni + erişim mesajı taslağı
       üretiyor; sistem promptu **cache'leniyor**; `outreach` kaydı `draft` doğuyor
-- [ ] Her denetim `audits.llm_cost_usd`'ye **gerçek** maliyetini yazıyor (alan boş kalamaz);
+      — BE-16 ile kapandı. `report_text`+`outreach_draft`+bulgu mesajları; LLM icat edemez
+      (bilinmeyen kural düşürülür); `cache_control` sistem promptunda; outreach `status=draft`.
+- [x] Her denetim `audits.llm_cost_usd`'ye **gerçek** maliyetini yazıyor (alan boş kalamaz);
       testler LLM'i mock'luyor, **canlı Anthropic çağrısı yok** (kural 6)
+      — BE-16 ile kapandı. Haiku+Sonnet Decimal toplamı (fixture usage ile 0.0113 doğrulandı);
+      LLM istemcisi enjekte, fixture modunda sahte istemci — canlı çağrı yok.
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 ✅ |
-| BE-16 | backend | Sonnet 5 sentez: rapor metni + `outreach` draft; sistem promptu cache; `llm_cost_usd` yaz | BE-15 |
 | SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 ✅ |
 
 ### Faz 4 karara bağlananlar (orkestra şefi — SPEC §5 ile veri gerçeği çatışması)
@@ -197,6 +200,8 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 _(tek satır sonuç notuyla)_
 
+- **BE-16** · Sonnet 5 sentez + outreach draft + maliyet kaydı (Faz 4 kutu #3+#4, #1 rapor metni de tamam). `api/llm/synthesize.py`: tek Sonnet çağrısı, girdi = BE-14 bulguları + metrikler + Haiku özeti + kohort; çıktı `report_text`+`outreach_draft`+bulgu mesajları. **LLM icat edemez** (SPEC §5): mesajlar yalnız var olan `rule`'lara bağlanır, bilinmeyen kural düşürülür (bulgu listesi BE-14'ten sabit) — enjekte edilen sahte kuralın düştüğü doğrulandı. Sistem promptu `cache_control` ile (prompt caching, versiyonlu dosya). **Üç faz job'a bağlandı** (`run_audit`'e opsiyonel `llm_client`): deterministik→Haiku→Sonnet→tek `audits` kaydı; `llm_cost_usd` = Haiku+Sonnet **Decimal** toplamı (BE-14'ün 0'ı gerçek maliyetle güncellendi; LLM çağrılmadıysa 0 meşru). `outreach` kaydı **`draft`** doğar (hukuki sınır), gönderme kodu yok. `report_text` için migration (`audits.report_text`, alembic check boş diff). Fixture modunda `FixtureLLMClient` — canlı Anthropic yok (kural 6). Doğrulama (fixture worker, anahtarsız): audit→done→GET skor/rapor/`llm_cost=0.0113`/outreach draft, her bulguda LLM mesajı + deterministik detail ayrı; maliyet toplamı elle doğrulandı. ruff+mypy(68)+pytest(110) yeşil, gönderme-kodu/anahtar/yasak-metrik grep boş. **Faz 4 dört kutu hazır; SEC-9 + FE-6 canlı.**
+- **BE-15** · Haiku 4.5 batch sınıflandırma + LLM istemci + Decimal maliyet (Faz 4 kutu #2). `LLMClient` protokolü enjekte edilebilir (test sahte istemci, kural 6); `AnthropicLLMClient` `AsyncAnthropic` sarar. Tek `complete` çağrısında ≤30 gönderi (gönderi başına ayrı çağrı YASAK); N>30→ceil grup. Katı JSON Pydantic doğrulamalı, bozuk→retry sonra reddet. Sistem promptu `cache_control` + versiyonlu dosya (`api/llm/prompts/`, SPEC §6); Haiku ~4096 min-prefix notu dosyada. Maliyet cache 1.25×/0.10× dahil, Sonnet tanıtım penceresi tarihe göre, `rate_tier` izlenebilir. Çıktı 4 alan (content_pillar/tone/visual_quality/has_cta) — yasak metrik yok. Doğrulama: N=5→1 çağrı, N=65→3 grup[30,30,5], bozuk-JSON retry+reddi. Model id `claude-haiku-4-5`.
 - **BE-14** · Deterministik bulgu motoru + audit uçları (LLM yok, Faz 4 kutu #1). **5 kural** (`api/core/findings.py`, saf): Reels yok (kritik), Bio dönüşüm yolu yok (yüksek), Kadans düzensiz (orta), CTA'sız caption (orta), Hashtag tekrarı (düşük). Dışarıda kalan 2 kural (yorum yanıtsız — yorum-düzeyi veri yok; görsel tutarsızlık — görüntü indirme kural 6'ya aykırı) motorda **hiç yok**, kod yorumunda gerekçeli. **Ceza haritası** kritik=35/yüksek=22/orta=12/düşük=5 (SPEC sıralamayı verir, sayı seçildi): görünürlük = 100−ceza, 0'a kırpılı; hiç bulgu→100, 5 kural hepsi→14 (belirgin düşük). **BE-11 sinyalleri paylaşıldı** — CTA/pencere/sessizlik `api/core/signals.py`'ye çıkarıldı, scoring+findings kopyalamadan kullanıyor (SEC-7 yeşil kaldı, `PostData` re-export). `REFERENCE_NOW` enjekte (fixture modunda `FIXTURE_REFERENCE_NOW`). **Uçlar:** `POST /businesses/{id}/audit` nitelik kontrolü uçta (senkron) — qualified→202 kuyruk, watch→409, yok→404; `GET /audits/{id}`→`Audit`. audit job deterministik faz, **`llm_cost_usd=0`** (gerçek maliyet 0, NOT NULL boş değil), `message=None`; BE-15/16 aynı audit'i zenginleştirecek. `report_text`/`outreach` şimdilik None (BE-16). **Idempotent değil bilinçli**: her audit yeni satır (denetim tarihsel; en güncel `generated_at`'le okunur). JobResult'a nullable `audit_id` eklendi (denetim işi audit_id, keşif null — sözleşme + Pydantic). Doğrulama (fixture worker, anahtarsız): discovery→skorlama→qualified(id=5) audit→done→`audit_id=1`, GET skor=41/3 bulgu/llm_cost=0/message=null/Türkçe severity; watch→409, yok→404, olmayan audit→404. ruff+mypy(59)+pytest(110) yeşil, alembic check temiz (findings tip liste, migration yok), LLM-yok grep boş, yasak-metrik boş. **BE-15 (Haiku) + SEC-9 başlayabilir.**
 - **BE-13** · Denetim sözleşmesi (`docs/openapi.yaml`, yalnız sözleşme — uygulama BE-14+). İki uç: `POST /businesses/{id}/audit` → `JobAccepted` (202, `/discovery/run` ile aynı job deseni; nitelikli-değil → **409**, işletme yok → 404), `GET /audits/{id}` → `Audit` (404). Beş yeni şema: `Severity` enum **SPEC §5 ile birebir** (`kritik|yüksek|orta|düşük`), `Finding` (deterministik `detail` ile LLM'in ürettiği `message` **ayrı alanlar** — LLM bulgu icat etmez), `OutreachStatus`/`OutreachDraft` (denetim yanıtında draft özeti, kopyalanabilsin), `Audit` (`visibility_score`+`findings`+`report_text`+`pdf_path`(null, PDF Faz 5)+`llm_cost_usd`+`outreach`). Bulgu listesi **açık uçlu** — Faz 4 dışı iki kural (yorum yanıtsız, görsel tutarsızlık) enum'da zorlanmıyor, ileride eklenebilir. redocly lint 0 hata; tüm gövdeler adlandırılmış şemaya `$ref` (inline yok); yasak alan yok; `security: []` korundu. **BE-14 + FE-6 başlayabilir.**
 

@@ -26,6 +26,8 @@ from api.config import get_settings
 from api.db import create_engine, create_session_factory
 from api.fixture_mode import FIXTURE_REFERENCE_NOW, fixture_adapters
 from api.jobstate import write_progress
+from api.llm.client import AnthropicLLMClient, LLMClient
+from api.llm.fixture_client import FixtureLLMClient
 from api.services import DiscoverySummary, run_audit, run_discovery
 from api.services.discovery import ProgressCallback
 
@@ -108,8 +110,23 @@ async def discovery_task(
     }
 
 
+def _build_llm_client(fixture_mode: bool) -> LLMClient | None:
+    """Denetim sentezi için LLM istemcisi seç.
+
+    Fixture modunda sahte istemci (canlı Anthropic yok, kural 6). Değilse ve anahtar
+    varsa gerçek istemci. Anahtar yoksa None → yalnız deterministik faz (llm_cost=0,
+    meşru): LLM çağrılmadıysa 0 kalabilir.
+    """
+    if fixture_mode:
+        return FixtureLLMClient()
+    api_key = get_settings().anthropic_api_key
+    if api_key:
+        return AnthropicLLMClient(api_key)
+    return None
+
+
 async def audit_task(ctx: dict[str, Any], *, business_id: int) -> dict[str, int | None]:
-    """Derin denetim job'u (BE-14: yalnız deterministik bulgu fazı). audit_id döner.
+    """Derin denetim job'u: deterministik bulgu → Haiku sınıflandırma → Sonnet sentez.
 
     Nitelik kontrolü (`qualified` mi) uçta yapıldı; buraya yalnız uygun işletme gelir.
     Referans zaman fixture modunda `FIXTURE_REFERENCE_NOW`, üretimde `now`.
@@ -117,8 +134,9 @@ async def audit_task(ctx: dict[str, Any], *, business_id: int) -> dict[str, int 
     settings = get_settings()
     session_factory = ctx["session_factory"]
     reference_now = FIXTURE_REFERENCE_NOW if settings.radar_fixture_mode else datetime.now(UTC)
+    llm_client = _build_llm_client(settings.radar_fixture_mode)
 
-    audit_id = await run_audit(session_factory, business_id, reference_now)
+    audit_id = await run_audit(session_factory, business_id, reference_now, llm_client=llm_client)
     # Keşif sözleşmesiyle aynı JobResult şekli; denetimde businesses/snapshots 0.
     return {"businesses": 0, "snapshots": 0, "audit_id": audit_id}
 

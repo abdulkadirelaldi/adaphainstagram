@@ -172,6 +172,8 @@ class Audit(Base):
     visibility_score: Mapped[float] = mapped_column(Score)
     # Deterministik kurallardan doğan bulgu **listesi** (SPEC §5). LLM bulgu icat etmez.
     findings: Mapped[list[dict[str, Any]]] = mapped_column(JSONB)
+    # Sonnet sentezinin ürettiği rapor metni (SPEC §6). Sentez öncesi/atlandıysa NULL.
+    report_text: Mapped[str | None] = mapped_column(Text)
     pdf_path: Mapped[str | None] = mapped_column(String(1024))
     # CLAUDE.md maliyet disiplini: bu alan boş kalamaz. NOT NULL, Numeric (Float değil);
     # mikro-dolar hassasiyeti için ölçek 6.

@@ -11,11 +11,14 @@ from api.persistence.businesses import (
     set_ig_handle,
     upsert_businesses,
 )
+from api.persistence.outreach import get_outreach_for_audit, persist_outreach
 from api.persistence.profiles import persist_profile
 
 __all__ = [
     "get_audit",
+    "get_outreach_for_audit",
     "persist_audit",
+    "persist_outreach",
     "persist_profile",
     "place_id_to_id",
     "set_ig_handle",

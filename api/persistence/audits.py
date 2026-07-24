@@ -1,6 +1,7 @@
 """Denetim sonucunu `audits` tablosuna yazar / okur."""
 
 from collections.abc import Sequence
+from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,18 +25,21 @@ async def persist_audit(
     business_id: int,
     visibility_score: float,
     findings: Sequence[Finding],
-    llm_cost_usd: float = 0.0,
+    llm_cost_usd: float | Decimal = 0.0,
+    report_text: str | None = None,
 ) -> Audit:
     """Bir denetim satırı yazar ve döndürür.
 
-    `llm_cost_usd` BE-14'te **0**: LLM gerçekten çağrılmadı, gerçek maliyet 0 (alan
-    NOT NULL — boş değil). BE-15/16 aynı audit'i güncelleyip gerçek maliyeti yazacak.
-    `findings` JSONB listesi olarak saklanır; `report_text`/`outreach` bu aşamada yok.
+    LLM çağrılmadan (deterministik yol) `llm_cost_usd=0` ve `report_text=None` meşru
+    (alan NOT NULL — 0 gerçek maliyet). LLM çağrıldığında (BE-16) çağıran gerçek
+    toplam maliyeti ve rapor metnini geçer; `findings` içindeki `message` alanları
+    Sonnet'in ajans-dili çevirisiyle dolar. `llm_cost_usd` Numeric — Decimal geçilir.
     """
     audit = Audit(
         business_id=business_id,
         visibility_score=visibility_score,
         findings=[_finding_to_dict(f) for f in findings],
+        report_text=report_text,
         pdf_path=None,
         llm_cost_usd=llm_cost_usd,
     )
