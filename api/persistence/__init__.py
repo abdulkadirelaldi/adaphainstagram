@@ -5,6 +5,7 @@ tersidir: `Normalized*` Pydantic modellerini alır, ORM modellerine yazar. Ayrı
 sayesinde normalize mantığı DB olmadan, persist mantığı HTTP olmadan test edilir.
 """
 
+from api.persistence.audits import get_audit, persist_audit
 from api.persistence.businesses import (
     place_id_to_id,
     set_ig_handle,
@@ -13,6 +14,8 @@ from api.persistence.businesses import (
 from api.persistence.profiles import persist_profile
 
 __all__ = [
+    "get_audit",
+    "persist_audit",
     "persist_profile",
     "place_id_to_id",
     "set_ig_handle",

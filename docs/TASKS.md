@@ -30,8 +30,11 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 ### Faz 4 — denetim (SPEC §5, §6, §8). Bitiş kriteri kutusu:
 
-- [ ] Deterministik bulgu kuralları (SPEC §5) bir hesap için bulgu listesi üretiyor; LLM bulgu
+- [x] Deterministik bulgu kuralları (SPEC §5) bir hesap için bulgu listesi üretiyor; LLM bulgu
       **icat etmiyor**, yalnız var olanı ajans diline çeviriyor/önceliklendiriyor
+      — BE-14 ile kapandı. 5 kural (Reels/Bio/Kadans/CTA/Hashtag), görünürlük skoru = ağırlıklı
+      ceza; `POST /businesses/{id}/audit`+`GET /audits/{id}` canlı; `llm_cost_usd=0` (LLM yok).
+      `message` alanı boş — BE-16 dolduracak.
 - [ ] Haiku 4.5 tek çağrıda ≤30 gönderi sınıflandırıyor (içerik sütunu/ton/görsel not/CTA);
       çıktı katı JSON, Pydantic doğrulamalı; **gönderi başına ayrı çağrı YASAK** (batch)
 - [ ] Sonnet 5 metrik + bulgu + kohort istatistiğinden rapor metni + erişim mesajı taslağı
@@ -41,10 +44,9 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-14 | backend | Deterministik bulgu kuralları (SPEC §5, üretilebilir 5 kural) + `audits` persist, LLM yok | BE-13 ✅ |
-| BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 |
+| BE-15 | backend | Haiku 4.5 batch sınıflandırma (`api/llm/prompts/`, prompt caching, katı JSON, maliyet) | BE-14 ✅ |
 | BE-16 | backend | Sonnet 5 sentez: rapor metni + `outreach` draft; sistem promptu cache; `llm_cost_usd` yaz | BE-15 |
-| SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 |
+| SEC-9 | güvenlik | Bulgu kuralı testleri + LLM mock disiplini (canlı çağrı yok) + maliyet/gizlilik denetimi | BE-14 ✅ |
 | FE-6 | frontend | Audit tetikleme + rapor görünümü + `outreach` draft kopyalama | BE-13 ✅ (sözleşme), canlı: BE-16 |
 
 ### Faz 4 karara bağlananlar (orkestra şefi — SPEC §5 ile veri gerçeği çatışması)
@@ -194,6 +196,7 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 _(tek satır sonuç notuyla)_
 
+- **BE-14** · Deterministik bulgu motoru + audit uçları (LLM yok, Faz 4 kutu #1). **5 kural** (`api/core/findings.py`, saf): Reels yok (kritik), Bio dönüşüm yolu yok (yüksek), Kadans düzensiz (orta), CTA'sız caption (orta), Hashtag tekrarı (düşük). Dışarıda kalan 2 kural (yorum yanıtsız — yorum-düzeyi veri yok; görsel tutarsızlık — görüntü indirme kural 6'ya aykırı) motorda **hiç yok**, kod yorumunda gerekçeli. **Ceza haritası** kritik=35/yüksek=22/orta=12/düşük=5 (SPEC sıralamayı verir, sayı seçildi): görünürlük = 100−ceza, 0'a kırpılı; hiç bulgu→100, 5 kural hepsi→14 (belirgin düşük). **BE-11 sinyalleri paylaşıldı** — CTA/pencere/sessizlik `api/core/signals.py`'ye çıkarıldı, scoring+findings kopyalamadan kullanıyor (SEC-7 yeşil kaldı, `PostData` re-export). `REFERENCE_NOW` enjekte (fixture modunda `FIXTURE_REFERENCE_NOW`). **Uçlar:** `POST /businesses/{id}/audit` nitelik kontrolü uçta (senkron) — qualified→202 kuyruk, watch→409, yok→404; `GET /audits/{id}`→`Audit`. audit job deterministik faz, **`llm_cost_usd=0`** (gerçek maliyet 0, NOT NULL boş değil), `message=None`; BE-15/16 aynı audit'i zenginleştirecek. `report_text`/`outreach` şimdilik None (BE-16). **Idempotent değil bilinçli**: her audit yeni satır (denetim tarihsel; en güncel `generated_at`'le okunur). JobResult'a nullable `audit_id` eklendi (denetim işi audit_id, keşif null — sözleşme + Pydantic). Doğrulama (fixture worker, anahtarsız): discovery→skorlama→qualified(id=5) audit→done→`audit_id=1`, GET skor=41/3 bulgu/llm_cost=0/message=null/Türkçe severity; watch→409, yok→404, olmayan audit→404. ruff+mypy(59)+pytest(110) yeşil, alembic check temiz (findings tip liste, migration yok), LLM-yok grep boş, yasak-metrik boş. **BE-15 (Haiku) + SEC-9 başlayabilir.**
 - **BE-13** · Denetim sözleşmesi (`docs/openapi.yaml`, yalnız sözleşme — uygulama BE-14+). İki uç: `POST /businesses/{id}/audit` → `JobAccepted` (202, `/discovery/run` ile aynı job deseni; nitelikli-değil → **409**, işletme yok → 404), `GET /audits/{id}` → `Audit` (404). Beş yeni şema: `Severity` enum **SPEC §5 ile birebir** (`kritik|yüksek|orta|düşük`), `Finding` (deterministik `detail` ile LLM'in ürettiği `message` **ayrı alanlar** — LLM bulgu icat etmez), `OutreachStatus`/`OutreachDraft` (denetim yanıtında draft özeti, kopyalanabilsin), `Audit` (`visibility_score`+`findings`+`report_text`+`pdf_path`(null, PDF Faz 5)+`llm_cost_usd`+`outreach`). Bulgu listesi **açık uçlu** — Faz 4 dışı iki kural (yorum yanıtsız, görsel tutarsızlık) enum'da zorlanmıyor, ileride eklenebilir. redocly lint 0 hata; tüm gövdeler adlandırılmış şemaya `$ref` (inline yok); yasak alan yok; `security: []` korundu. **BE-14 + FE-6 başlayabilir.**
 
 - **FE-4 + FE-5** · Keşif tetikleme + `/jobs/{id}` yoklama UI'ı **canlı doğrulandı**; panel gerçek skorlanmış 100 hesabı gösteriyor. FE-4-B1 (uçlar DB'den — BE-12) ve FE-4-B2 (worker fixture modu — BE-10) birlikte kapandı. **Ortam:** backend fixture modda (`RADAR_FIXTURE_MODE=true`, anahtarsız, kural 6 uyumlu) uvicorn+arq worker+yerel pg/redis; 8000'de yabancı bir servis olduğu için API 8001'e alındı, panel `NEXT_PUBLIC_API_URL=:8001` ile build edildi, CORS temiz. **Uçtan uca headless kanıt:** boş DB → keşif çubuğundan "Tara" → gerçek `job_id` → `queued→running→done` ("Tarama bitti · 100 işletme, 83 snapshot") → tablo gerçek DB ile tazelendi (100 aday, ilk sayfa 50) → üst şerit gerçek `/stats` (Taranan **83**, Nitelikli **9**, Rapor 0, $0,00) → **poll `done`'da durdu** (/jobs 2→2). **İmza öğesi ilk kez tam gücüyle:** 100 skorla kohortlar doldu, her satırın skoru kategori kohortunun içindeki yeriyle (soluk çentikler + dolu çentik) okunuyor. Skor bantları üçü de doğru: `status=qualified`→nitelikli üstte azalan sıralı; `status=rejected`→elendi bandı (skorlar <40); **kohort<5** (florist/gift_shop/pet_store, 3'er kayıt)→çentiksiz ray + "—" + "İzlemede". **Küçük UI düzeltmesi (yalnız `web/`):** skor rakamı `Math.round`→`Math.floor` — round(39.6)="40" bir `rejected` satırı izlemede eşiğinde gösteriyordu; floor daima status bandıyla hizalı (39.6→"39"), gerçek eşik-sınırı verisiyle görülüp düzeltildi (DESIGN §2). `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik grep boş. **Faz 3 panel kutusu (100 hesap skorlarıyla listeleniyor) canlı kapandı.**

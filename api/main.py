@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.cache import create_redis
 from api.config import get_cors_settings, get_settings
 from api.db import create_engine, create_session_factory
-from api.routes import businesses, health, jobs, stats
+from api.routes import audits, businesses, health, jobs, stats
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -76,6 +76,7 @@ def create_app() -> FastAPI:
     app.include_router(stats.router)
     app.include_router(businesses.router)
     app.include_router(jobs.router)
+    app.include_router(audits.router)
     return app
 
 

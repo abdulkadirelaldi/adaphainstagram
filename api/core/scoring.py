@@ -26,10 +26,33 @@ taranmış hesapların medyanına göre. Kohort<5 → potansiyel hesaplanmaz, he
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime
 from statistics import median
 
+from api.core.signals import (
+    REELS_TYPES,
+    PostData,
+    has_cta,
+    longest_silence_days,
+    posts_in_window,
+)
 from api.models.enums import TriageStatus
+
+# PostData signals.py'de tanımlı; skorlama API'sini bozmamak için buradan da dışa
+# aktarılır (SEC-7 `from api.core.scoring import PostData` yapıyor).
+__all__ = [
+    "MIN_COHORT",
+    "AccountData",
+    "PostData",
+    "ScoreResult",
+    "activity_score",
+    "assign_status",
+    "capacity_score",
+    "combined_score",
+    "engagement_rate",
+    "potential_score",
+    "score_accounts",
+]
 
 # --- Ayarlanabilir sabitler (SPEC §4 niyetinin sayısal karşılığı) ---------------
 
@@ -67,41 +90,7 @@ _CAP_W_FOLLOWERS = 0.20
 _CAP_W_WEBSITE = 0.20
 _CAP_W_RATING = 0.20
 
-# CTA tespiti — deterministik anahtar kelime (Faz 3 LLM kullanamaz; nitelikli tespit
-# Faz 4 Haiku'nun işi). Küçük harfe indirilmiş caption'da aranır.
-_CTA_KEYWORDS = (
-    "dm",
-    "mesaj",
-    "ara",
-    "arayın",
-    "sipariş",
-    "siparis",
-    "link",
-    "whatsapp",
-    "wp",
-    "randevu",
-    "rezervasyon",
-    "iletişim",
-    "iletisim",
-    "bilgi için",
-    "detaylı bilgi",
-)
-
-_REELS_TYPES = frozenset({"VIDEO", "REELS", "Video"})
-
-
 # --- Girdi/çıktı dataclass'ları -------------------------------------------------
-
-
-@dataclass(frozen=True)
-class PostData:
-    """Skorlamaya giren tek gönderi (SPEC §3 `posts` alt kümesi)."""
-
-    posted_at: datetime
-    media_type: str | None = None
-    caption: str | None = None
-    like_count: int | None = None
-    comment_count: int | None = None
 
 
 @dataclass(frozen=True)
@@ -137,24 +126,6 @@ def _clamp(value: float, low: float = 0.0, high: float = 1.0) -> float:
     return max(low, min(high, value))
 
 
-def _posts_in_window(posts: Sequence[PostData], reference_now: datetime) -> list[PostData]:
-    start = reference_now - timedelta(days=ACTIVITY_WINDOW_DAYS)
-    return [p for p in posts if start <= p.posted_at <= reference_now]
-
-
-def _longest_silence_days(window_posts: Sequence[PostData], reference_now: datetime) -> float:
-    """En uzun sessizlik: ardışık gönderiler arası + son gönderiden referansa kadar.
-
-    Pencere başlangıcından ilk gönderiye kadar olan boşluk **sayılmaz** — yeni
-    başlamış bir hesabı geçmişte var olmadığı için cezalandırmayız; dormantlık son
-    gönderiden bugüne olan sessizlikle yakalanır.
-    """
-    times = sorted(p.posted_at for p in window_posts)
-    gaps = [(times[i + 1] - times[i]).total_seconds() / 86400 for i in range(len(times) - 1)]
-    gaps.append((reference_now - times[-1]).total_seconds() / 86400)
-    return max(gaps)
-
-
 # --- Alt skorlar ---------------------------------------------------------------
 
 
@@ -164,14 +135,14 @@ def activity_score(account: AccountData, reference_now: datetime) -> float:
     0 gönderi → 0 (SPEC §4; çarpımı çökertir → ölü hesap rejected). Frekans ve kadans
     ortalanır; ikisi de iyiyse (2+/hafta, <14 gün sessizlik) 100'e yaklaşır.
     """
-    window = _posts_in_window(account.posts, reference_now)
+    window = posts_in_window(account.posts, reference_now, ACTIVITY_WINDOW_DAYS)
     if not window:
         return 0.0
 
     weekly_rate = len(window) / (ACTIVITY_WINDOW_DAYS / 7)
     freq = _clamp(weekly_rate / _WEEKLY_TARGET)
 
-    silence = _longest_silence_days(window, reference_now)
+    silence = longest_silence_days(window, reference_now)
     if silence < _SILENCE_OK_DAYS:
         cadence = 1.0
     else:
@@ -192,18 +163,11 @@ def engagement_rate(account: AccountData, reference_now: datetime) -> float | No
     """
     if not account.followers or account.followers <= 0:
         return None
-    window = _posts_in_window(account.posts, reference_now)
+    window = posts_in_window(account.posts, reference_now, ACTIVITY_WINDOW_DAYS)
     if not window:
         return None
     rates = [((p.like_count or 0) + (p.comment_count or 0)) / account.followers for p in window]
     return sum(rates) / len(rates)
-
-
-def _has_cta(caption: str | None) -> bool:
-    if not caption:
-        return False
-    lowered = caption.lower()
-    return any(keyword in lowered for keyword in _CTA_KEYWORDS)
 
 
 def potential_score(
@@ -222,9 +186,9 @@ def potential_score(
 
     all_posts = list(account.posts)
     if all_posts:
-        reels = sum(1 for p in all_posts if p.media_type in _REELS_TYPES)
+        reels = sum(1 for p in all_posts if p.media_type in REELS_TYPES)
         signals.append(1.0 - reels / len(all_posts))
-        cta_posts = sum(1 for p in all_posts if _has_cta(p.caption))
+        cta_posts = sum(1 for p in all_posts if has_cta(p.caption))
         signals.append(1.0 - cta_posts / len(all_posts))
     else:
         # Gönderi yok → Reels de CTA da yok → iki sinyal de tam yüksek.

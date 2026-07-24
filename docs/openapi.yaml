@@ -462,18 +462,25 @@ components:
     JobResult:
       type: object
       title: JobResult
-      description: İş tamamlandığında yazılanların özeti.
+      description: |
+        İş tamamlandığında yazılanların özeti. Keşif işi `businesses`/`snapshots`
+        doldurur; denetim işi `audit_id` doldurur (diğerleri 0). Arayüz denetim işi
+        `done` olunca `audit_id` ile `GET /audits/{id}`'ye gider.
       additionalProperties: false
-      required: [businesses, snapshots]
+      required: [businesses, snapshots, audit_id]
       properties:
         businesses:
           type: integer
           minimum: 0
-          description: Yazılan/güncellenen işletme kaydı sayısı.
+          description: Yazılan/güncellenen işletme kaydı sayısı (keşif işi).
         snapshots:
           type: integer
           minimum: 0
-          description: Alınan snapshot sayısı.
+          description: Alınan snapshot sayısı (keşif işi).
+        audit_id:
+          type: [integer, 'null']
+          format: int64
+          description: Üretilen denetimin kimliği (denetim işi). Keşif işinde null.
 
     JobStatus:
       type: object

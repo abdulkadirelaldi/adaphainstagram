@@ -4,7 +4,19 @@ Adaptörler tek kaynağı bilir, persist tek tabloyu; orkestrasyon (ör. profil 
 Business Discovery → Apify fallback) buraya düşer.
 """
 
+from api.services.audit import (
+    NotAuditableError,
+    assert_auditable,
+    run_audit,
+)
 from api.services.discovery import DiscoverySummary, run_discovery
 from api.services.profile import fetch_profile
 
-__all__ = ["DiscoverySummary", "fetch_profile", "run_discovery"]
+__all__ = [
+    "DiscoverySummary",
+    "NotAuditableError",
+    "assert_auditable",
+    "fetch_profile",
+    "run_audit",
+    "run_discovery",
+]

@@ -30,3 +30,13 @@ class OutreachStatus(StrEnum):
     MEETING = "meeting"
     WON = "won"
     LOST = "lost"
+
+
+class Severity(StrEnum):
+    """Denetim bulgusu önemi = ceza ağırlığı (SPEC §5). Değerler `docs/openapi.yaml`
+    `Severity` enum'u ve SPEC §5 ile birebir."""
+
+    CRITICAL = "kritik"
+    HIGH = "yüksek"
+    MEDIUM = "orta"
+    LOW = "düşük"

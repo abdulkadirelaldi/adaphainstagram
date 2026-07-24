@@ -9,22 +9,27 @@ from enum import Enum, StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
-# TriageStatus tek kaynaktan gelir: değer kümesi (qualified|watch|rejected) hem
-# veritabanı modelinde hem burada aynı olmalı. `api.models.enums` yalnızca StrEnum'a
-# dayanır (SQLAlchemy çekmez), bu yüzden HTTP katmanına güvenle import edilir.
-from api.models.enums import TriageStatus
+# Enum'lar tek kaynaktan gelir: değer kümeleri hem veritabanı modelinde hem burada
+# aynı olmalı. `api.models.enums` yalnızca StrEnum'a dayanır (SQLAlchemy çekmez), bu
+# yüzden HTTP katmanına güvenle import edilir.
+from api.models.enums import OutreachStatus, Severity, TriageStatus
 
 __all__ = [
+    "Audit",
     "Business",
     "BusinessList",
     "ComponentStatus",
     "DiscoveryRequest",
+    "Finding",
     "Health",
     "JobAccepted",
     "JobProgress",
     "JobResult",
     "JobState",
     "JobStatus",
+    "OutreachDraft",
+    "OutreachStatus",
+    "Severity",
     "Stats",
     "TriageStatus",
 ]
@@ -140,8 +145,11 @@ class JobResult(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    businesses: int = Field(ge=0, description="Yazılan/güncellenen işletme sayısı.")
-    snapshots: int = Field(ge=0, description="Alınan snapshot sayısı.")
+    businesses: int = Field(ge=0, description="Yazılan/güncellenen işletme sayısı (keşif).")
+    snapshots: int = Field(ge=0, description="Alınan snapshot sayısı (keşif).")
+    audit_id: int | None = Field(
+        description="Üretilen denetim kimliği (denetim işi); keşifte null."
+    )
 
 
 class JobStatus(BaseModel):
@@ -154,3 +162,42 @@ class JobStatus(BaseModel):
     progress: JobProgress | None
     result: JobResult | None
     error: str | None
+
+
+class Finding(BaseModel):
+    """Deterministik denetim bulgusu (SPEC §5). `message` LLM'e ait (BE-16)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    rule: str = Field(description="Kural makine kimliği, ör. `reels_yok`.")
+    title: str = Field(description="Kuralın insan okunur adı.")
+    severity: Severity
+    detail: str = Field(description="Deterministik tetik açıklaması (ölçülen değer + eşik).")
+    message: str | None = Field(description="LLM'in ürettiği ajans-dili metni; sentez öncesi null.")
+
+
+class OutreachDraft(BaseModel):
+    """Denetime bağlı erişim mesajı taslağının özeti (SPEC §3 `outreach`)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: int
+    channel: str = Field(description="İletişim kanalı, ör. `instagram_dm`.")
+    draft: str = Field(description="Üretilen mesaj taslağının metni.")
+    status: OutreachStatus
+
+
+class Audit(BaseModel):
+    """`GET /audits/{id}` yanıtı — bir derin denetimin sonucu (SPEC §3 `audits` + §5)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: int
+    business_id: int
+    visibility_score: float = Field(ge=0, le=100)
+    findings: list[Finding]
+    report_text: str | None = Field(description="LLM rapor metni; sentez tamamlanana kadar null.")
+    pdf_path: str | None = Field(description="PDF raporunun yolu; PDF Faz 5, o zamana kadar null.")
+    llm_cost_usd: float = Field(ge=0, description="Denetimin gerçek LLM maliyeti (USD).")
+    generated_at: datetime
+    outreach: OutreachDraft | None = Field(description="Erişim taslağı; üretilene kadar null.")

@@ -1,0 +1,102 @@
+"""`POST /businesses/{id}/audit` ve `GET /audits/{id}` — denetim uçları (SPEC §7).
+
+POST yalnız `qualified` işletme için denetimi arq'ya atar ve **anında** `job_id` döner
+(senkron değil; `/discovery/run` ile aynı desen). GET denetim sonucunu `Audit` şemasına
+göre döndürür. Denetim `job_id`'si tamamlanınca `GET /jobs/{id}` sonucundaki `audit_id`
+ile buraya gelinir.
+"""
+
+from typing import Any, cast
+
+from arq import ArqRedis
+from fastapi import APIRouter, HTTPException, Request, status
+
+from api.models import Audit as AuditModel
+from api.persistence import get_audit
+from api.schemas import Audit, Finding, JobAccepted, Severity
+from api.services import NotAuditableError, assert_auditable
+
+router = APIRouter(tags=["audits"])
+
+
+def _require_pool(request: Request) -> ArqRedis:
+    pool = request.app.state.arq_pool
+    if pool is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Kuyruk servisi kullanılamıyor (redis).",
+        )
+    return cast(ArqRedis, pool)
+
+
+@router.post(
+    "/businesses/{id}/audit",
+    summary="Derin denetimi kuyruğa al",
+    operation_id="runAudit",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=JobAccepted,
+    responses={
+        status.HTTP_404_NOT_FOUND: {"description": "Böyle bir işletme yok"},
+        status.HTTP_409_CONFLICT: {"description": "İşletme derin denetime uygun değil"},
+    },
+)
+async def run_audit_endpoint(id: int, request: Request) -> JobAccepted:  # noqa: A002  # yol param sözleşmede `id`
+    session_factory = request.app.state.session_factory
+    # Nitelik kontrolü uçta (senkron): uygun değilse iş kuyruğa hiç girmez.
+    async with session_factory() as session:
+        try:
+            await assert_auditable(session, id)
+        except LookupError as exc:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except NotAuditableError as exc:
+            raise HTTPException(status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
+    pool = _require_pool(request)
+    job = await pool.enqueue_job("audit_task", business_id=id)
+    if job is None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Denetim işi kuyruğa alınamadı (çakışan iş kimliği).",
+        )
+    return JobAccepted(job_id=job.job_id)
+
+
+def _to_finding(raw: dict[str, Any]) -> Finding:
+    return Finding(
+        rule=raw["rule"],
+        title=raw["title"],
+        severity=Severity(raw["severity"]),
+        detail=raw["detail"],
+        message=raw.get("message"),
+    )
+
+
+def _to_audit(model: AuditModel) -> Audit:
+    return Audit(
+        id=model.id,
+        business_id=model.business_id,
+        visibility_score=float(model.visibility_score),
+        findings=[_to_finding(f) for f in model.findings],
+        # report_text/outreach BE-16'da doldurulacak; audits tablosunda henüz yok.
+        report_text=None,
+        pdf_path=model.pdf_path,
+        llm_cost_usd=float(model.llm_cost_usd),
+        generated_at=model.generated_at,
+        outreach=None,
+    )
+
+
+@router.get(
+    "/audits/{id}",
+    summary="Denetim sonucu",
+    operation_id="getAudit",
+    response_model=Audit,
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Böyle bir denetim yok"}},
+)
+async def get_audit_endpoint(id: int, request: Request) -> Audit:  # noqa: A002  # yol param sözleşmede `id`
+    session_factory = request.app.state.session_factory
+    async with session_factory() as session:
+        audit = await get_audit(session, id)
+        if audit is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Denetim bulunamadı: {id}")
+        return _to_audit(audit)

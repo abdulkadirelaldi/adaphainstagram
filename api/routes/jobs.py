@@ -96,9 +96,11 @@ async def get_job(id: str, request: Request) -> JobStatus:  # noqa: A002  # yol 
         if info is not None and info.success:
             state = JobState.DONE
             data = info.result
+            audit_id = data.get("audit_id")
             result = JobResult(
                 businesses=int(data.get("businesses", 0)),
                 snapshots=int(data.get("snapshots", 0)),
+                audit_id=int(audit_id) if audit_id is not None else None,
             )
         else:
             state = JobState.ERROR

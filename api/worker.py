@@ -26,7 +26,7 @@ from api.config import get_settings
 from api.db import create_engine, create_session_factory
 from api.fixture_mode import FIXTURE_REFERENCE_NOW, fixture_adapters
 from api.jobstate import write_progress
-from api.services import DiscoverySummary, run_discovery
+from api.services import DiscoverySummary, run_audit, run_discovery
 from api.services.discovery import ProgressCallback
 
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ async def discovery_task(
     query: str,
     region: str = "Samsun",
     limit: int | None = None,
-) -> dict[str, int]:
+) -> dict[str, int | None]:
     """Keşif job'u; job sonucu özet döner. Fixture modu ayardan gelir."""
     settings = get_settings()
     redis: Redis = ctx["redis"]
@@ -99,9 +99,28 @@ async def discovery_task(
         on_progress=on_progress,
     )
     logger.info("keşif tamamlandı: %s", summary.as_dict())
-    # Sözleşme JobResult'ı businesses+snapshots ister; zengin sayaçlar log'da.
+    # Sözleşme JobResult'ı businesses+snapshots+audit_id ister; keşif audit üretmez.
     data = summary.as_dict()
-    return {"businesses": data["discovered"], "snapshots": data["snapshots_written"]}
+    return {
+        "businesses": data["discovered"],
+        "snapshots": data["snapshots_written"],
+        "audit_id": None,
+    }
+
+
+async def audit_task(ctx: dict[str, Any], *, business_id: int) -> dict[str, int | None]:
+    """Derin denetim job'u (BE-14: yalnız deterministik bulgu fazı). audit_id döner.
+
+    Nitelik kontrolü (`qualified` mi) uçta yapıldı; buraya yalnız uygun işletme gelir.
+    Referans zaman fixture modunda `FIXTURE_REFERENCE_NOW`, üretimde `now`.
+    """
+    settings = get_settings()
+    session_factory = ctx["session_factory"]
+    reference_now = FIXTURE_REFERENCE_NOW if settings.radar_fixture_mode else datetime.now(UTC)
+
+    audit_id = await run_audit(session_factory, business_id, reference_now)
+    # Keşif sözleşmesiyle aynı JobResult şekli; denetimde businesses/snapshots 0.
+    return {"businesses": 0, "snapshots": 0, "audit_id": audit_id}
 
 
 async def startup(ctx: dict[str, Any]) -> None:
@@ -118,7 +137,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 class WorkerSettings:
     """arq bu sınıfı okur: `arq api.worker.WorkerSettings`."""
 
-    functions: ClassVar = [discovery_task]
+    functions: ClassVar = [discovery_task, audit_task]
     on_startup = startup
     on_shutdown = shutdown
     # arq `redis_settings`'i bir değer olarak okur (fonksiyon değil). Import anında
