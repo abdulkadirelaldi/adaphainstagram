@@ -39,6 +39,9 @@ class Settings(BaseSettings):
         default=None, description="IG Graph API Business Discovery erişim jetonu."
     )
     apify_token: str | None = Field(default=None, description="Apify API jetonu.")
+    anthropic_api_key: str | None = Field(
+        default=None, description="Anthropic API anahtarı (LLM katmanı, SPEC §6)."
+    )
 
     # Maliyet disiplini (CLAUDE.md): aynı hesap 7 gün içinde tekrar kazınmaz. BE-9
     # profil çekmeden önce bu TTL'li Redis anahtarına bakar. Varsayılan 7 gün.

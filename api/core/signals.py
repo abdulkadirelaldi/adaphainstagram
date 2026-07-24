@@ -38,13 +38,18 @@ _HASHTAG_RE = re.compile(r"#(\w+)", re.UNICODE)
 
 @dataclass(frozen=True)
 class PostData:
-    """Skorlamaya/bulguya giren tek gönderi (SPEC §3 `posts` alt kümesi)."""
+    """Skorlamaya/bulguya/sınıflandırmaya giren tek gönderi (SPEC §3 `posts` alt kümesi).
+
+    `ig_id` yalnızca LLM sınıflandırmasının (BE-15) gönderiyi eşlemesi için; skorlama
+    ve bulgu motoru kullanmaz (opsiyonel, varsayılan None).
+    """
 
     posted_at: datetime
     media_type: str | None = None
     caption: str | None = None
     like_count: int | None = None
     comment_count: int | None = None
+    ig_id: str | None = None
 
 
 def has_cta(caption: str | None) -> bool:
