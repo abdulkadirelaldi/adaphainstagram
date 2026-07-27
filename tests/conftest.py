@@ -140,7 +140,6 @@ async def db_session_factory() -> AsyncIterator[async_sessionmaker[AsyncSession]
     tablolar; migration ayrı doğrulanır). Her testten önce `TRUNCATE ... CASCADE`
     ile temizlenir. Bağlanılamazsa test atlanır.
     """
-    from sqlalchemy import text
     from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
     from api.models.base import Base
@@ -148,9 +147,13 @@ async def db_session_factory() -> AsyncIterator[async_sessionmaker[AsyncSession]
     url = _test_db_url()
     engine = create_async_engine(url)
     try:
+        # drop_all + create_all: şema DAİMA güncel modellerle eşleşir. `create_all`
+        # tek başına mevcut tabloya yeni kolon EKLEMEZ; model değişince (ör. BE-16
+        # report_text kolonu) bayat test DB'si patlar. Kendini onaran yol: her testte
+        # sıfırdan kur (yerel test DB'si; CI'da zaten taze konteyner).
         async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
-            await conn.execute(text("TRUNCATE businesses CASCADE"))
     except Exception as exc:
         # asyncpg auth/bağlantı hataları SQLAlchemyError sarmalına girmeyebilir
         # (InvalidAuthorizationSpecificationError vb.); erişilemezlik = testi atla.

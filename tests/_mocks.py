@@ -75,3 +75,58 @@ def apify_client(profiles: dict[str, Any], counter: CallCounter) -> httpx.AsyncC
         return httpx.Response(200, json=[item] if item is not None else [])
 
     return httpx.AsyncClient(transport=httpx.MockTransport(handler))
+
+
+# --- LLM mock'ları (SEC-9, Faz 4) — canlı Anthropic yok (kural 6) ---------------
+#
+# `FixtureLLMClient` (api/llm/fixture_client.py) geçerli yanıt üretir; buradaki
+# sarmalayıcılar çağrıları sayar/yakalar (batch + cache_control + model kanıtı) ya da
+# sabit metin döndürür (icat-düşürme ve şema-reddi karşı-kanıtları için).
+
+
+class CapturingLLMClient:
+    """Bir iç LLM istemcisini sarar; her `complete` çağrısını kaydeder.
+
+    `calls` listesi çağrı sayısını (batch kanıtı), gönderilen `model`'i ve
+    `system_blocks`'u (cache_control kanıtı) taşır. İç istemci fixture yanıtını üretir.
+    """
+
+    def __init__(self, inner: Any) -> None:
+        self._inner = inner
+        self.calls: list[dict[str, Any]] = []
+
+    async def complete(
+        self,
+        *,
+        model: str,
+        system_blocks: list[dict[str, Any]],
+        messages: list[dict[str, Any]],
+        max_tokens: int,
+    ) -> Any:
+        self.calls.append({"model": model, "system_blocks": system_blocks, "messages": messages})
+        return await self._inner.complete(
+            model=model,
+            system_blocks=system_blocks,
+            messages=messages,
+            max_tokens=max_tokens,
+        )
+
+
+class ScriptedLLMClient:
+    """Her `complete` çağrısında sabit metin + usage döndürür (call sayar).
+
+    İcat-düşürme ve şema-reddi karşı-kanıtları için: çıktı metni testte kontrol edilir.
+    """
+
+    def __init__(self, text: str, *, usage: Any = None) -> None:
+        from api.llm.client import LLMUsage
+
+        self._text = text
+        self._usage = usage or LLMUsage(input_tokens=100, output_tokens=50)
+        self.calls = 0
+
+    async def complete(self, **_kwargs: Any) -> Any:
+        from api.llm.client import LLMResponse
+
+        self.calls += 1
+        return LLMResponse(text=self._text, usage=self._usage)

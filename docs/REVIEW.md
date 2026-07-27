@@ -545,3 +545,61 @@ sabitiyle), sabit "florist/gift/pet" listesi gömmez — fixture yeniden boyutla
 Skorlama motoru altı kritere göre bağımsız doğrulandı; gizlilik/maliyet/LLM ihlali yok.
 Yorum-yanıt sinyalinin Faz 4'te (Apify yorum çekimi) eklenmesi planı doğru — o gün potansiyel
 dört sinyale çıkarken bu testler güncellenecek.
+
+---
+
+## SEC-9 · Faz 4 — denetim + LLM bağımsız denetimi
+
+**Tarih:** 2026-07-27
+**Denetlenen ağaç:** `973cc3d` (BE-16) + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict, 72 dosya), pytest — 146 test (36 yeni), yerel pg16 + redis
+
+Faz 4 backend'i (BE-14 bulgu motoru, BE-15 Haiku, BE-16 Sonnet + maliyet) backend'in elle
+doğrulamasından **bağımsız** olarak 36 yeni testle makineye bağlandı. Dört test dosyası:
+`test_findings.py` (15), `test_llm_discipline.py` (9), `test_cost.py` (6), `test_audit_integration.py` (6).
+
+### Dört blok — kabul kriterleri
+
+| Blok | Durum | Kanıt |
+|---|---|---|
+| 1. Deterministik bulgu kuralları | **PASS** | `test_findings.py`: 5 kural eşik sınırında (off-by-one: reels %10/%9.09, kadans 14/15g, cta %20/%10, hashtag %70/%80, bio üçlü); dışlanan 2 kural regresyonu; skor deterministik/hiç bulgu→100 |
+| 2. LLM mock disiplini (kural 6) | **PASS** | `test_llm_discipline.py`: 146 test ağ muhafızı altında yeşil (canlı Anthropic yok); Haiku N≤30→1 çağrı, N=65→3 grup; Sonnet icat düşürür + katı şema |
+| 3. Maliyet | **PASS** | `test_cost.py` + `test_audit_integration.py`: cache 1.25×/0.10× türetilmiş USD; Sonnet tanıtım penceresi; `llm_cost_usd`>0 & Haiku+Sonnet toplamı; NOT NULL DB kısıtı |
+| 4. Gizlilik + hukuki sınır | **PASS** | aşağıda |
+
+### İki karşı-kanıt — testler gerçekten ölçüyor
+
+- **Sonnet icat etmiyor:** çıktıya `findings`'te olmayan `UYDURMA` kuralı enjekte edildi →
+  `synthesize` düşürdü (çıktı yalnız `{reels_yok}`). `known_rules` filtresi kaldırılsaydı
+  uydurma kural sızardı → `set(finding_messages) == {reels_yok}` assert'i kırmızı olurdu.
+- **Maliyet türetilmiş:** beklenen USD magic number değil, cost.py'nin belgelediği oran
+  tablosundan bağımsız formülle türetiliyor. Uçtan uca: fixture usage (Haiku 1200/300 +
+  Sonnet-intro 1800/500) = **0.0113 USD**, `audits.llm_cost_usd` ile birebir.
+
+### Gizlilik + hukuki sınır denetimi
+
+| Kontrol | Durum | Kanıt |
+|---|---|---|
+| Yasak metrik zinciri (kural 7) | **PASS** | `api/llm/`, `findings.py`, `audit.py`, persist'te gerçek yasak alan adı **yok** (tek eşleşme "out**reach**" alt-dizisi + prompt'ların *yasaklama* metni). Persist edilen `audits.findings`/`report_text`/`outreach.draft`'ta yasak token yok — `test_persist_edilen_denetimde_yasak_metrik_yok` |
+| Otomatik mesaj yok (hukuki sınır) | **PASS** | `api/` içinde gönderme yolu (`smtp`/`sendmail`/`send_message`/`requests.post`/`twilio`/`mail.send`) taraması **boş**; `outreach` yalnız `persist_outreach` ile `draft` doğuyor; hiçbir kod yolu `OutreachStatus`'u SENT/OPENED/REPLIED'e taşımıyor. `test_outreach_draft_doguyor` |
+| Prompt/sır | **PASS** | Sistem promptları `api/llm/prompts/*.md` versiyonlu dosyalarda (`load_prompt`), koda gömülü değil; `.env.example:50` `ANTHROPIC_API_KEY=` değersiz; gerçek anahtar sızıntısı yok |
+| Prompt caching | **PASS** | Haiku + Sonnet system bloğunda `cache_control: {type: ephemeral}` — `test_haiku_cache_control_gonderiyor`, `test_sonnet_cache_control_gonderiyor_ve_dogru_model`; cost.py `cache_read`/`cache_creation` çarpanlarını işliyor |
+
+### Model id doğrulaması (CLAUDE.md)
+
+Sınıflandırma `claude-haiku-4-5`, sentez `claude-sonnet-5` — capturing mock gönderilen
+`model` alanını doğruluyor. Opus çağrısı yok (bilinçli — triyaj/denetim maliyet disiplini).
+
+### Not — self-healing test şeması
+
+BE-16 `audits.report_text` kolonunu migration ile ekledi; yerel test DB'si `create_all`
+ile bayat kalıyordu (mevcut tabloya kolon eklemez). `conftest.db_session_factory` artık
+her testte `drop_all`+`create_all` yapıyor — şema daima güncel modellerle eşleşir (CI'da
+zaten taze konteyner). Bu bir test-altyapısı iyileştirmesi, `api/` değişmedi.
+
+### Bu turda yeni bulgu yok
+
+Faz 4 backend'i dört kritere göre bağımsız doğrulandı; gizlilik (kural 7), hukuki sınır
+(otomatik gönderim yok), maliyet disiplini (gerçek USD, batch, cache) ve LLM icat-yasağı
+(SPEC §5) ihlali bulunmadı. BE-14'ün 2-kural dışlaması (yorum yanıtsız, görsel tutarsızlık)
+kural 7'ye uyum — regresyon testiyle korundu.
