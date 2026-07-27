@@ -34,6 +34,8 @@ tags:
     description: Kuyruk işleri
   - name: audits
     description: Derin denetim
+  - name: outreach
+    description: Erişim mesajı taslakları ve durum takibi
 
 paths:
   /health:
@@ -262,6 +264,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
+
+  /audits/{id}/pdf:
+    get:
+      tags: [audits]
+      summary: Denetim raporunu PDF olarak indir
+      description: |
+        Üretilmiş denetim raporunu PDF olarak stream eder (`application/pdf`, binary).
+        `GET /audits/{id}` yanıtındaki `pdf_path` bu indirmeye işaret eder. PDF henüz
+        üretilmemişse (`pdf_path` null) `409` döner; böyle bir denetim yoksa `404`.
+      operationId: getAuditPdf
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Denetim kimliği.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: PDF raporu (binary)
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Böyle bir denetim yok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '409':
+          description: Denetimin PDF'i henüz üretilmedi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /outreach/{id}:
+    patch:
+      tags: [outreach]
+      summary: Erişim taslağının durumunu güncelle
+      description: |
+        Bir erişim kaydının durumunu (`draft|sent|opened|replied|meeting|won|lost`,
+        SPEC §3) günceller — insan kararını **kaydeder**.
+
+        **Bu uç mesaj GÖNDERMEZ.** Gövdede "gönder" veya "kanal tetikle" gibi bir alan
+        yoktur ve olmamalıdır; sistem hiçbir koşulda otomatik mesaj göndermez (CLAUDE.md
+        hukuki sınır). PATCH yalnız durum kaydeder. `sent_at`/`replied_at` gibi zaman
+        alanları sunucu tarafında ilgili duruma geçişte damgalanır.
+      operationId: updateOutreach
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Erişim kaydının kimliği.
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutreachUpdate'
+      responses:
+        '200':
+          description: Güncellenmiş erişim kaydı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outreach'
+        '404':
+          description: Böyle bir erişim kaydı yok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '422':
+          description: Geçersiz durum değeri (enum dışı)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
 
 components:
   schemas:
@@ -572,6 +659,55 @@ components:
         draft:
           type: string
           description: Üretilen mesaj taslağının metni.
+        status:
+          $ref: '#/components/schemas/OutreachStatus'
+
+    Outreach:
+      type: object
+      title: Outreach
+      description: |
+        Tam erişim kaydı (SPEC §3 `outreach`). `PATCH /outreach/{id}` yanıtı bunu
+        döndürür. Bir **eylem/gönderme alanı taşımaz** — sistem otomatik mesaj
+        göndermez (CLAUDE.md hukuki sınır); yalnız insan tarafından güncellenen durum
+        ve zaman damgalarını taşır.
+      additionalProperties: false
+      required: [id, audit_id, channel, draft, status, sent_at, replied_at]
+      properties:
+        id:
+          type: integer
+          format: int64
+        audit_id:
+          type: integer
+          format: int64
+          description: Bağlı denetim.
+        channel:
+          type: string
+          description: İletişim kanalı, ör. `instagram_dm`, `email`.
+        draft:
+          type: string
+          description: Üretilen mesaj taslağının metni (BE-16 Sonnet çıktısı).
+        status:
+          $ref: '#/components/schemas/OutreachStatus'
+        sent_at:
+          type: [string, 'null']
+          format: date-time
+          description: Durum `sent`'e geçince sunucuda damgalanır; öncesinde null.
+        replied_at:
+          type: [string, 'null']
+          format: date-time
+          description: Durum `replied`'a geçince sunucuda damgalanır; öncesinde null.
+
+    OutreachUpdate:
+      type: object
+      title: OutreachUpdate
+      description: |
+        `PATCH /outreach/{id}` istek gövdesi. **Yalnızca** yeni durum. Bilinçli olarak
+        gönderme/kanal-tetikleme alanı yok: bu uç mesaj göndermez, insan kararını
+        kaydeder (CLAUDE.md hukuki sınır). `additionalProperties: false` bu garantiyi
+        sözleşme seviyesinde sabitler.
+      additionalProperties: false
+      required: [status]
+      properties:
         status:
           $ref: '#/components/schemas/OutreachStatus'
 
