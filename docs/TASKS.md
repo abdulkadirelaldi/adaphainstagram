@@ -9,8 +9,14 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 ✅** · **Faz 2 ✅ (SPEC bitiş kriteri)** · **Faz 3 — skorlama ✅ TAMAMLANDI** ·
-**Faz 4 — denetim açık** (SPEC §8).
+**Faz 1 ✅** · **Faz 2 ✅** · **Faz 3 ✅** · **Faz 4 — denetim ✅ TAMAMLANDI** ·
+**Faz 5 — çıktı açık** (SPEC §8).
+
+Faz 4 kutuları (4/4): deterministik 5 bulgu kuralı + görünürlük skoru (LLM icat etmiyor),
+Haiku 4.5 batch (tek çağrıda ≤30 gönderi), Sonnet 5 sentez (rapor metni + outreach draft,
+sistem promptu cache'li), `audits.llm_cost_usd` gerçek toplam (Haiku+Sonnet). SEC-9 36 testle
+bağımsız doğruladı: bulgu eşikleri, dışlanan 2 kural üretilmiyor, LLM-icat-etmez karşı-kanıtı,
+maliyet formülü, gizlilik zinciri + otomatik-mesaj-yok. `outreach` `draft` doğuyor.
 
 Faz 3 kutuları (4/4): triyaj motoru üç alt skor + çarpım (potansiyel 3 sinyal — yorum-yanıt
 ölçülemez, kural 7), kohort<5→watch, durum atama + `triage_scores`, `/businesses`+`/stats`
@@ -28,7 +34,33 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 ## Açık
 
-### Faz 4 — denetim (SPEC §5, §6, §8). Bitiş kriteri kutusu:
+### Faz 5 — çıktı (SPEC §8). Bitiş kriteri kutusu:
+
+- [ ] Denetim raporu **PDF olarak indiriliyor** (Playwright; rapor HTML→PDF); `audits.pdf_path`
+      doluyor, `GET /audits/{id}/pdf` PDF stream ediyor
+- [ ] Erişim mesajı **taslağı kopyalanabiliyor** (BE-16 draft'ı; panelde kopyala)
+- [ ] Outreach durum takibi: `PATCH /outreach/{id}` durumu güncelliyor
+      (`draft→sent→opened→replied→meeting→won→lost`); geçersiz değer reddediliyor
+- [ ] **Sistem hâlâ otomatik mesaj GÖNDERMİYOR** — PATCH insan kararını *kaydeder*, mesaj
+      göndermez (CLAUDE.md hukuki sınır)
+
+| id | ajan | görev | bağımlı |
+|---|---|---|---|
+| BE-17 | backend | **Sözleşme önce:** `openapi.yaml`'a `PATCH /outreach/{id}` + `GET /audits/{id}/pdf` + outreach durum enum (SPEC §7) | — |
+| BE-18 | backend | Playwright PDF üretimi (rapor HTML→PDF) + `audits.pdf_path` + `GET /audits/{id}/pdf` indirme | BE-17 |
+| BE-19 | backend | `PATCH /outreach/{id}` durum güncelleme + geçiş doğrulama (gönderme YOK) | BE-17 |
+| SEC-10 | güvenlik | PDF + outreach testleri; hukuki denetim (otomatik gönderim yok); canlı çağrı yok | BE-18, BE-19 |
+| FE-7 | frontend | PDF indir düğmesi + outreach durum takibi UI + taslak kopyala | BE-17 (sözleşme), canlı: BE-18/BE-19 |
+
+### Sıralama notu (Faz 5)
+
+BE-17 sözleşmeyi dondurur, her şeyi bloke eder. BE-18 (PDF) ve BE-19 (PATCH) bağımsız; tek
+backend oturumu seri koşar. SEC-10 ikisini bekler. FE-7 sözleşme (BE-17) donunca UI'yi kurar,
+canlı doğrulamayı BE-18/BE-19 bekler. **Playwright kısıtı:** PDF gerçekten üretilecekse
+headless Chromium gerekir — bu makinede kurulu değilse (Docker/CI gibi) `## Bloke`'ya yazılır,
+karar orkestra şefinin.
+
+### Faz 4 — denetim (SPEC §5, §6, §8) ✅ TAMAMLANDI. Bitiş kriteri kutusu:
 
 - [x] Deterministik bulgu kuralları (SPEC §5) bir hesap için bulgu listesi üretiyor; LLM bulgu
       **icat etmiyor**, yalnız var olanı ajans diline çeviriyor/önceliklendiriyor
