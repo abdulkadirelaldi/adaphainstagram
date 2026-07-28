@@ -256,12 +256,31 @@ deterministik tetiktir (ölçülen değer + eşik, ör. "Reels oranı %0, eşik 
 doludur**; `message` LLM'in ajans-dili çevirisidir ve **null olabilir** (sentez öncesi). LLM
 bulgu icat etmez — ölçülen ile yazıya dökülen karışmasın diye iki alan hiç birleştirilmez.
 
-### Erişim taslağı — kopyalanır, gönderilmez
+### Erişim kaydı — kopyalanır ve durumu izlenir, gönderilmez
 
-Erişim mesajı taslağının tek eylemi **kopyalamaktır**. "Gönder" düğmesi **bilinçle yoktur**:
-CLAUDE.md hukuki sınırı, sistem hiçbir koşulda otomatik mesaj göndermez, kayıt `draft` doğar,
-gönderme kararı insandadır. "Taslak" etiketi her bakışta bunu hatırlatır. Kopyala düğmesi
-"Kopyala → Kopyalandı" ile aynı fiili korur.
+Erişim mesajının **iki eylemi** vardır, ikisi de insan kararı: **kopyala** (metni al) ve
+**durumu güncelle** (nerede kaldığını kaydet). "Gönder / DM at / e-posta yolla" **bilinçle
+yoktur** — CLAUDE.md hukuki sınırı, sistem hiçbir koşulda otomatik mesaj göndermez, kayıt
+`draft` doğar, gönderme kararı insandadır. "Taslak" etiketi ve "Kopyala → Kopyalandı" fiili bunu
+her bakışta hatırlatır.
+
+**Durum takibi bir gönderim değildir.** `draft → sent → opened → replied → meeting → won → lost`
+(SPEC §3) bir select ile insan tarafından güncellenir → `PATCH /outreach/{id}`. "Gönderildi"yi
+işaretlemek, bir insanın mesajı **elle gönderip** kaydetmesidir; arayüz göndermez, kaydeder.
+Sözleşme bunu yapısal olarak sabitler: `OutreachUpdate` yalnız `status` taşır, gönderme alanı
+imkânsızdır. Durum **tek bakışta okunur ve renk tek taşıyıcı değildir** — her durum tam Türkçe
+adıyla yazılır (renk zaten skora ayrılmış, §1). `sent_at`/`replied_at` sunucuda damgalanır ve
+ilgili duruma geçilince mono tarih olarak görünür. Geçersiz bir geçiş uçtan `422` dönerse ("bu
+geçiş geçerli değil") select eski değerinde kalır — yarım bir durum yazılmaz.
+
+### PDF indir
+
+Rapor metninin altında **PDF indir** düğmesi. PDF ayrı bir fazda üretilir (Playwright, Faz 5);
+`Audit.pdf_path` null iken düğme **pasiftir** ve sebep açıktır ("PDF rapor üretiliyor; hazır
+olduğunda indirilebilir") — pasif bir düğmeye tıklatıp `409` ile reddetmekten dürüsttür.
+`pdf_path` dolunca düğme raporu binary çeker (`application/pdf`) ve tarayıcıya indirtir. Bu, boş
+alanı hata gibi göstermeme ilkesinin (§7) çıktı tarafındaki karşılığı: PDF'in yokluğu bir arıza
+değil, henüz-gelmemiş bir aşamadır.
 
 ### Gazete tuzağı
 

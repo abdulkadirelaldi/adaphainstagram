@@ -153,6 +153,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/audits/{id}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Denetim raporunu PDF olarak indir
+         * @description Üretilmiş denetim raporunu PDF olarak stream eder (`application/pdf`, binary).
+         *     `GET /audits/{id}` yanıtındaki `pdf_path` bu indirmeye işaret eder. PDF henüz
+         *     üretilmemişse (`pdf_path` null) `409` döner; böyle bir denetim yoksa `404`.
+         */
+        get: operations["getAuditPdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/outreach/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Erişim taslağının durumunu güncelle
+         * @description Bir erişim kaydının durumunu (`draft|sent|opened|replied|meeting|won|lost`,
+         *     SPEC §3) günceller — insan kararını **kaydeder**.
+         *
+         *     **Bu uç mesaj GÖNDERMEZ.** Gövdede "gönder" veya "kanal tetikle" gibi bir alan
+         *     yoktur ve olmamalıdır; sistem hiçbir koşulda otomatik mesaj göndermez (CLAUDE.md
+         *     hukuki sınır). PATCH yalnız durum kaydeder. `sent_at`/`replied_at` gibi zaman
+         *     alanları sunucu tarafında ilgili duruma geçişte damgalanır.
+         */
+        patch: operations["updateOutreach"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -368,6 +416,47 @@ export interface components {
             channel: string;
             /** @description Üretilen mesaj taslağının metni. */
             draft: string;
+            status: components["schemas"]["OutreachStatus"];
+        };
+        /**
+         * Outreach
+         * @description Tam erişim kaydı (SPEC §3 `outreach`). `PATCH /outreach/{id}` yanıtı bunu
+         *     döndürür. Bir **eylem/gönderme alanı taşımaz** — sistem otomatik mesaj
+         *     göndermez (CLAUDE.md hukuki sınır); yalnız insan tarafından güncellenen durum
+         *     ve zaman damgalarını taşır.
+         */
+        Outreach: {
+            /** Format: int64 */
+            id: number;
+            /**
+             * Format: int64
+             * @description Bağlı denetim.
+             */
+            audit_id: number;
+            /** @description İletişim kanalı, ör. `instagram_dm`, `email`. */
+            channel: string;
+            /** @description Üretilen mesaj taslağının metni (BE-16 Sonnet çıktısı). */
+            draft: string;
+            status: components["schemas"]["OutreachStatus"];
+            /**
+             * Format: date-time
+             * @description Durum `sent`'e geçince sunucuda damgalanır; öncesinde null.
+             */
+            sent_at: string | null;
+            /**
+             * Format: date-time
+             * @description Durum `replied`'a geçince sunucuda damgalanır; öncesinde null.
+             */
+            replied_at: string | null;
+        };
+        /**
+         * OutreachUpdate
+         * @description `PATCH /outreach/{id}` istek gövdesi. **Yalnızca** yeni durum. Bilinçli olarak
+         *     gönderme/kanal-tetikleme alanı yok: bu uç mesaj göndermez, insan kararını
+         *     kaydeder (CLAUDE.md hukuki sınır). `additionalProperties: false` bu garantiyi
+         *     sözleşme seviyesinde sabitler.
+         */
+        OutreachUpdate: {
             status: components["schemas"]["OutreachStatus"];
         };
         /**
@@ -664,6 +753,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+        };
+    };
+    getAuditPdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Denetim kimliği. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PDF raporu (binary) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Böyle bir denetim yok */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+            /** @description Denetimin PDF'i henüz üretilmedi */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+        };
+    };
+    updateOutreach: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Erişim kaydının kimliği. */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OutreachUpdate"];
+            };
+        };
+        responses: {
+            /** @description Güncellenmiş erişim kaydı */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Outreach"];
+                };
+            };
+            /** @description Böyle bir erişim kaydı yok */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+            /** @description Geçersiz durum değeri (enum dışı) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
         };

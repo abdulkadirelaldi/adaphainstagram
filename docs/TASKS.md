@@ -51,7 +51,6 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 | BE-18 | backend | Playwright PDF üretimi (rapor HTML→PDF) + `audits.pdf_path` + `GET /audits/{id}/pdf` indirme | BE-17 ✅ |
 | BE-19 | backend | `PATCH /outreach/{id}` durum güncelleme + geçiş doğrulama (gönderme YOK) | BE-17 ✅ |
 | SEC-10 | güvenlik | PDF + outreach testleri; hukuki denetim (otomatik gönderim yok); canlı çağrı yok | BE-18, BE-19 |
-| FE-7 | frontend | PDF indir düğmesi + outreach durum takibi UI + taslak kopyala | BE-17 ✅ (sözleşme), canlı: BE-18/BE-19 |
 
 ### Sıralama notu (Faz 5)
 
@@ -171,7 +170,11 @@ Aynı dosyaya iki ajan yazmasın diye kesin ayrım:
 
 _(ajan görevi alınca satırı buraya taşır ve yanına oturum tarihini yazar)_
 
-_(frontend: açık/devam eden görev yok — Faz 4 UI'ı canlı ve tam)_
+- **FE-7** · frontend · PDF indir + outreach durum takibi + taslak kopyala. **UI + tip + istekler tam; canlı doğrulama BE-18 (PDF) + BE-19 (PATCH) bekliyor.** `gen:api` ile `Outreach`/`OutreachUpdate` tipleri; `getAuditPdf` (blob) + `updateOutreach` (PATCH), `useUpdateOutreach` mutation. Denetim panelinde rapor metninin altında **PDF indir** düğmesi: `pdf_path` null→**pasif** + sebep ("hazır olduğunda"), dolu→binary çekip tarayıcıya indirtir. Erişim kaydı FE-6'nın taslağını genişletti (`erisim-kaydi.tsx`): kopyala (Kopyala→Kopyalandı) + **durum takibi** — `draft…lost` select ile insan güncelliyor→`PATCH /outreach/{id}`; durum tam Türkçe adıyla (renk tek taşıyıcı değil), `sent_at`/`replied_at` damgaları mono; 422→"bu geçiş geçerli değil", select eski değerde kalır. **Mesaj GÖNDEREN hiçbir UI yok** — yalnız kopyala + durum kaydı (CLAUDE.md hukuki sınır); grep kelime-sınırlı temiz (gönder/send/dm/e-posta yalnız yorum). `NEXT_PUBLIC_API_URL`; `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik boş.
+  - **Route-mock ile headless kanıtlandı** (BE-18/19 uçlarının sözleşmedeki davranışı; canlı gelince gerçek backend'le tekrarlanacak): (A) `pdf_path` dolu→"PDF indir" aktif→**GET /audits/7/pdf çağrıldı + download tetiklendi**; durum "sent"→**PATCH /outreach/3 gönderildi**→yanıttaki `sent_at` damgası panelde; taslak kopyalandı; gönderen düğme yok. (B) `pdf_path` null→PDF indir **pasif** + sebep. (C) 422→"bu geçiş geçerli değil" + select durumu **eski değerde kaldı** (controlled).
+  - **Kalan:** BE-18 (gerçek PDF binary) + BE-19 (gerçek PATCH + geçiş doğrulama) ayağa kalkınca canlı uçtan-uca doğrulanacak (fixture modda); görev o zaman `## Biten`'e. Not: gerçek BE-16 audit'inde `pdf_path` zaten null olduğundan PDF-pasif yolu gerçek backend'le de görülür.
+
+_(frontend: yukarıdaki FE-7 dışında açık görev yok — Faz 4 UI'ı canlı ve tam)_
 
 ## Bloke
 

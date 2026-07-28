@@ -5,7 +5,8 @@ import { useState } from "react";
 import { ApiHatasi } from "@/lib/api/istemci";
 import { useAudit, useJob, useRunAudit } from "@/lib/api/sorgular";
 import { BulguListesi } from "@/components/bulgu-listesi";
-import { ErisimTaslagi } from "@/components/erisim-taslagi";
+import { ErisimKaydi } from "@/components/erisim-kaydi";
+import { PdfIndir } from "@/components/pdf-indir";
 import { para, tarih } from "@/lib/bicim";
 import type { Isletme } from "@/lib/api/tipler";
 
@@ -241,11 +242,14 @@ function Sonuc({ denetim }: { denetim: import("@/lib/api/tipler").Denetim }) {
             üretilmedi.
           </p>
         )}
+        <div className="mt-3">
+          <PdfIndir auditId={denetim.id} hazir={denetim.pdf_path !== null} />
+        </div>
       </section>
 
       <section>
         {denetim.outreach !== null ? (
-          <ErisimTaslagi taslak={denetim.outreach} />
+          <ErisimKaydi taslak={denetim.outreach} />
         ) : (
           <>
             <span className="text-mikro text-kursun uppercase">

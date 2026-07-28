@@ -24,3 +24,5 @@ export type Bulgu = components["schemas"]["Finding"];
 export type Onem = components["schemas"]["Severity"];
 export type ErisimTaslagi = components["schemas"]["OutreachDraft"];
 export type ErisimDurumu = components["schemas"]["OutreachStatus"];
+export type ErisimKaydi = components["schemas"]["Outreach"];
+export type ErisimGuncelleme = components["schemas"]["OutreachUpdate"];

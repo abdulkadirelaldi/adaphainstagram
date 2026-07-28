@@ -1,5 +1,7 @@
 import type {
   Denetim,
+  ErisimDurumu,
+  ErisimKaydi,
   IsDurumu,
   IsKabul,
   IsletmeListesi,
@@ -111,4 +113,48 @@ export function runAudit(
 /** Denetim sonucu: görünürlük skoru + bulgular + (varsa) rapor metni + taslak. */
 export function getAudit(id: number, imza?: AbortSignal): Promise<Denetim> {
   return istek<Denetim>(`/audits/${id}`, { imza });
+}
+
+/** Taban URL — istemci içi kullanım için de dışa verilir (PDF bağlantısı vb.). */
+export const API_TABAN = TABAN;
+
+/**
+ * Denetim raporunu PDF olarak indirir (binary). PDF henüz üretilmemişse uç 409
+ * döner (`ApiHatasi` 409); böyle bir denetim yoksa 404. Panel `pdf_path` null
+ * iken düğmeyi zaten pasif tutar — bu çağrı yalnız üretilmiş PDF için yapılır.
+ */
+export async function getAuditPdf(
+  id: number,
+  imza?: AbortSignal,
+): Promise<Blob> {
+  let yanit: Response;
+  try {
+    yanit = await fetch(`${TABAN}/audits/${id}/pdf`, {
+      headers: { accept: "application/pdf" },
+      signal: imza,
+    });
+  } catch {
+    throw new ApiHatasi(0, "Sunucuya ulaşılamadı.");
+  }
+  if (!yanit.ok) {
+    throw new ApiHatasi(yanit.status, `PDF alınamadı (${yanit.status}).`);
+  }
+  return yanit.blob();
+}
+
+/**
+ * Erişim kaydının durumunu günceller — insan kararını KAYDEDER, mesaj GÖNDERMEZ.
+ * Gövde yalnız `status`; sözleşme (OutreachUpdate) gönderme alanını yapısal olarak
+ * imkânsız kılar. Enum-dışı değer → 422.
+ */
+export function updateOutreach(
+  id: number,
+  status: ErisimDurumu,
+  imza?: AbortSignal,
+): Promise<ErisimKaydi> {
+  return istek<ErisimKaydi>(`/outreach/${id}`, {
+    metod: "PATCH",
+    govde: { status },
+    imza,
+  });
 }

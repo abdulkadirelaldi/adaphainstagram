@@ -11,9 +11,10 @@ import {
   getStats,
   runAudit,
   runDiscovery,
+  updateOutreach,
   type IsletmeSorgusu,
 } from "@/lib/api/istemci";
-import type { KesifIstegi } from "@/lib/api/tipler";
+import type { ErisimDurumu, KesifIstegi } from "@/lib/api/tipler";
 
 /** openapi `limit` üst sınırı — kohort kaynağı bu kadar kaydı kapsar. */
 const KOHORT_LIMITI = 200;
@@ -82,6 +83,17 @@ export function useAudit(auditId: number | null) {
     queryKey: ["audit", auditId],
     queryFn: ({ signal }) => getAudit(auditId as number, signal),
     enabled: auditId !== null,
+  });
+}
+
+/**
+ * Erişim durumunu günceller (mutation). Mesaj göndermez — insan kararını kaydeder.
+ * Enum-dışı değer uçta 422 olur (UI yalnız geçerli değerler sunar; bu son savunma).
+ */
+export function useUpdateOutreach() {
+  return useMutation({
+    mutationFn: ({ id, status }: { id: number; status: ErisimDurumu }) =>
+      updateOutreach(id, status),
   });
 }
 
