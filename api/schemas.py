@@ -27,8 +27,10 @@ __all__ = [
     "JobResult",
     "JobState",
     "JobStatus",
+    "Outreach",
     "OutreachDraft",
     "OutreachStatus",
+    "OutreachUpdate",
     "Severity",
     "Stats",
     "TriageStatus",
@@ -184,6 +186,34 @@ class OutreachDraft(BaseModel):
     id: int
     channel: str = Field(description="İletişim kanalı, ör. `instagram_dm`.")
     draft: str = Field(description="Üretilen mesaj taslağının metni.")
+    status: OutreachStatus
+
+
+class Outreach(BaseModel):
+    """`PATCH /outreach/{id}` yanıtı — tam erişim kaydı (SPEC §3). Eylem/gönderme alanı yok."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: int
+    audit_id: int
+    channel: str = Field(description="İletişim kanalı, ör. `instagram_dm`.")
+    draft: str = Field(description="Üretilen mesaj taslağının metni (BE-16).")
+    status: OutreachStatus
+    sent_at: datetime | None = Field(description="`sent`'e geçince damgalanır; öncesinde null.")
+    replied_at: datetime | None = Field(
+        description="`replied`'a geçince damgalanır; öncesinde null."
+    )
+
+
+class OutreachUpdate(BaseModel):
+    """`PATCH /outreach/{id}` istek gövdesi — YALNIZCA yeni durum.
+
+    Gönderme/kanal-tetikleme alanı bilinçle yok; `extra="forbid"` bunu yapısal
+    garanti eder. Bu uç mesaj göndermez, insan kararını kaydeder (CLAUDE.md hukuki sınır).
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
     status: OutreachStatus
 
 
