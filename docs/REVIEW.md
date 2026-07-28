@@ -603,3 +603,78 @@ Faz 4 backend'i dört kritere göre bağımsız doğrulandı; gizlilik (kural 7)
 (otomatik gönderim yok), maliyet disiplini (gerçek USD, batch, cache) ve LLM icat-yasağı
 (SPEC §5) ihlali bulunmadı. BE-14'ün 2-kural dışlaması (yorum yanıtsız, görsel tutarsızlık)
 kural 7'ye uyum — regresyon testiyle korundu.
+
+---
+
+## SEC-10 · Faz 5 — PDF + outreach + hukuki denetim
+
+**Tarih:** 2026-07-28
+**Denetlenen ağaç:** `b75f73c` (BE-19) + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict, 79 dosya), pytest — 167 test (21 yeni), yerel pg16 + Playwright/Chromium
+
+Faz 5 backend'i (BE-18 PDF, BE-19 PATCH /outreach) bağımsız doğrulandı. En kritik denetim —
+**otomatik mesaj GÖNDERİLMİYOR** (CLAUDE.md hukuki sınır) — kalıcı bir makine muhafızına bağlandı.
+
+### 🔒 Otomatik mesaj yok (hukuki sınır) — EN ÖNEMLİ · **PASS**
+
+`tests/test_no_send_path.py` — ağ muhafızı ve `.gitignore` regresyonuyla aynı felsefede,
+**çalışan bir muhafız**: `api/` altındaki her `.py` dosyası **AST ile** taranıyor; mesaj
+gönderen bir mekanizma (import: `smtplib`/`aiosmtplib`/`twilio`/`sendgrid`/`mailgun`/
+`requests`; çağrı: `send_email`/`send_message`/`send_dm`/`sendmail`; string: mesajlaşma-ucu
+URL'si `graph.facebook.com/.../messages`, `api.telegram.org`, `hooks.slack.com`) belirirse
+test kırmızıya döner.
+
+- **AST tabanlı** olması bilinçli: docstring/yorumdaki *"sistem mesaj göndermez (SMTP/DM/
+  webhook)"* gibi yasaklama metni yanlış-pozitif üretmez; yalnız gerçek kod (import/çağrı/
+  URL string literali) incelenir. Anthropic'in `messages.create` LLM API'si listede yok.
+- **Karşı-kanıt** (`test_muhafiz_gercekten_olcuyor_karsi_kanit`): tarayıcı `import smtplib`,
+  `send_message(...)`, `requests.post`, `graph.facebook.com/.../messages` string'ini
+  **yakalıyor**; benign kodu (`channel="instagram_dm"`, `messages.create`, veri-çekme
+  `graph.facebook.com/v21.0`, yasaklama docstring'i) **yakalamıyor**. Muhafız bir davranış
+  ölçüyor, boş yeşil değil.
+- **Sonuç:** `api/` içinde mesaj gönderen kod yolu **yok**. `PATCH /outreach/{id}` yalnız DB
+  satırını günceller (`update_outreach_status`), hiçbir dış gönderim tetiklemez; `outreach`
+  hâlâ `draft` doğuyor (BE-16). İnsan kararı kaydedilir, mesaj gönderilmez.
+
+### Blok 1 — PDF üretimi + indirme · **PASS**
+
+| Kontrol | Durum | Kanıt |
+|---|---|---|
+| Rapor HTML içerik/sıralama/kaçış | **PASS** | `test_pdf.py`: skor+bulgu+rapor metni; kritik önce; `html.escape` XSS'i kaçırıyor; yasak metrik yok |
+| Gerçek PDF baytları | **PASS (chromium var)** | `render_pdf` → `%PDF-` magic bytes; `generate_audit_pdf` dosyaya yazıyor; **pdftotext** ile PDF metninde "Reels yok"+"Elmas Kuyumculuk" |
+| `GET /audits/{id}/pdf` | **PASS** | 200+`application/pdf`+`%PDF-` (üretilmiş); pdf_path boş→409; dosya yok→409; audit yok→404 |
+| Playwright yokken | **SKIP (dürüst)** | Chromium erişilemezse PDF-render testleri SKIP + neden; sahte yeşil yok. Doğrulandı: `PLAYWRIGHT_BROWSERS_PATH` bozunca temiz SKIP |
+
+**Playwright durumu:** headless Chromium bu makinede kurulu ve çalıştı → PDF **gerçekten**
+üretildi ve doğrulandı (BE-18-B1 gerekmedi). CI kararı: aşağıda `## Bloke` SEC-10-N1.
+
+### Blok 2 — PATCH /outreach durum geçişi · **PASS**
+
+`test_outreach_patch.py`: `sent`→`sent_at` damgalanıyor; `sent`→`replied` `replied_at`
+damgalanıp `sent_at` **korunuyor** (yeniden damgalanmıyor); geçersiz enum→**422**; fazladan
+`send` alanı→**422** (`extra=forbid` — gönderme alanı yapısal olarak imkânsız); olmayan→**404**.
+BE-19'un **geçiş grafiği zorlamama** kararı test edildi (draft→meeting doğrudan serbest).
+
+### Yasak metrik + sır · **PASS**
+
+- PDF şablonu/render ve outreach kaydında yasak metrik (erişim/gösterim/kaydetme/demografi)
+  taraması **boş** (`api/pdf/` + outreach); `test_html_yasak_metrik_icermiyor` HTML'de doğruluyor.
+- `.env.example:55` `PDF_OUTPUT_DIR=` **değersiz**; `api/pdf/`+outreach'ta gerçek anahtar yok.
+
+### Kural 6 · **PASS**
+
+Yeni testler dış veri çağrısı yapmıyor; PDF render **yerel** (Chromium yerelde HTML→PDF, dış
+istek değil). 167 test ağ muhafızı altında yeşil. DB/PDF testleri erişilemez/chromium yoksa
+SKIP — CI'da servis konteyneri + `playwright install` ile koşar.
+
+### Kapatılan bulgu
+
+**BE-18-N1** (`.gitignore var/`) — SEC-10'da kapatıldı: `.gitignore`'a `var/` eklendi (PDF
+çıktı dizini `./var/audit_pdfs` artık izlenmiyor). `git check-ignore var/audit_pdfs/audit_1.pdf`
+→ `.gitignore:38`; `git ls-files` içinde PDF/var yok. Regresyon `tests/test_gitignore.py`'ye
+eklendi (silme→kırmızı deseni). `.gitignore` benim dosyam; düzeltmesi meşru.
+
+### Bu turda yeni bulgu yok
+
+Faz 5 backend'i bağımsız doğrulandı; **hukuki sınır (otomatik gönderim yok)**, gizlilik
+(kural 7) ve sır ihlali bulunmadı.

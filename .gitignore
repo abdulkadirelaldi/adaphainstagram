@@ -33,5 +33,9 @@ test-results/
 playwright-report/
 playwright/.cache/
 
+# --- Üretilen çıktılar (Faz 5) — depoya girmez (BE-18-N1) ---
+# Denetim PDF'lerinin varsayılan çıktı dizini (config `pdf_output_dir` → ./var/audit_pdfs).
+var/
+
 # --- İşletim sistemi ---
 .DS_Store

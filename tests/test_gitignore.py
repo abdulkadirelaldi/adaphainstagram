@@ -31,6 +31,7 @@ IGNORED_PATHS = [
     ".DS_Store",
     "test-results/report.xml",  # Playwright, Faz 6
     ".coverage",
+    "var/audit_pdfs/audit_1.pdf",  # üretilen PDF çıktısı, Faz 5 (BE-18-N1)
 ]
 
 
