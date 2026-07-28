@@ -136,7 +136,13 @@ async def audit_task(ctx: dict[str, Any], *, business_id: int) -> dict[str, int 
     reference_now = FIXTURE_REFERENCE_NOW if settings.radar_fixture_mode else datetime.now(UTC)
     llm_client = _build_llm_client(settings.radar_fixture_mode)
 
-    audit_id = await run_audit(session_factory, business_id, reference_now, llm_client=llm_client)
+    audit_id = await run_audit(
+        session_factory,
+        business_id,
+        reference_now,
+        llm_client=llm_client,
+        pdf_output_dir=settings.pdf_output_dir,
+    )
     # Keşif sözleşmesiyle aynı JobResult şekli; denetimde businesses/snapshots 0.
     return {"businesses": 0, "snapshots": 0, "audit_id": audit_id}
 

@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str | None = Field(
         default=None, description="Anthropic API anahtarı (LLM katmanı, SPEC §6)."
     )
+    # Üretilen denetim PDF'lerinin yazılacağı dizin (Faz 5). Yerel render, dış çağrı
+    # değil (kural 6). Depo dışında/gitignore'lu tutulmalı.
+    pdf_output_dir: str = Field(default="./var/audit_pdfs", description="Denetim PDF çıktı dizini.")
 
     # Maliyet disiplini (CLAUDE.md): aynı hesap 7 gün içinde tekrar kazınmaz. BE-9
     # profil çekmeden önce bu TTL'li Redis anahtarına bakar. Varsayılan 7 gün.

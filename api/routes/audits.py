@@ -6,10 +6,12 @@ göre döndürür. Denetim `job_id`'si tamamlanınca `GET /jobs/{id}` sonucundak
 ile buraya gelinir.
 """
 
+from pathlib import Path
 from typing import Any, cast
 
 from arq import ArqRedis
 from fastapi import APIRouter, HTTPException, Request, status
+from fastapi.responses import FileResponse
 
 from api.models import Audit as AuditModel
 from api.models import Outreach as OutreachModel
@@ -112,3 +114,29 @@ async def get_audit_endpoint(id: int, request: Request) -> Audit:  # noqa: A002 
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Denetim bulunamadı: {id}")
         outreach = await get_outreach_for_audit(session, id)
         return _to_audit(audit, outreach)
+
+
+@router.get(
+    "/audits/{id}/pdf",
+    summary="Denetim raporunu PDF olarak indir",
+    operation_id="getAuditPdf",
+    response_class=FileResponse,
+    responses={
+        status.HTTP_200_OK: {"content": {"application/pdf": {}}, "description": "PDF raporu"},
+        status.HTTP_404_NOT_FOUND: {"description": "Böyle bir denetim yok"},
+        status.HTTP_409_CONFLICT: {"description": "PDF henüz üretilmedi"},
+    },
+)
+async def get_audit_pdf(id: int, request: Request) -> FileResponse:  # noqa: A002  # yol param sözleşmede `id`
+    session_factory = request.app.state.session_factory
+    async with session_factory() as session:
+        audit = await get_audit(session, id)
+        if audit is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Denetim bulunamadı: {id}")
+        pdf_path = audit.pdf_path
+    # pdf_path boşsa (sentez/PDF fazı koşmadı) → 409 (BE-17 sözleşmesi).
+    if not pdf_path or not Path(pdf_path).is_file():
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, detail=f"Denetim {id} PDF'i henüz üretilmedi."
+        )
+    return FileResponse(pdf_path, media_type="application/pdf", filename=f"denetim_{id}.pdf")

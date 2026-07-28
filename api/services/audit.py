@@ -26,6 +26,7 @@ from api.llm.client import LLMClient
 from api.llm.synthesize import synthesize_audit
 from api.models import Business, Snapshot, TriageScore
 from api.models.enums import TriageStatus
+from api.pdf import generate_audit_pdf
 from api.persistence import persist_audit, persist_outreach
 
 logger = logging.getLogger(__name__)
@@ -98,8 +99,9 @@ async def _synthesize_phase(
     findings: list[Finding],
     score: float,
     reference_now: datetime,
+    pdf_output_dir: str | None,
 ) -> int:
-    """BE-15 (Haiku) + BE-16 (Sonnet): sınıflandır, sentezle, gerçek maliyetle persist et."""
+    """BE-15 (Haiku) + BE-16 (Sonnet) + BE-18 (PDF): sınıflandır, sentezle, PDF üret, persist et."""
     as_of = reference_now.date()
     classify = await classify_posts(llm_client, posts, as_of=as_of)
     synthesis = await synthesize_audit(
@@ -126,11 +128,26 @@ async def _synthesize_phase(
     await persist_outreach(
         session, audit_id=audit.id, channel="instagram_dm", draft=synthesis.outreach_draft
     )
+
+    # BE-18: rapor PDF'i (yerel render, dış çağrı değil — kural 6). pdf_path dolar.
+    if pdf_output_dir is not None:
+        pdf_path = await generate_audit_pdf(
+            audit_id=audit.id,
+            output_dir=pdf_output_dir,
+            business_name=snapshot.business.name,
+            visibility_score=score,
+            findings=enriched,
+            report_text=synthesis.report_text,
+        )
+        audit.pdf_path = pdf_path
+        await session.flush()
+
     logger.info(
-        "denetim sentezi: audit=%d haiku_çağrı=%d llm_maliyet=%s",
+        "denetim sentezi: audit=%d haiku_çağrı=%d llm_maliyet=%s pdf=%s",
         audit.id,
         classify.calls,
         total_cost,
+        "var" if pdf_output_dir else "yok",
     )
     return audit.id
 
@@ -141,6 +158,7 @@ async def run_audit(
     reference_now: datetime,
     *,
     llm_client: LLMClient | None = None,
+    pdf_output_dir: str | None = None,
 ) -> int:
     """İşletmenin son snapshot'ını denetler; audit id döner.
 
@@ -188,6 +206,7 @@ async def run_audit(
                 findings=findings,
                 score=score,
                 reference_now=reference_now,
+                pdf_output_dir=pdf_output_dir,
             )
         await session.commit()
 
