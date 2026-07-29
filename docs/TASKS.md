@@ -190,6 +190,14 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 ### Karara bağlananlar (orkestra şefi, dalga 1 sonu)
 
+- **SEC-10-N1** (CI'da PDF-render testi için `playwright install chromium` gereksinimi) →
+  *Faz 6'ya devredildi.* PDF yolu **yerelde gerçek doğrulandı** (BE-18 + SEC-10 pdftotext ile
+  "Reels yok" başlığını üretilen PDF'te gördü); CI'da chromium yokken testler **dürüst SKIP**
+  ediyor (sahte yeşil yok). CI'a chromium kurmak her koşuya ~büyük indirme + süre ekler; bu
+  doğal olarak Faz 6 "e2e testler" kapsamına ait — orada `.github` sahibi (güvenlik & test)
+  pytest job'ına `playwright install --with-deps chromium` adımını ekler. Faz 5 bundan bağımsız
+  kapanır (PDF üretimi çalışıyor, yalnız CI-otomasyonu Faz 6'da).
+
 - **FE-4-B2** (canlı `discovery/run`→done bu makinede doğrulanamıyor) → *worker fixture modu
   eklenecek.* `BE-10` görevi açıldı: env-bayraklı fixture/mock-transport modu, kural 6 uyumlu.
   Faz 6 e2e de bunu kullanacak. FE-4 done doğrulaması BE-10 + BE-12 (DB bağı) sonrası `FE-5`'te.
