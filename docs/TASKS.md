@@ -55,11 +55,10 @@ SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-21 | backend | **Sözleşme önce:** rate-limit `429`/`Retry-After`, maliyet-alarm göstergesi (`/stats`), kohort ucu (FE-3-B1) → `openapi.yaml` | — |
 | BE-22 | backend | 180 günlük silme cron'u (arq scheduled) + maliyet alarmı (eşik + log + `/stats` alanı) | BE-21 |
 | BE-23 | backend | Rate limit middleware (`429`+`Retry-After`) + kohort ucu implementasyonu | BE-21 |
 | SEC-12 | güvenlik | 180-silme + rate-limit + maliyet-alarm testleri + son gizlilik/maliyet denetimi | BE-22, BE-23 |
-| FE-8 | frontend | Kohort rayını gerçek kohort ucuna bağla (FE-3-B1) + maliyet alarmı göstergesi | BE-21 (sözleşme), canlı: BE-23 |
+| FE-8 | frontend | Kohort rayını gerçek kohort ucuna bağla (FE-3-B1) + maliyet alarmı göstergesi | BE-21 ✅ (sözleşme), canlı: BE-23 |
 
 ### Sıralama notu (Faz 6)
 
@@ -295,6 +294,7 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 _(tek satır sonuç notuyla)_
 
+- **BE-21** · Faz 6 sertleştirme sözleşmesi (`docs/openapi.yaml`, yalnız sözleşme). **(1) Rate limit:** `/discovery/run` + `/businesses/{id}/audit`'e `429` yanıtı + `Retry-After` başlığı (ortak `components/headers/RetryAfter`) + `RateLimited` gövde şeması. **(2) Kohort ucu (FE-3-B1):** `GET /stats/categories` → `CategoryCohortList`; kategori başına skor medyanı+çeyrekler (q1/q3) + etkileşim kohort medyanı (SPEC §4); yetersiz veride (kohort<5) null. `/businesses?limit=200` istemci-türetiminin yerini alır. Yasak alan yok — yalnız skor/etkileşim dağılımı. **(3) Maliyet alarmı:** `Stats`'a `monthly_cost_alarm` (bool, `default:false`, **required'da değil** → geriye uyumlu) + `monthly_cost_limit_usd` (nullable eşik). redocly lint 0 hata (5 uyarı); tüm JSON gövdeleri adlandırılmış şemaya `$ref`; kohort/Stats yasak-alan grep boş; `Stats` mevcut tip üretimini kırmıyor (yeni alanlar opsiyonel); Faz 1-5 ile çelişki yok. **BE-22 (cron+alarm), BE-23 (rate-limit+kohort impl), FE-8 başlayabilir.**
 - **SEC-11** · E2E test iskeleti + CI'da chromium (3 yeni test, 170 toplam). **CI:** `.github/workflows/ci.yml` pytest job'ına `playwright install --with-deps chromium` eklendi → PDF-render (BE-18/SEC-10) + e2e PDF CI'da SKIP değil koşuyor; **SEC-10-N1 kapatıldı**. **E2E** (`tests/e2e/test_pipeline_e2e.py`, fixture modu, canlı çağrı yok): worker'ın servis fonksiyonlarıyla (`fixture_adapters`+`FIXTURE_REFERENCE_NOW`+`FixtureLLMClient`) SPEC §1 tam akışı — ① keşif+skor→DB 100 işletme/>0 skorlu; ② `POST /businesses/{id}/audit` gate qualified→202+job_id/watch→409/yok→404; ③ `run_audit` denetim+PDF; ④ `GET /audits/{id}` skor+rapor+**llm_cost>0**+draft; ⑤ `GET /audits/{id}/pdf` 200/`%PDF-` (chromium; yoksa alt-adım SKIP); ⑥ `PATCH /outreach/{id}` draft→sent+sent_at. Tümü offline (MockTransport+Fixture LLM), ağ muhafızı altında; pg+redis erişilemezse dürüst SKIP (doğrulandı). ruff+mypy(81)+pytest(170) yeşil env'li+env'siz. **Frontend Playwright e2e** kapsam dışı bırakıldı (backend API-e2e kapsıyor) → öneri `## Bloke` SEC-11-N1 (ayrı görev, orkestra şefine). Detay: `docs/REVIEW.md` SEC-11.
 
 - **FE-7** · Çıktı arayüzü **canlı ve tam** (PDF indir + outreach durum takibi + taslak kopyala). `gen:api` `Outreach`/`OutreachUpdate`; `getAuditPdf` (blob) + `updateOutreach` (PATCH) + `useUpdateOutreach`. Denetim panelinde rapor altında **PDF indir** (`pdf_path` null→pasif+sebep, dolu→binary indir); erişim kaydı (`erisim-kaydi.tsx`) kopyala + **durum takibi** (`draft…lost` select→`PATCH /outreach/{id}`, durum tam Türkçe adıyla/renk tek taşıyıcı değil, `sent_at`/`replied_at` mono damga, 422→net hata+select eski değerde). **Mesaj GÖNDEREN hiçbir UI yok** — yalnız kopyala + durum kaydı (hukuki sınır); gönder/send/dm/e-posta grep kelime-sınırlı temiz. `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik boş.

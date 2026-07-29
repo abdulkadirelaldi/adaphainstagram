@@ -163,6 +163,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
+        '429':
+          description: |
+            Hız sınırı aşıldı (SPEC §8 sertleştirme). `Retry-After` başlığı, yeni istek
+            öncesi beklenmesi gereken saniyeyi verir.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimited'
 
   /jobs/{id}:
     get:
@@ -234,6 +245,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
+        '429':
+          description: |
+            Hız sınırı aşıldı (SPEC §8 sertleştirme). `Retry-After` başlığı, yeni istek
+            öncesi beklenmesi gereken saniyeyi verir.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimited'
+
+  /stats/categories:
+    get:
+      tags: [dashboard]
+      summary: Kategori kohort dağılımı
+      description: |
+        Her kategori için taranmış hesapların skor dağılımını (medyan + çeyrekler) ve
+        etkileşim kohort medyanını (SPEC §4) döndürür. Panelin kohort rayı bunu kullanır;
+        `/businesses?limit=200` üzerinden istemci-tarafı türetmenin yerini alır (FE-3-B1).
+        Yalnız skor/etkileşim dağılımı taşır — erişim/gösterim/demografi yok (kural 7).
+      operationId: getCategoryCohorts
+      responses:
+        '200':
+          description: Kategori başına kohort istatistikleri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryCohortList'
 
   /audits/{id}:
     get:
@@ -351,6 +391,14 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
 
 components:
+  headers:
+    RetryAfter:
+      description: Yeni istek göndermeden önce beklenmesi gereken saniye.
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+
   schemas:
 
     Health:
@@ -399,6 +447,20 @@ components:
           description: |
             İçinde bulunulan takvim ayındaki gerçekleşen LLM maliyeti (USD).
             `audits.llm_cost_usd` alanlarının toplamıdır.
+        monthly_cost_alarm:
+          type: boolean
+          default: false
+          description: |
+            Aylık maliyet yapılandırılmış eşiği aştı mı (SPEC §8 maliyet alarmı). Panel
+            üst şeritte alarmı gösterir. **Opsiyonel + varsayılanlı** — mevcut istemci tip
+            üretimini kırmaz (geriye uyumlu).
+        monthly_cost_limit_usd:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          description: |
+            Yapılandırılmış aylık maliyet eşiği (USD); alarm bunun aşılmasıyla açılır.
+            Eşik tanımlı değilse null. Opsiyonel — geriye uyumlu.
 
     TriageStatus:
       type: string
@@ -779,6 +841,81 @@ components:
         detail:
           type: string
           description: İnsan okunur hata açıklaması.
+
+    RateLimited:
+      type: object
+      title: RateLimited
+      description: |
+        Hız sınırı aşıldığında (`429`) dönen gövde. Bekleme süresi `Retry-After`
+        başlığındadır (SPEC §8 sertleştirme).
+      additionalProperties: false
+      required: [detail]
+      properties:
+        detail:
+          type: string
+          description: İnsan okunur açıklama.
+
+    CategoryCohort:
+      type: object
+      title: CategoryCohort
+      description: |
+        Tek kategori için kohort istatistiği (SPEC §4). Yalnız skor/etkileşim dağılımı;
+        erişim/gösterim/demografi taşımaz (kural 7). Yeterli veri yoksa (ör. kohort<5,
+        SPEC §4) dağılım alanları null olabilir.
+      additionalProperties: false
+      required:
+        - category
+        - scanned
+        - score_median
+        - score_q1
+        - score_q3
+        - engagement_median
+      properties:
+        category:
+          type: string
+          description: İşletme kategorisi.
+        scanned:
+          type: integer
+          minimum: 0
+          description: Bu kategoride skorlanmış hesap sayısı.
+        score_median:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          maximum: 100
+          description: Kategori birleşik skor medyanı. Yetersiz veride null.
+        score_q1:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          maximum: 100
+          description: Skor birinci çeyreği (%25). Yetersiz veride null.
+        score_q3:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          maximum: 100
+          description: Skor üçüncü çeyreği (%75). Yetersiz veride null.
+        engagement_median:
+          type: [number, 'null']
+          format: double
+          minimum: 0
+          description: |
+            Etkileşim oranı kohort medyanı (SPEC §4 — potansiyel bu medyana göre
+            hesaplanır). Kohort<5 ise hesaplanmaz → null.
+
+    CategoryCohortList:
+      type: object
+      title: CategoryCohortList
+      description: Kategori kohort istatistiklerinin listesi.
+      additionalProperties: false
+      required: [items]
+      properties:
+        items:
+          type: array
+          description: Kategori başına bir kohort kaydı.
+          items:
+            $ref: '#/components/schemas/CategoryCohort'
 
     ValidationError:
       type: object
