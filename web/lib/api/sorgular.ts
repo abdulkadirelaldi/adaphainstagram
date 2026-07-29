@@ -7,6 +7,7 @@ import {
 import {
   getAudit,
   getBusinesses,
+  getCategoryCohorts,
   getJob,
   getStats,
   runAudit,
@@ -15,9 +16,6 @@ import {
   type IsletmeSorgusu,
 } from "@/lib/api/istemci";
 import type { ErisimDurumu, KesifIstegi } from "@/lib/api/tipler";
-
-/** openapi `limit` üst sınırı — kohort kaynağı bu kadar kaydı kapsar. */
-const KOHORT_LIMITI = 200;
 
 /** Üst şerit sayaçları — `/stats`. */
 export function useStats() {
@@ -39,25 +37,28 @@ export function useBusinesses(sorgu: IsletmeSorgusu) {
 }
 
 /**
- * Kohort kaynağı — filtresiz tüm liste, yalnızca kohort rayının dağılımı için.
- * Ana listeden ayrı tutulur ki filtre uygulansa bile ray tüm kohortu göstersin
- * ve görece konum bozulmasın. Tek istek, 30s cache.
+ * Kohort kaynağı — kategori başına skor dağılımı (`GET /stats/categories`).
+ * İmza öğesi kohort rayını bu besler: her kategorinin medyan + çeyrekleri, o
+ * kategoride skorlanmış hesap sayısı. Filtreden bağımsızdır (backend tüm skorlanmış
+ * hesaplardan hesaplar) — filtre altında bile görece konum bozulmaz.
  *
- * Sınır: `KOHORT_LIMITI` kaydı aşan bir kohort kaynağı eksik kalır — Faz 1 sahte
- * verisinde sorun değil. Kalıcı çözüm için kategori-dağılım ucu gerekir; bkz.
- * docs/TASKS.md ## Bloke (FE-3 notu).
+ * FE-3'ün `/businesses?limit=200` türetimi bununla söküldü (FE-3-B1): backend
+ * dağılımı `percentile_cont` ile hesaplıyor, 200+ hesapta eksik kalma sınırı yok.
  */
-export function useKohortKaynagi() {
+export function useCategoryCohorts() {
   return useQuery({
-    queryKey: ["kohort-kaynagi"],
-    queryFn: ({ signal }) =>
-      getBusinesses({ limit: KOHORT_LIMITI, offset: 0 }, signal),
+    queryKey: ["kategori-kohortlari"],
+    queryFn: ({ signal }) => getCategoryCohorts(signal),
     staleTime: 30_000,
   });
 }
 
 /** İş bittiğinde tazelenecek liste sorguları. */
-const VERI_ANAHTARLARI = [["businesses"], ["stats"], ["kohort-kaynagi"]] as const;
+const VERI_ANAHTARLARI = [
+  ["businesses"],
+  ["stats"],
+  ["kategori-kohortlari"],
+] as const;
 
 /** Keşif taramasını başlatır (mutation). Başarıda `job_id` döner. */
 export function useRunDiscovery() {

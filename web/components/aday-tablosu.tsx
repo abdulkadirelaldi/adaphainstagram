@@ -1,8 +1,7 @@
 import { RayAnahtari } from "@/components/ray-anahtari";
 import { SkorHucresi } from "@/components/skor-hucresi";
-import type { Isletme } from "@/lib/api/tipler";
+import type { Isletme, KategoriKohort } from "@/lib/api/tipler";
 import { sayi, tarih, YOK } from "@/lib/bicim";
-import { kategoriKohortu } from "@/lib/kohort";
 
 /**
  * Aday tablosu — tam genişlik, kenarlıklı yoğun satırlar.
@@ -30,12 +29,12 @@ const SUTUNLAR = [
 
 export function AdayTablosu({
   durum,
-  kohortKaynagi = [],
+  kohortlar,
   onSec,
 }: {
   durum: Durum;
-  /** Kohort rayının filtresiz dağılım kaynağı (bkz. useKohortKaynagi). */
-  kohortKaynagi?: readonly Isletme[];
+  /** Kategori adı → kohort dağılımı haritası (bkz. useCategoryCohorts). */
+  kohortlar?: Map<string, KategoriKohort>;
   /** Bir satır seçilince (denetim paneli açmak için). */
   onSec?: (isletme: Isletme) => void;
 }) {
@@ -93,7 +92,9 @@ export function AdayTablosu({
               <Satir
                 key={k.id}
                 isletme={k}
-                kohortKaynagi={kohortKaynagi}
+                kohort={
+                  k.category ? (kohortlar?.get(k.category) ?? null) : null
+                }
                 onSec={onSec}
               />
             ))
@@ -105,14 +106,13 @@ export function AdayTablosu({
 
 function Satir({
   isletme,
-  kohortKaynagi,
+  kohort,
   onSec,
 }: {
   isletme: Isletme;
-  kohortKaynagi: readonly Isletme[];
+  kohort: KategoriKohort | null;
   onSec?: (isletme: Isletme) => void;
 }) {
-  const kohort = kategoriKohortu(isletme.category, kohortKaynagi);
   const secilebilir = onSec !== undefined;
   return (
     <tr

@@ -7,8 +7,15 @@ import type { Istatistik } from "@/lib/api/tipler";
  * Dört ölçü, tek satır, kart yok. Rakamlar mono ve iri; etiketler küçük ve
  * kurşun. Veri gelmediğinde rakam yerine yarım tire durur — şerit asla kaybolmaz,
  * yeri korunur ki yükleme sırasında düzen zıplamasın.
+ *
+ * Maliyet alarmı (SPEC §8): aylık maliyet yapılandırılmış eşiği aştıysa
+ * `monthly_cost_alarm` true olur ve maliyet hücresi görünür bir uyarı taşır.
+ * Renk TEK taşıyıcı değildir — "Eşik aşıldı" metni uyarıyı sözle de söyler
+ * (bkz. docs/DESIGN.md § maliyet alarmı; oksit burada ölçülü genişletildi).
  */
 export function UstSerit({ istatistik }: { istatistik?: Istatistik }) {
+  const alarm = istatistik?.monthly_cost_alarm === true;
+
   const olculer = [
     { etiket: "Taranan", deger: istatistik ? sayi(istatistik.scanned) : YOK },
     { etiket: "Nitelikli", deger: istatistik ? sayi(istatistik.qualified) : YOK },
@@ -16,6 +23,7 @@ export function UstSerit({ istatistik }: { istatistik?: Istatistik }) {
     {
       etiket: "Aylık maliyet",
       deger: istatistik ? para(istatistik.monthly_cost_usd) : YOK,
+      alarm,
     },
   ];
 
@@ -28,7 +36,16 @@ export function UstSerit({ istatistik }: { istatistik?: Istatistik }) {
           style={{ minWidth: "180px" }}
         >
           <span className="text-mikro text-kursun uppercase">{olcu.etiket}</span>
-          <span className="sayi text-rakam tabular-nums">{olcu.deger}</span>
+          <span
+            className={
+              "sayi text-rakam tabular-nums " + (olcu.alarm ? "text-oksit" : "")
+            }
+          >
+            {olcu.deger}
+          </span>
+          {olcu.alarm && (
+            <span className="text-mikro text-oksit uppercase">Eşik aşıldı</span>
+          )}
         </div>
       ))}
     </div>

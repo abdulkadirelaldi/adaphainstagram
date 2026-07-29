@@ -6,6 +6,7 @@ import type {
   IsKabul,
   IsletmeListesi,
   Istatistik,
+  KategoriKohortListesi,
   KesifIstegi,
 } from "@/lib/api/tipler";
 
@@ -74,6 +75,13 @@ function sorguDizesi(sorgu: IsletmeSorgusu): string {
 
 export function getStats(imza?: AbortSignal): Promise<Istatistik> {
   return istek<Istatistik>("/stats", { imza });
+}
+
+/** Kategori kohort istatistikleri — kohort rayının dağılım kaynağı (SPEC §4). */
+export function getCategoryCohorts(
+  imza?: AbortSignal,
+): Promise<KategoriKohortListesi> {
+  return istek<KategoriKohortListesi>("/stats/categories", { imza });
 }
 
 export function getBusinesses(

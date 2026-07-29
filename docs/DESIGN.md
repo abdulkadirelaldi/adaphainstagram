@@ -19,6 +19,13 @@ sıkıştırmak sahte eşitlik üretir. Karar: **ağırlık kromatik olarak kodl
 kritikte görünür; kalan üç seviye sıralama ve tipografik ağırlıkla ayrışır. Renk bir ölçü
 birimi olarak kalır, kategori etiketine dönüşmez.
 
+*Oksit'in ölçülü genişletmesi (FE-8):* Oksit "kritik" sinyali, denetimdeki kritik bulguya ek
+olarak **maliyet alarmına** da açıldı (SPEC §8 — aylık maliyet eşiği aşımı). Gerekçe: maliyet
+disiplini bu ürünün rekabet avantajının merkezi (CLAUDE.md); eşik aşımı, bir denetim bulgusu
+kadar kritik bir sistem durumudur. Genişletme *ölçülü*dür — oksit hâlâ yalnızca iki yerde:
+kritik bulgu ve maliyet alarmı. Renk tek taşıyıcı değildir; alarmda "Eşik aşıldı" metni uyarıyı
+sözle de söyler.
+
 **b) Odak tokeni yoktu.** Vurgu rengi yasak, gölge yok, yarıçap ~0. Verilen altı değerin
 hiçbiri klavye odağını çizemiyordu, ama kapsam sınırları "klavye odağı görünür olacak" diyor.
 Eklendi: `--color-odak`, mürekkeple 2px halka + 2px kağıt ofseti. Yeni renk üretmedim.
@@ -116,31 +123,35 @@ Minimal yön hatasız aralık ister — ara değer üretmek ritmi bozar.
 ## 4. İmza öğesi — kohort rayı
 
 Skor hücresi çıplak bir sayı ya da rozet değil. Her hücrede **sabit bir 0–100 yatay ray**
-durur. Taranmış kohortun tüm skorları bu rayda soluk çentikler, o satırın skoru dolu çentik.
-Hiçbir skor tek başına okunmaz; daima kohortun içindeki yeriyle okunur.
+durur. O kategorinin skor **dağılımı** (çeyrekler) rayda soluk bir bant, o satırın skoru dolu
+çentik. Hiçbir skor tek başına okunmaz; daima kohortun içindeki yeriyle okunur.
 
 Bu süs değil, ürünün tezi. SPEC §4 açıkça diyor: *"Etkileşim oranı için mutlak eşik kullanma.
 Karşılaştırma daima aynı kategorideki taranmış hesapların medyanına göre yapılır."* Mutlak eşik
 yanıltıcıdır, anlamlı olan görece konumdur. Ray tam olarak bunu gösterir.
 
+**Çeyrek bandı (FE-8'de çentikten dağılıma).** İlk tasarımda kohortun her skoru ayrı bir soluk
+çentikti; kaynak `/businesses?limit=200`'ü istemcide türetmekti (FE-3-B1) ve 200+ hesapta eksik
+kalırdı. FE-8'de kaynak `GET /stats/categories`'e (BE-23) taşındı: kategori başına **medyan +
+Q1 + Q3** (`percentile_cont`). Ray artık Q1–Q3 arası soluk bir **bant** (dağılımın orta %50'si)
++ medyan çizgisidir. Bu üç sayıyla 200+ hesapta da ölçeklenir, gürültüsüzdür ve dağılımı
+tek-tek-çentikten daha nicel gösterir — skorun üst çeyrekte mi orta yarıda mı alt çeyrekte mi
+olduğu doğrudan okunur. Görece konum tezi güçlendi.
+
 **Ray asla veriye göre ölçeklenmez.** 0–100 sabittir. Ölçeği veriye uydurmak, karşılaştırmayı
 imkânsız kılar — aletin taksimatı kaymaz.
 
-**Kohort 5'in altındaysa çentikler çizilmez.** SPEC §4 gereği bu durumda potansiyel alt skoru
-hesaplanmaz ve hesap `watch` olur. Ray boş taşıyıcı olarak durur, erişilebilir etiketi
-"kohort 5 hesabın altında, karşılaştırma yapılmadı" der. Olmayan karşılaştırmayı çizmeyiz
-(CLAUDE.md kural 7'nin ruhu). *Faz 3'te (100 skorlanmış hesap, fixture) kohortlar doldu ve
-çentikler imza öğesini tam gücüyle çiziyor: her kategoride (dental_clinic, jewelry_store,
-car_dealer, real_estate_agency, cafe, hair_salon…) skorlar rayda kümeleniyor, her satırın skoru
-kohortun içindeki yeriyle okunuyor. Kohortu 5'in altında kalan kategoriler (florist, gift_shop,
-pet_store) skorsuz `watch` — çentiksiz ray + "—" + "İzlemede", canlı doğrulandı.*
+**Kohort 5'in altındaysa bant çizilmez.** SPEC §4 gereği bu durumda dağılım hesaplanmaz
+(`score_median` null gelir) ve hesap `watch` olur. Ray boş taşıyıcı olarak durur, erişilebilir
+etiketi "kohort 5 hesabın altında, karşılaştırma yapılmadı" der. Olmayan karşılaştırmayı
+çizmeyiz (CLAUDE.md kural 7'nin ruhu). *Canlı doğrulandı: florist/gift_shop/pet_store (3'er
+kayıt) → bant yok + "—" + "İzlemede"; dolu kategoriler (dental_clinic, jewelry_store…) çeyrek
+bandını tam gösteriyor.*
 
-**Kohort kaynağı filtreden bağımsızdır.** `/businesses` sayfalı ve filtreli gelir; ama kohort
+**Kohort dağılımı filtreden bağımsızdır.** `/businesses` sayfalı ve filtreli gelir; ama kohort
 "aynı kategorideki taranmış tüm hesaplar" olmalı, yoksa `status=qualified` filtresi altında ray
-yalnızca qualified skorları gösterir ve görece konum yanıltıcı olur. Bu yüzden panel kohortu
-**ayrı, filtresiz bir istekten** besler (`useKohortKaynagi`, tek istek, 30s cache). Sınır:
-`limit` üst sınırı 200; bunu aşan bir kohort kaynağı eksik kalır — Faz 1'de sorun değil, kalıcı
-çözüm bir kategori-dağılım ucu ister (docs/TASKS.md `## Bloke`).
+yanıltıcı olur. `GET /stats/categories` dağılımı **tüm skorlanmış hesaplardan** hesaplar —
+filtreden bağımsız, `limit=200` sınırı yok (FE-3-B1 kapandı).
 
 **Anahtar bir kez gösterilir.** Skor sütunu başlığının altında 0 · 40 · 70 · 100 taksimatı
 duran sabit bir ray anahtarı var. Böylece her satırda bant etiketi tekrar etmeye gerek kalmaz.
@@ -199,6 +210,13 @@ insan okur; çubuk kendini kutlamaz.
 **Üst şerit.** SPEC §7 `/stats`: taranan · nitelikli · rapor · aylık maliyet. Dört ölçü, tek
 satır, dikey çizgilerle ayrılmış. Rakam iri mono, etiket `mikro` versal kurşun. Şerit veri
 yokken de **yerini korur** — yükleme bittiğinde düzen zıplamaz.
+
+**Maliyet alarmı (SPEC §8).** Aylık maliyet yapılandırılmış eşiği aştıysa (`monthly_cost_alarm`)
+maliyet hücresi görünür bir uyarı taşır: rakam oksit + altında "Eşik aşıldı" (mikro, oksit).
+Renk **tek taşıyıcı değildir** — metin uyarıyı sözle de söyler, renk körlüğünde de okunur.
+Oksit'in buraya açılması §1'de ölçülü genişletme olarak gerekçeli; maliyet disiplini ürünün
+merkezi olduğundan eşik aşımı kritik bir sistem durumudur. Alarm kapalıyken hiçbir ek işaret
+yok — sessiz varsayılan.
 
 **Tablo.** Sütunlar: İşletme (ad + `@handle`) · Kategori · Değerlendirme · Keşfedildi · Triyaj
 skoru. Genişlikler sabit (`colgroup`); veri gelince başlık kaymaz. Satır 44px — yoğun ama

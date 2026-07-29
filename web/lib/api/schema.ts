@@ -132,6 +132,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stats/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Kategori kohort dağılımı
+         * @description Her kategori için taranmış hesapların skor dağılımını (medyan + çeyrekler) ve
+         *     etkileşim kohort medyanını (SPEC §4) döndürür. Panelin kohort rayı bunu kullanır;
+         *     `/businesses?limit=200` üzerinden istemci-tarafı türetmenin yerini alır (FE-3-B1).
+         *     Yalnız skor/etkileşim dağılımı taşır — erişim/gösterim/demografi yok (kural 7).
+         */
+        get: operations["getCategoryCohorts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/audits/{id}": {
         parameters: {
             query?: never;
@@ -237,6 +260,19 @@ export interface components {
              *     `audits.llm_cost_usd` alanlarının toplamıdır.
              */
             monthly_cost_usd: number;
+            /**
+             * @description Aylık maliyet yapılandırılmış eşiği aştı mı (SPEC §8 maliyet alarmı). Panel
+             *     üst şeritte alarmı gösterir. **Opsiyonel + varsayılanlı** — mevcut istemci tip
+             *     üretimini kırmaz (geriye uyumlu).
+             * @default false
+             */
+            monthly_cost_alarm: boolean;
+            /**
+             * Format: double
+             * @description Yapılandırılmış aylık maliyet eşiği (USD); alarm bunun aşılmasıyla açılır.
+             *     Eşik tanımlı değilse null. Opsiyonel — geriye uyumlu.
+             */
+            monthly_cost_limit_usd?: number | null;
         };
         /**
          * TriageStatus
@@ -506,6 +542,56 @@ export interface components {
             detail: string;
         };
         /**
+         * RateLimited
+         * @description Hız sınırı aşıldığında (`429`) dönen gövde. Bekleme süresi `Retry-After`
+         *     başlığındadır (SPEC §8 sertleştirme).
+         */
+        RateLimited: {
+            /** @description İnsan okunur açıklama. */
+            detail: string;
+        };
+        /**
+         * CategoryCohort
+         * @description Tek kategori için kohort istatistiği (SPEC §4). Yalnız skor/etkileşim dağılımı;
+         *     erişim/gösterim/demografi taşımaz (kural 7). Yeterli veri yoksa (ör. kohort<5,
+         *     SPEC §4) dağılım alanları null olabilir.
+         */
+        CategoryCohort: {
+            /** @description İşletme kategorisi. */
+            category: string;
+            /** @description Bu kategoride skorlanmış hesap sayısı. */
+            scanned: number;
+            /**
+             * Format: double
+             * @description Kategori birleşik skor medyanı. Yetersiz veride null.
+             */
+            score_median: number | null;
+            /**
+             * Format: double
+             * @description Skor birinci çeyreği (%25). Yetersiz veride null.
+             */
+            score_q1: number | null;
+            /**
+             * Format: double
+             * @description Skor üçüncü çeyreği (%75). Yetersiz veride null.
+             */
+            score_q3: number | null;
+            /**
+             * Format: double
+             * @description Etkileşim oranı kohort medyanı (SPEC §4 — potansiyel bu medyana göre
+             *     hesaplanır). Kohort<5 ise hesaplanmaz → null.
+             */
+            engagement_median: number | null;
+        };
+        /**
+         * CategoryCohortList
+         * @description Kategori kohort istatistiklerinin listesi.
+         */
+        CategoryCohortList: {
+            /** @description Kategori başına bir kohort kaydı. */
+            items: components["schemas"]["CategoryCohort"][];
+        };
+        /**
          * ValidationError
          * @description FastAPI sorgu/gövde doğrulama hatası.
          */
@@ -525,7 +611,10 @@ export interface components {
     responses: never;
     parameters: never;
     requestBodies: never;
-    headers: never;
+    headers: {
+        /** @description Yeni istek göndermeden önce beklenmesi gereken saniye. */
+        RetryAfter: number;
+    };
     pathItems: never;
 }
 export type $defs = Record<string, never>;
@@ -650,6 +739,19 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
+            /**
+             * @description Hız sınırı aşıldı (SPEC §8 sertleştirme). `Retry-After` başlığı, yeni istek
+             *     öncesi beklenmesi gereken saniyeyi verir.
+             */
+            429: {
+                headers: {
+                    "Retry-After": components["headers"]["RetryAfter"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RateLimited"];
+                };
+            };
         };
     };
     getJob: {
@@ -721,6 +823,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorMessage"];
+                };
+            };
+            /**
+             * @description Hız sınırı aşıldı (SPEC §8 sertleştirme). `Retry-After` başlığı, yeni istek
+             *     öncesi beklenmesi gereken saniyeyi verir.
+             */
+            429: {
+                headers: {
+                    "Retry-After": components["headers"]["RetryAfter"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RateLimited"];
+                };
+            };
+        };
+    };
+    getCategoryCohorts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Kategori başına kohort istatistikleri */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryCohortList"];
                 };
             };
         };

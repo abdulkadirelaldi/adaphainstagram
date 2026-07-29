@@ -9,8 +9,12 @@ import { KesifCubugu } from "@/components/kesif-cubugu";
 import { Sayfalama } from "@/components/sayfalama";
 import { UstSerit } from "@/components/ust-serit";
 import type { Isletme } from "@/lib/api/tipler";
-import { useBusinesses, useKohortKaynagi, useStats } from "@/lib/api/sorgular";
-import { kategoriler as benzersizKategoriler } from "@/lib/kohort";
+import {
+  useBusinesses,
+  useCategoryCohorts,
+  useStats,
+} from "@/lib/api/sorgular";
+import { kategoriler as kohortKategorileri, kohortHaritasi } from "@/lib/kohort";
 import { sorguCoz } from "@/lib/sorgu-durumu";
 
 /**
@@ -18,8 +22,8 @@ import { sorguCoz } from "@/lib/sorgu-durumu";
  * uçlarını TanStack Query ile çağırır, üst şeridi ve tabloyu çizer.
  *
  * Üç durum artık gerçek: ağ/CORS hatası hata durumunu, `items: []` boş durumu
- * tetikler. Kohort rayı ayrı, filtresiz bir kaynaktan beslenir ki filtre altında
- * bile görece konum bozulmasın.
+ * tetikler. Kohort rayı ayrı bir uçtan (`/stats/categories`) beslenir ki filtre
+ * altında bile görece konum bozulmasın (FE-3-B1 bununla kapandı).
  */
 export function AdayPaneli() {
   const params = useSearchParams();
@@ -33,12 +37,15 @@ export function AdayPaneli() {
 
   const stats = useStats();
   const liste = useBusinesses(sorgu);
-  const kohort = useKohortKaynagi();
+  const kohortlarSorgu = useCategoryCohorts();
 
-  const kohortKaynagi = useMemo(() => kohort.data?.items ?? [], [kohort.data]);
+  const kohortlar = useMemo(
+    () => kohortHaritasi(kohortlarSorgu.data),
+    [kohortlarSorgu.data],
+  );
   const kategoriler = useMemo(
-    () => benzersizKategoriler(kohortKaynagi),
-    [kohortKaynagi],
+    () => kohortKategorileri(kohortlarSorgu.data),
+    [kohortlarSorgu.data],
   );
 
   const durum = liste.isError
@@ -55,11 +62,7 @@ export function AdayPaneli() {
       <KesifCubugu />
       <UstSerit istatistik={stats.data} />
       <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
-      <AdayTablosu
-        durum={durum}
-        kohortKaynagi={kohortKaynagi}
-        onSec={setSecili}
-      />
+      <AdayTablosu durum={durum} kohortlar={kohortlar} onSec={setSecili} />
       <Sayfalama
         offset={sorgu.offset}
         limit={sorgu.limit}

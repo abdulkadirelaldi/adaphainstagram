@@ -11,6 +11,8 @@ export type Isletme = components["schemas"]["Business"];
 export type IsletmeListesi = components["schemas"]["BusinessList"];
 export type Istatistik = components["schemas"]["Stats"];
 export type TriageStatus = components["schemas"]["TriageStatus"];
+export type KategoriKohort = components["schemas"]["CategoryCohort"];
+export type KategoriKohortListesi = components["schemas"]["CategoryCohortList"];
 
 export type KesifIstegi = components["schemas"]["DiscoveryRequest"];
 export type IsKabul = components["schemas"]["JobAccepted"];

@@ -1,28 +1,26 @@
-import {
-  ASGARI_KOHORT,
-  BANT_ETIKET,
-  kelepcele,
-  type SkorBandi,
-} from "@/lib/skor";
+import { kelepcele, type SkorBandi } from "@/lib/skor";
+import type { KategoriKohort } from "@/lib/api/tipler";
 
 /**
  * İMZA ÖĞESİ — kohort rayı.
  *
  * Skor hücresi çıplak bir sayı ya da rozet değildir. Her hücrede sabit bir 0–100
- * yatay ray durur: taranmış tüm kohortun skorları bu rayda soluk çentikler, o
- * satırın skoru dolu çentiktir. Böylece hiçbir skor tek başına okunmaz, daima
+ * yatay ray durur: o kategorinin skor DAĞILIMI (çeyrekler) rayda soluk bir bant,
+ * o satırın skoru dolu çentiktir. Böylece hiçbir skor tek başına okunmaz, daima
  * kohortun içindeki yeriyle okunur.
  *
  * Bu SPEC §4'ün merkezindeki ilkenin görselleştirilmesidir: mutlak eşik
  * yanıltıcıdır, anlamlı olan görece konumdur.
  *
- * Üç eksende kodlama yapılır — hiçbiri tek başına yeterli değildir:
+ * Dağılım kaynağı `GET /stats/categories` (BE-23): medyan + Q1 + Q3. FE-3'ün tek
+ * tek skorları çizen "soluk çentik" yaklaşımı bununla değişti — çeyrek bandı 200+
+ * hesapta da üç sayıyla ölçeklenir, gürültüsüzdür ve dağılımı nicel gösterir
+ * (Q1–Q3 arası orta %50, medyan tam ortası). Görece konum daha okunur oldu.
+ *
+ * Üç eksende kodlama — hiçbiri tek başına yeterli değil:
  *   konum      → skorun büyüklüğü (sürekli) · `score`
  *   yükseklik  → bant (elendi kısa · izlemede orta · nitelikli tam)
- *   renk       → bant (tek hue, üç koyuluk durağı)
- *
- * Bant DAİMA `status`'tan gelir (SkorHucresi türetir), `score`'dan değil — kohort<5
- * durumunda skor eşiği yanıltıcıdır (SPEC §4).
+ *   renk       → bant (tek hue, üç koyuluk durağı) · `status`'tan türer
  */
 
 const RAY_RENK: Record<SkorBandi, string> = {
@@ -31,7 +29,6 @@ const RAY_RENK: Record<SkorBandi, string> = {
   nitelikli: "stroke-skor-nitelikli",
 };
 
-/** Çentik yüksekliği (px). Taban çizgisinden yukarı doğru. */
 const RAY_YUKSEKLIK: Record<SkorBandi, number> = {
   elendi: 8,
   izlemede: 13,
@@ -49,18 +46,25 @@ export function KohortRayi({
   skor: number | null;
   /** Görsel bant — statustan türer. null ise nötr işaret. */
   bant: SkorBandi | null;
-  /** Aynı kategoride taranmış tüm hesapların skorları. */
-  kohort: readonly number[];
+  /** Kategori kohort dağılımı (medyan + çeyrekler). Kohort<5 ise null çeyrekler. */
+  kohort: KategoriKohort | null;
 }) {
-  const yeterliKohort = kohort.length >= ASGARI_KOHORT;
   const konum = skor === null ? null : kelepcele(skor);
 
-  const etiket =
-    konum === null
-      ? "Skorlanmadı."
-      : yeterliKohort
-        ? `${bant ? BANT_ETIKET[bant] : "Skor"}. Kohortta ${kohort.length} hesap arasında.`
-        : `${bant ? BANT_ETIKET[bant] : "Skor"}. Kohort ${ASGARI_KOHORT} hesabın altında, karşılaştırma yapılmadı.`;
+  // SPEC §4: kohort<5 → dağılım hesaplanmaz (medyan null). Bant çizilmez.
+  const dagilim =
+    kohort &&
+    kohort.score_median !== null &&
+    kohort.score_q1 !== null &&
+    kohort.score_q3 !== null
+      ? {
+          medyan: kelepcele(kohort.score_median),
+          q1: kelepcele(kohort.score_q1),
+          q3: kelepcele(kohort.score_q3),
+        }
+      : null;
+
+  const etiket = etiketMetni(konum, dagilim);
 
   return (
     <svg
@@ -84,20 +88,27 @@ export function KohortRayi({
         vectorEffect="non-scaling-stroke"
       />
 
-      {/* Kohort çentikleri — tek tek okunmaz, küme olarak dağılımı gösterir. */}
-      {yeterliKohort &&
-        kohort.map((k, i) => (
+      {/* Kohort çeyrek bandı (Q1–Q3, orta %50) + medyan. Küme olarak dağılımı gösterir. */}
+      {dagilim && (
+        <>
+          <rect
+            x={Math.min(dagilim.q1, dagilim.q3)}
+            y={TABAN - 6}
+            width={Math.max(0.5, Math.abs(dagilim.q3 - dagilim.q1))}
+            height={6}
+            className="fill-ray-kohort"
+          />
           <line
-            key={`${k}-${i}`}
-            x1={kelepcele(k)}
-            y1={TABAN - 6}
-            x2={kelepcele(k)}
+            x1={dagilim.medyan}
+            y1={TABAN - 8}
+            x2={dagilim.medyan}
             y2={TABAN}
             className="stroke-ray-kohort"
             strokeWidth={1}
             vectorEffect="non-scaling-stroke"
           />
-        ))}
+        </>
+      )}
 
       {/* Bu satırın skoru. Konum yoksa (skor null) çizilmez. */}
       {konum !== null && (
@@ -113,4 +124,19 @@ export function KohortRayi({
       )}
     </svg>
   );
+}
+
+function etiketMetni(
+  konum: number | null,
+  dagilim: { medyan: number; q1: number; q3: number } | null,
+): string {
+  if (konum === null) return "Skorlanmadı.";
+  if (!dagilim) return "Kohort 5 hesabın altında, karşılaştırma yapılmadı.";
+  const yer =
+    konum < dagilim.q1
+      ? "kohortun alt çeyreğinde"
+      : konum > dagilim.q3
+        ? "kohortun üst çeyreğinde"
+        : "kohortun orta yarısında";
+  return `Skor ${Math.floor(konum)}, ${yer} (medyan ${Math.floor(dagilim.medyan)}).`;
 }

@@ -6,6 +6,7 @@ import {
   STATUS_ETIKET,
   type TriageStatus,
 } from "@/lib/skor";
+import type { KategoriKohort } from "@/lib/api/tipler";
 
 /**
  * Skor hücresi: mono rakam + kohort rayı.
@@ -24,7 +25,7 @@ export function SkorHucresi({
 }: {
   skor: number | null;
   status: TriageStatus | null;
-  kohort: readonly number[];
+  kohort: KategoriKohort | null;
 }) {
   const bant =
     status !== null
