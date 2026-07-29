@@ -43,15 +43,19 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
 
-- [ ] **180 günlük silme cron'u** — dönüşmeyen aday (`won` olmamış, 180 günden eski
+- [x] **180 günlük silme cron'u** — dönüşmeyen aday (`won` olmamış, 180 günden eski
       `discovered_at`) otomatik siliniyor. Cron, opsiyonel değil (CLAUDE.md hukuki sınır).
       Fixture + enjekte referans zamanla test edilir; canlı çağrı yok.
+      — BE-22 ile kapandı. arq `cron` (her gün 03:00); referans enjekte; won+fresh korundu,
+      CASCADE+yetim PDF silme deterministik doğrulandı (98/100 silindi, won/fresh kaldı).
 - [ ] **Rate limit** — aşırı istek `429` + `Retry-After` dönüyor (senkron scraping zaten yasak;
       bu API yüzeyi koruması).
 - [ ] **E2E testler** — keşif→skor→denetim→PDF/outreach uçtan uca (Playwright), CI'da koşuyor;
       **CI'da chromium kurulu** (SEC-10-N1 kapanır).
-- [ ] **Maliyet alarmı** — aylık LLM maliyeti (`audits.llm_cost_usd` toplamı) eşiği aşınca alarm
+- [x] **Maliyet alarmı** — aylık LLM maliyeti (`audits.llm_cost_usd` toplamı) eşiği aşınca alarm
       (log + `/stats` göstergesi). Eşik ayarlanabilir.
+      — BE-22 ile kapandı. `MONTHLY_COST_LIMIT_USD` eşiği; `Stats.monthly_cost_alarm` + net log;
+      eşik-altı→true, eşik-üstü/yok→false doğrulandı. Alarm bildirimdir, sistemi durdurmaz.
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
@@ -294,6 +298,7 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 
 _(tek satır sonuç notuyla)_
 
+- **BE-22** · 180 günlük silme cron'u + maliyet alarmı (Faz 6 kutu #1+#4). **Silme** (`api/services/retention.py`): arq `cron` (her gün 03:00, `WorkerSettings.cron_jobs`) → `discovered_at` `retention_days` (varsayılan 180) günden eski **ve dönüşmemiş** (won outreach'i olmayan) işletmeleri siler. Referans zaman **enjekte** (üretimde `now(UTC)`, testte sabit — `datetime.now()` saf mantığa gömülü değil). FK zinciri DB `ondelete=CASCADE` → tek DELETE snapshots→posts/triage_scores/audits→outreach'i temizliyor; yetim PDF'ler (audit `pdf_path`) transaction sonrası diskten siliniyor. **`won` korunur** (dönüşen müşteri verisi — belgeli karar). **Alarm**: `MONTHLY_COST_LIMIT_USD` eşiği (`.env` değersiz); `compute_stats` aylık `audits.llm_cost_usd` toplamını eşikle karşılaştırıp `Stats.monthly_cost_alarm`+`monthly_cost_limit_usd` dolduruyor + net uyarı logu. Alarm bildirimdir, sistemi durdurmaz. `Stats` yeni alanları opsiyonel+varsayılanlı (geriye uyumlu, BE-21). Doğrulama (fixture worker, gerçek pg): 100 işletme→98 silindi (won+fresh korundu=2), CASCADE snapshot 14→2/posts→8, silinen adayın yetim PDF'i gitti (removed_pdfs=1) won'unki kaldı; alarm eşik-altı→true, eşik-üstü/yok→false. ruff+mypy(82)+pytest(170) yeşil, yasak-metrik/anahtar grep boş.
 - **BE-21** · Faz 6 sertleştirme sözleşmesi (`docs/openapi.yaml`, yalnız sözleşme). **(1) Rate limit:** `/discovery/run` + `/businesses/{id}/audit`'e `429` yanıtı + `Retry-After` başlığı (ortak `components/headers/RetryAfter`) + `RateLimited` gövde şeması. **(2) Kohort ucu (FE-3-B1):** `GET /stats/categories` → `CategoryCohortList`; kategori başına skor medyanı+çeyrekler (q1/q3) + etkileşim kohort medyanı (SPEC §4); yetersiz veride (kohort<5) null. `/businesses?limit=200` istemci-türetiminin yerini alır. Yasak alan yok — yalnız skor/etkileşim dağılımı. **(3) Maliyet alarmı:** `Stats`'a `monthly_cost_alarm` (bool, `default:false`, **required'da değil** → geriye uyumlu) + `monthly_cost_limit_usd` (nullable eşik). redocly lint 0 hata (5 uyarı); tüm JSON gövdeleri adlandırılmış şemaya `$ref`; kohort/Stats yasak-alan grep boş; `Stats` mevcut tip üretimini kırmıyor (yeni alanlar opsiyonel); Faz 1-5 ile çelişki yok. **BE-22 (cron+alarm), BE-23 (rate-limit+kohort impl), FE-8 başlayabilir.**
 - **SEC-11** · E2E test iskeleti + CI'da chromium (3 yeni test, 170 toplam). **CI:** `.github/workflows/ci.yml` pytest job'ına `playwright install --with-deps chromium` eklendi → PDF-render (BE-18/SEC-10) + e2e PDF CI'da SKIP değil koşuyor; **SEC-10-N1 kapatıldı**. **E2E** (`tests/e2e/test_pipeline_e2e.py`, fixture modu, canlı çağrı yok): worker'ın servis fonksiyonlarıyla (`fixture_adapters`+`FIXTURE_REFERENCE_NOW`+`FixtureLLMClient`) SPEC §1 tam akışı — ① keşif+skor→DB 100 işletme/>0 skorlu; ② `POST /businesses/{id}/audit` gate qualified→202+job_id/watch→409/yok→404; ③ `run_audit` denetim+PDF; ④ `GET /audits/{id}` skor+rapor+**llm_cost>0**+draft; ⑤ `GET /audits/{id}/pdf` 200/`%PDF-` (chromium; yoksa alt-adım SKIP); ⑥ `PATCH /outreach/{id}` draft→sent+sent_at. Tümü offline (MockTransport+Fixture LLM), ağ muhafızı altında; pg+redis erişilemezse dürüst SKIP (doğrulandı). ruff+mypy(81)+pytest(170) yeşil env'li+env'siz. **Frontend Playwright e2e** kapsam dışı bırakıldı (backend API-e2e kapsıyor) → öneri `## Bloke` SEC-11-N1 (ayrı görev, orkestra şefine). Detay: `docs/REVIEW.md` SEC-11.
 

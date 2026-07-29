@@ -7,6 +7,7 @@ ve `monthly_cost_usd` `audits`'tan gelir — Faz 4'e kadar tablo boş, sorgu 0 d
 
 from fastapi import APIRouter, Request
 
+from api.config import get_settings
 from api.schemas import Stats
 from api.services.dashboard import compute_stats
 
@@ -27,4 +28,6 @@ async def get_stats(request: Request) -> Stats:
         return Stats(scanned=0, qualified=0, reports=0, monthly_cost_usd=0.0)
 
     async with session_factory() as session:
-        return await compute_stats(session)
+        return await compute_stats(
+            session, monthly_cost_limit=get_settings().monthly_cost_limit_usd
+        )

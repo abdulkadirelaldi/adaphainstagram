@@ -6,6 +6,7 @@ skorlanmamış (handle'sız / kohort<5 skorsuz) hesapta `score`/`status` null ka
 sözleşmedeki nullable davranış.
 """
 
+import logging
 from decimal import Decimal
 
 from sqlalchemy import Select, func, select
@@ -14,6 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.models import Audit, Business, TriageScore
 from api.schemas import Business as BusinessOut
 from api.schemas import BusinessList, Stats, TriageStatus
+
+logger = logging.getLogger(__name__)
 
 # İşletme başına en güncel triyaj satırı. triage_scores zaten idempotent (işletme
 # başına tek satır) ama DISTINCT ON ile birden fazlaya karşı da doğru kalır.
@@ -90,20 +93,33 @@ async def list_businesses(
     return BusinessList(items=items, total=total)
 
 
-async def compute_stats(session: AsyncSession) -> Stats:
+async def compute_stats(session: AsyncSession, *, monthly_cost_limit: float | None = None) -> Stats:
     scanned = await session.scalar(select(func.count(func.distinct(TriageScore.business_id))))
     qualified = await session.scalar(
         select(func.count())
         .select_from(TriageScore)
         .where(TriageScore.status == TriageStatus.QUALIFIED)
     )
-    # Faz 4'te audits dolacak; şimdilik gerçek sorgu boş tabloda 0 döner (uydurma yok).
     reports = await session.scalar(select(func.count()).select_from(Audit))
-    monthly_cost = await session.scalar(select(func.coalesce(func.sum(Audit.llm_cost_usd), 0)))
+    monthly_cost = float(
+        await session.scalar(select(func.coalesce(func.sum(Audit.llm_cost_usd), 0))) or 0
+    )
+
+    # Maliyet alarmı (SPEC §8): eşik tanımlı ve aşıldıysa alarm açık + net uyarı logu.
+    # Alarm bir bildirim; sistemi durdurmaz.
+    alarm = monthly_cost_limit is not None and monthly_cost > monthly_cost_limit
+    if alarm:
+        logger.warning(
+            "MALİYET ALARMI: aylık LLM maliyeti %.4f USD eşiği (%.2f USD) aştı.",
+            monthly_cost,
+            monthly_cost_limit,
+        )
 
     return Stats(
         scanned=scanned or 0,
         qualified=qualified or 0,
         reports=reports or 0,
-        monthly_cost_usd=float(monthly_cost or 0),
+        monthly_cost_usd=monthly_cost,
+        monthly_cost_alarm=alarm,
+        monthly_cost_limit_usd=monthly_cost_limit,
     )

@@ -11,12 +11,15 @@ from api.services.audit import (
 )
 from api.services.discovery import DiscoverySummary, run_discovery
 from api.services.profile import fetch_profile
+from api.services.retention import PurgeSummary, purge_old_candidates
 
 __all__ = [
     "DiscoverySummary",
     "NotAuditableError",
+    "PurgeSummary",
     "assert_auditable",
     "fetch_profile",
+    "purge_old_candidates",
     "run_audit",
     "run_discovery",
 ]

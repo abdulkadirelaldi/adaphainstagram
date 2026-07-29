@@ -46,6 +46,15 @@ class Settings(BaseSettings):
     # değil (kural 6). Depo dışında/gitignore'lu tutulmalı.
     pdf_output_dir: str = Field(default="./var/audit_pdfs", description="Denetim PDF çıktı dizini.")
 
+    # Hukuki sınır (CLAUDE.md): dönüşmeyen adayın verisi bu süre sonra silinir (cron,
+    # opsiyonel değil). Varsayılan 180 gün — politika sabiti; test için ayarlanabilir.
+    retention_days: int = Field(default=180, ge=1, description="Silme öncesi bekleme (gün).")
+    # Aylık LLM maliyeti bu eşiği aşınca alarm (Stats.monthly_cost_alarm=true + log).
+    # Alarm bir bildirim; sistemi durdurmaz. Tanımlı değilse alarm hep kapalı.
+    monthly_cost_limit_usd: float | None = Field(
+        default=None, ge=0, description="Aylık maliyet alarm eşiği (USD). Boşsa alarm kapalı."
+    )
+
     # Maliyet disiplini (CLAUDE.md): aynı hesap 7 gün içinde tekrar kazınmaz. BE-9
     # profil çekmeden önce bu TTL'li Redis anahtarına bakar. Varsayılan 7 gün.
     snapshot_cache_ttl_seconds: int = Field(

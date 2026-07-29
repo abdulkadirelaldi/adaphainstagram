@@ -70,6 +70,13 @@ class Stats(BaseModel):
         ge=0,
         description="İçinde bulunulan takvim ayının gerçekleşen LLM maliyeti (USD).",
     )
+    # Faz 6 maliyet alarmı. Opsiyonel + varsayılanlı → geriye uyumlu (BE-21 sözleşmesi).
+    monthly_cost_alarm: bool = Field(
+        default=False, description="Aylık maliyet eşiği aşıldı mı (SPEC §8)."
+    )
+    monthly_cost_limit_usd: float | None = Field(
+        default=None, ge=0, description="Yapılandırılmış aylık maliyet eşiği (USD); yoksa null."
+    )
 
 
 class Business(BaseModel):

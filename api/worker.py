@@ -14,6 +14,7 @@ import os
 from datetime import UTC, datetime
 from typing import Any, ClassVar
 
+from arq import cron
 from arq.connections import RedisSettings
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -28,7 +29,7 @@ from api.fixture_mode import FIXTURE_REFERENCE_NOW, fixture_adapters
 from api.jobstate import write_progress
 from api.llm.client import AnthropicLLMClient, LLMClient
 from api.llm.fixture_client import FixtureLLMClient
-from api.services import DiscoverySummary, run_audit, run_discovery
+from api.services import DiscoverySummary, purge_old_candidates, run_audit, run_discovery
 from api.services.discovery import ProgressCallback
 
 logger = logging.getLogger(__name__)
@@ -147,6 +148,21 @@ async def audit_task(ctx: dict[str, Any], *, business_id: int) -> dict[str, int 
     return {"businesses": 0, "snapshots": 0, "audit_id": audit_id}
 
 
+async def purge_task(ctx: dict[str, Any]) -> dict[str, int]:
+    """180 günlük silme cron'u (CLAUDE.md hukuki sınır — opsiyonel değil).
+
+    Dönüşmeyen ve `retention_days` günden eski adayları (bağlı kayıtlar + PDF) siler.
+    Referans zaman üretimde `now(UTC)`; `won` adaylar korunur (retention servisinde).
+    """
+    settings = get_settings()
+    summary = await purge_old_candidates(
+        ctx["session_factory"],
+        reference_now=datetime.now(UTC),
+        retention_days=settings.retention_days,
+    )
+    return summary.as_dict()
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     settings = get_settings()
     engine = create_engine(settings)
@@ -162,6 +178,8 @@ class WorkerSettings:
     """arq bu sınıfı okur: `arq api.worker.WorkerSettings`."""
 
     functions: ClassVar = [discovery_task, audit_task]
+    # Silme cron'u her gün 03:00'te (düşük trafik). Opsiyonel değil (hukuki sınır).
+    cron_jobs: ClassVar = [cron(purge_task, hour=3, minute=0)]
     on_startup = startup
     on_shutdown = shutdown
     # arq `redis_settings`'i bir değer olarak okur (fonksiyon değil). Import anında
