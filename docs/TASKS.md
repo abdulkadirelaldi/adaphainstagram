@@ -9,8 +9,13 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 ✅** · **Faz 2 ✅** · **Faz 3 ✅** · **Faz 4 — denetim ✅ TAMAMLANDI** ·
-**Faz 5 — çıktı açık** (SPEC §8).
+**Faz 1 ✅** · **Faz 2 ✅** · **Faz 3 ✅** · **Faz 4 ✅** · **Faz 5 — çıktı ✅ TAMAMLANDI** ·
+**Faz 6 — sertleştirme açık** (SPEC §8, son faz).
+
+Faz 5 kutuları (4/4): rapor PDF indiriliyor (Playwright, yerelde gerçek), erişim taslağı
+kopyalanabiliyor, `PATCH /outreach/{id}` durum güncelliyor, **sistem otomatik mesaj göndermiyor**
+(SEC-10 AST-tabanlı muhafızla `api/`'de gönderim yolu olmadığını doğruladı). FE-7-B1 (CORS PATCH)
+BE-20 ile çözüldü.
 
 Faz 4 kutuları (4/4): deterministik 5 bulgu kuralı + görünürlük skoru (LLM icat etmiyor),
 Haiku 4.5 batch (tek çağrıda ≤30 gönderi), Sonnet 5 sentez (rapor metni + outreach draft,
@@ -34,7 +39,45 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 ## Açık
 
-### Faz 5 — çıktı (SPEC §8). Bitiş kriteri kutusu:
+### Faz 6 — sertleştirme (SPEC §8, son faz). Bitiş kriteri kutusu:
+
+SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
+
+- [ ] **180 günlük silme cron'u** — dönüşmeyen aday (`won` olmamış, 180 günden eski
+      `discovered_at`) otomatik siliniyor. Cron, opsiyonel değil (CLAUDE.md hukuki sınır).
+      Fixture + enjekte referans zamanla test edilir; canlı çağrı yok.
+- [ ] **Rate limit** — aşırı istek `429` + `Retry-After` dönüyor (senkron scraping zaten yasak;
+      bu API yüzeyi koruması).
+- [ ] **E2E testler** — keşif→skor→denetim→PDF/outreach uçtan uca (Playwright), CI'da koşuyor;
+      **CI'da chromium kurulu** (SEC-10-N1 kapanır).
+- [ ] **Maliyet alarmı** — aylık LLM maliyeti (`audits.llm_cost_usd` toplamı) eşiği aşınca alarm
+      (log + `/stats` göstergesi). Eşik ayarlanabilir.
+
+| id | ajan | görev | bağımlı |
+|---|---|---|---|
+| BE-21 | backend | **Sözleşme önce:** rate-limit `429`/`Retry-After`, maliyet-alarm göstergesi (`/stats`), kohort ucu (FE-3-B1) → `openapi.yaml` | — |
+| BE-22 | backend | 180 günlük silme cron'u (arq scheduled) + maliyet alarmı (eşik + log + `/stats` alanı) | BE-21 |
+| BE-23 | backend | Rate limit middleware (`429`+`Retry-After`) + kohort ucu implementasyonu | BE-21 |
+| SEC-11 | güvenlik | E2E test iskeleti (Playwright) + CI'a `playwright install chromium` (SEC-10-N1) | — |
+| SEC-12 | güvenlik | 180-silme + rate-limit + maliyet-alarm testleri + son gizlilik/maliyet denetimi | BE-22, BE-23 |
+| FE-8 | frontend | Kohort rayını gerçek kohort ucuna bağla (FE-3-B1) + maliyet alarmı göstergesi | BE-21 (sözleşme), canlı: BE-23 |
+
+### Sıralama notu (Faz 6)
+
+BE-21 sözleşmeyi dondurur. SEC-11 (e2e + CI chromium) **sözleşmeden bağımsız**, hemen başlar —
+mevcut akışı test eder. BE-22 (cron+alarm) ‖ BE-23 (rate-limit+kohort) sözleşme sonrası; tek
+backend oturumu seri. SEC-12 ve FE-8 canlı doğrulama BE-22/BE-23'ü bekler.
+
+### Faz 6 — devredilmiş işler (biriken kararlar burada kapanır)
+
+- **SEC-10-N1** (CI'da chromium) → SEC-11'e dahil.
+- **CI kutusu** (remote push + Actions doğrulaması) + **Docker** (gerçek `docker compose up`) →
+  **kullanıcı kararı bekliyor:** remote/Docker bu makinede yok. Faz 6 sonunda orkestra şefi
+  kullanıcıya soracak: remote kurulup CI/Actions gerçekten koşturulsun mu, Docker Desktop kurulup
+  compose doğrulansın mı, yoksa ikisi de "yerel + belgeli daraltma" olarak mı kabul edilsin.
+- **FE-3-B1** (kohort ucu) → BE-21 sözleşme + BE-23 impl + FE-8 bağlama ile kapanır.
+
+### Faz 5 — çıktı (SPEC §8) ✅ TAMAMLANDI. Bitiş kriteri kutusu:
 
 - [x] Denetim raporu **PDF olarak indiriliyor** (Playwright; rapor HTML→PDF); `audits.pdf_path`
       doluyor, `GET /audits/{id}/pdf` PDF stream ediyor
