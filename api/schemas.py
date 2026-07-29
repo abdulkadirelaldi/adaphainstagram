@@ -18,6 +18,8 @@ __all__ = [
     "Audit",
     "Business",
     "BusinessList",
+    "CategoryCohort",
+    "CategoryCohortList",
     "ComponentStatus",
     "DiscoveryRequest",
     "Finding",
@@ -77,6 +79,29 @@ class Stats(BaseModel):
     monthly_cost_limit_usd: float | None = Field(
         default=None, ge=0, description="Yapılandırılmış aylık maliyet eşiği (USD); yoksa null."
     )
+
+
+class CategoryCohort(BaseModel):
+    """Tek kategori için kohort istatistiği (SPEC §4). Yalnız skor/etkileşim dağılımı."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    category: str
+    scanned: int = Field(ge=0, description="Kategoride skorlanmış hesap sayısı.")
+    score_median: float | None = Field(ge=0, le=100)
+    score_q1: float | None = Field(ge=0, le=100)
+    score_q3: float | None = Field(ge=0, le=100)
+    engagement_median: float | None = Field(
+        ge=0, description="Etkileşim kohort medyanı (SPEC §4); kohort<5 → null."
+    )
+
+
+class CategoryCohortList(BaseModel):
+    """`GET /stats/categories` yanıtı."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    items: list[CategoryCohort]
 
 
 class Business(BaseModel):

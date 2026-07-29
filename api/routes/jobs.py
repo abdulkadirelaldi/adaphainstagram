@@ -9,9 +9,10 @@ from typing import cast
 from arq import ArqRedis
 from arq.jobs import Job
 from arq.jobs import JobStatus as ArqJobStatus
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from api.jobstate import read_progress
+from api.ratelimit import rate_limited
 from api.schemas import (
     DiscoveryRequest,
     JobAccepted,
@@ -48,6 +49,10 @@ def _require_pool(request: Request) -> ArqRedis:
     operation_id="runDiscovery",
     status_code=status.HTTP_202_ACCEPTED,
     response_model=JobAccepted,
+    responses={
+        status.HTTP_429_TOO_MANY_REQUESTS: {"description": "Hız sınırı aşıldı (Retry-After)"},
+    },
+    dependencies=[Depends(rate_limited("discovery"))],
 )
 async def run_discovery_endpoint(body: DiscoveryRequest, request: Request) -> JobAccepted:
     pool = _require_pool(request)

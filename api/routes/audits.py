@@ -10,12 +10,13 @@ from pathlib import Path
 from typing import Any, cast
 
 from arq import ArqRedis
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 
 from api.models import Audit as AuditModel
 from api.models import Outreach as OutreachModel
 from api.persistence import get_audit, get_outreach_for_audit
+from api.ratelimit import rate_limited
 from api.schemas import Audit, Finding, JobAccepted, OutreachDraft, OutreachStatus, Severity
 from api.services import NotAuditableError, assert_auditable
 
@@ -41,7 +42,9 @@ def _require_pool(request: Request) -> ArqRedis:
     responses={
         status.HTTP_404_NOT_FOUND: {"description": "Böyle bir işletme yok"},
         status.HTTP_409_CONFLICT: {"description": "İşletme derin denetime uygun değil"},
+        status.HTTP_429_TOO_MANY_REQUESTS: {"description": "Hız sınırı aşıldı (Retry-After)"},
     },
+    dependencies=[Depends(rate_limited("audit"))],
 )
 async def run_audit_endpoint(id: int, request: Request) -> JobAccepted:  # noqa: A002  # yol param sözleşmede `id`
     session_factory = request.app.state.session_factory

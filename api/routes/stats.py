@@ -8,8 +8,8 @@ ve `monthly_cost_usd` `audits`'tan gelir — Faz 4'e kadar tablo boş, sorgu 0 d
 from fastapi import APIRouter, Request
 
 from api.config import get_settings
-from api.schemas import Stats
-from api.services.dashboard import compute_stats
+from api.schemas import CategoryCohortList, Stats
+from api.services.dashboard import category_cohorts, compute_stats
 
 router = APIRouter(tags=["dashboard"])
 
@@ -31,3 +31,18 @@ async def get_stats(request: Request) -> Stats:
         return await compute_stats(
             session, monthly_cost_limit=get_settings().monthly_cost_limit_usd
         )
+
+
+@router.get(
+    "/stats/categories",
+    summary="Kategori kohort dağılımı",
+    operation_id="getCategoryCohorts",
+    response_model=CategoryCohortList,
+)
+async def get_category_cohorts(request: Request) -> CategoryCohortList:
+    session_factory = getattr(request.app.state, "session_factory", None)
+    if session_factory is None:
+        return CategoryCohortList(items=[])
+
+    async with session_factory() as session:
+        return await category_cohorts(session)

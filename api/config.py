@@ -54,6 +54,11 @@ class Settings(BaseSettings):
     monthly_cost_limit_usd: float | None = Field(
         default=None, ge=0, description="Aylık maliyet alarm eşiği (USD). Boşsa alarm kapalı."
     )
+    # Rate limit (Faz 6 sertleştirme): ağır uçlarda dakika başına istemci-başına istek
+    # sınırı. Aşılınca 429 + Retry-After. Redis sayacı; redis yoksa sınır uygulanmaz.
+    rate_limit_per_minute: int = Field(
+        default=30, ge=1, description="Ağır uçlarda istemci başına dakikalık istek sınırı."
+    )
 
     # Maliyet disiplini (CLAUDE.md): aynı hesap 7 gün içinde tekrar kazınmaz. BE-9
     # profil çekmeden önce bu TTL'li Redis anahtarına bakar. Varsayılan 7 gün.
