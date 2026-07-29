@@ -51,7 +51,8 @@ istemiyor. İki entegrasyon boşluğu (`FE-4-B1`, `FE-4-B2`) Faz 3'e taşındı,
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| BE-18 | backend | Playwright PDF üretimi (rapor HTML→PDF) + `audits.pdf_path` + `GET /audits/{id}/pdf` indirme | BE-17 ✅ |
+| BE-20 | backend | CORS `allow_methods`'a `PATCH` ekle (FE-7-B1) — panelden `PATCH /outreach` engelleniyor | — |
+| FE-7 | frontend | PATCH canlı doğrulama tamamla + `## Biten`'e taşı (kutu #2) | BE-20 |
 
 ### Sıralama notu (Faz 5)
 
