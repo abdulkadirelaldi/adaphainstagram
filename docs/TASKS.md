@@ -75,6 +75,11 @@ backend oturumu seri. SEC-12 ve FE-8 canlı doğrulama BE-22/BE-23'ü bekler.
   kullanıcıya soracak: remote kurulup CI/Actions gerçekten koşturulsun mu, Docker Desktop kurulup
   compose doğrulansın mı, yoksa ikisi de "yerel + belgeli daraltma" olarak mı kabul edilsin.
 - **FE-3-B1** (kohort ucu) → BE-21 sözleşme + BE-23 impl + FE-8 bağlama ile kapanır.
+- **SEC-11-N1** (frontend Playwright panel-tıklama e2e) → *FE-8 kapsamına küçük bir smoke
+  olarak eklendi.* Backend akışı API-e2e ile (`tests/e2e/test_pipeline_e2e.py`) zaten tam
+  kapsandı ve her FE adımı (FE-5/6/7) headless doğrulandı; SPEC §8 "e2e testler" kutusu bununla
+  karşılanıyor. Tarayıcı-tıklama e2e marjinal ek güvence — FE-8 kohort+alarm bağlarken bir panel
+  smoke'u ekler (ayrı büyük görev açmaya değmez). FE-8 promptuna işlendi.
 
 ### Faz 5 — çıktı (SPEC §8) ✅ TAMAMLANDI. Bitiş kriteri kutusu:
 
