@@ -117,8 +117,11 @@ jobs:
           pip install "pytest==${PYTEST_VERSION}" \
                       "pytest-asyncio==${PYTEST_ASYNCIO_VERSION}"
 
+      # Headless Chromium: PDF-render (BE-18/SEC-10) ve e2e PDF adımı (SEC-11)
+      # CI'da SKIP değil koşsun (SEC-10-N1 kararı — süre/indirme maliyeti kabul edildi).
+      # `--with-deps` sistem kütüphanelerini de kurar (Ubuntu runner).
+      - name: Playwright chromium
+        run: playwright install --with-deps chromium
+
       - name: Testler
         run: pytest
-
-  # Faz 1'de e2e testi yok; Playwright job'ı Faz 6'da (SPEC §8 "sertleştirme")
-  # bu dosyaya eklenecek. Boş bir job bırakmak yerine not olarak duruyor.

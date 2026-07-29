@@ -678,3 +678,61 @@ eklendi (silme→kırmızı deseni). `.gitignore` benim dosyam; düzeltmesi meş
 
 Faz 5 backend'i bağımsız doğrulandı; **hukuki sınır (otomatik gönderim yok)**, gizlilik
 (kural 7) ve sır ihlali bulunmadı.
+
+---
+
+## SEC-11 · Faz 6 — uçtan uca test iskeleti + CI'da chromium
+
+**Tarih:** 2026-07-29
+**Denetlenen ağaç:** `4fd8bad` + çalışma ağacındaki `tests/` + `.github/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict, 81 dosya), pytest — 170 test (3 yeni e2e), yerel pg16+redis+Chromium
+
+### CI chromium — SEC-10-N1 kapatıldı · **PASS**
+
+`.github/workflows/ci.yml` pytest job'ına **`playwright install --with-deps chromium`** adımı
+eklendi (Bağımlılıklar ile Testler arasında). Böylece PDF-render testleri (BE-18/SEC-10) ve
+e2e PDF adımı (SEC-11) CI'da **SKIP değil koşuyor**. YAML doğrulandı (`pytest` job adımları:
+… → Playwright chromium → Testler). Chromium süre/indirme maliyeti orkestra şefi kararıyla
+kabul edildi (SEC-10-N1).
+
+### E2E test iskeleti — fixture modu, canlı çağrı yok · **PASS**
+
+`tests/e2e/test_pipeline_e2e.py` — SPEC §1 tam akışını **worker'ın kullandığı servis
+fonksiyonlarıyla** sürer ve **gerçek HTTP uçlarından** doğrular:
+
+1. **Keşif + skor:** `api.fixture_mode.fixture_adapters` (MockTransport — ağ yok) +
+   `FIXTURE_REFERENCE_NOW` ile `run_discovery` (skorlama son faz) → DB'de **100 işletme**,
+   >0 skorlu. Bu, worker `discovery_task`'inin fixture-modu gövdesinin aynısı.
+2. **Denetim uç gate'i:** `POST /businesses/{id}/audit` — qualified→**202**+job_id (sahte arq
+   havuzu), watch→**409**, olmayan→**404** (nitelik kontrolü uçta, iş kuyruğa girmeden).
+3. **Denetim job gövdesi:** `run_audit` + `FixtureLLMClient` (Anthropic yok) + PDF tmp'ye.
+4. **`GET /audits/{id}`:** görünürlük skoru + rapor metni + **`llm_cost_usd>0`** + bulgu listesi
+   + outreach (draft) — maliyet disiplini uçtan uca.
+5. **`GET /audits/{id}/pdf`:** 200 + `application/pdf` + `%PDF-` (chromium; yoksa alt-adım SKIP).
+6. **`PATCH /outreach/{id}`:** outreach `draft` doğuyor (hukuki sınır); PATCH `sent`→`sent_at`.
+
+**Kural 6:** akış tümüyle offline — MockTransport (IG/Apify/Places) + FixtureLLMClient
+(Anthropic). 170 test ağ muhafızı altında yeşil. Gerçek pg+redis ister; erişilemezse **dürüst
+SKIP** (doğrulandı: kötü DB URL'siyle 3 e2e testi temiz atlandı). Env'siz varsayılan yerel yol
+da 170 yeşil.
+
+### Frontend Playwright e2e — kapsam kararı (ayrı görev önerisi)
+
+SPEC §8 "Playwright e2e" der. **Backend akışı yukarıdaki API-e2e ile tam kapsanıyor**
+(keşif→skor→denetim→PDF→outreach, gerçek uçlardan). **Frontend panel-tıklama Playwright e2e'si
+(tarayıcıda `web/` sürme) bu göreve dahil EDİLMEDİ** — gerekçe:
+- `web/` (Next.js) build + dev-server ayağa kaldırma + Playwright tarayıcı otomasyonu ayrı,
+  büyük bir iş; `web/` çalıştırmayı ve muhtemelen bir mock API katmanını gerektirir.
+- `tests/**` ve `.github/**` benim alanım ama `web/` frontend'in; panel e2e'si FE ile
+  koordinasyon ister (test-id'ler, mock veri).
+- FE-3..FE-7 zaten her dalgada headless panel doğrulaması yaptı (route-mock + gerçek backend).
+
+**Öneri (`## Bloke`, orkestra şefine):** Frontend Playwright e2e ayrı bir görev (SEC-12 veya
+FE-8) olarak açılsın; kapsam: panel → Tara → job done → tablo skorlu → denetim panelini aç →
+PDF indir düğmesi → outreach kopyala. `web/` sahipliği FE'de, e2e sürücüsü SEC'te olabilir.
+
+### Bu turda yeni bulgu yok
+
+Uçtan uca akış fixture modunda offline yeşil; maliyet disiplini (llm_cost>0), hukuki sınır
+(outreach draft, gönderme yok — SEC-10 muhafızı korunuyor) ve kural 6 (canlı çağrı yok)
+uçtan uca doğrulandı.
