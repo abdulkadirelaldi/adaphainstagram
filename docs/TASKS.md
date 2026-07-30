@@ -12,11 +12,17 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 **Faz 1 ✅ · Faz 2 ✅ · Faz 3 ✅ · Faz 4 ✅ · Faz 5 ✅ · Faz 6 ✅ — 🎉 PROJE TAMAMLANDI**
 (SPEC §8'in altı fazı da bitti).
 
-**Kalan tek makine-kısıtı (kullanıcı kararıyla daraltıldı, eksik iş değil):** repoda git remote
-ve Docker yok. Karar: **yerel + belgeli daraltma.** `ci.yml` yazıldı+lokal doğrulandı (185 test
-yeşil, chromium'la e2e+PDF dahil), `docker-compose.yml` repoda; gerçek GitHub Actions koşusu ve
-`docker compose up` doğrulaması **remote/Docker bağlanınca ilk push'ta** olacak. Faz atlanmadı,
-her kriter makine kısıtına göre dürüstçe daraltıldı — gevşetilmedi.
+**CI artık gerçek GitHub Actions'ta yeşil** (SEC-13, orkestra şefi push etti 2026-07-30):
+remote `github.com/abdulkadirelaldi/adaphainstagram` kuruldu, push tetiklenen koşuda üç job
+(ruff/mypy/pytest) yeşil, chromium'la **e2e + PDF testleri CI'da gerçekten koştu** (SKIP değil):
+`184 passed, 1 skipped` (tek SKIP `pdftotext` aracı runner'da yok — PDF üretimi+HTML testi
+geçti). Run: `actions/runs/30524793554`. Faz 1 CI kutusu + Faz 6 e2e-CI kutusu **gerçek Actions
+yeşiliyle** kapandı.
+
+**Kalan tek makine-kısıtı:** Docker yok. Karar: **yerel + belgeli daraltma** (kullanıcı, Docker
+Desktop kurulmayacak). `docker-compose.yml` repoda; `/health` yerel postgres@16 + redis ve CI
+servis konteyneriyle doğrulandı; gerçek `docker compose up` Docker bağlanınca alınır. Eksik iş
+değil, makine kısıtı — faz atlanmadı, kriter dürüstçe daraltıldı.
 
 Faz 5 kutuları (4/4): rapor PDF indiriliyor (Playwright, yerelde gerçek), erişim taslağı
 kopyalanabiliyor, `PATCH /outreach/{id}` durum güncelliyor, **sistem otomatik mesaj göndermiyor**
@@ -70,8 +76,7 @@ SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
-| SEC-13 | güvenlik | Remote'a push + GitHub Actions yeşilini doğrula (CI kutusu daraltmasını kaldırır) | kullanıcı remote kurmalı |
-| BE-22 | backend | 180 günlük silme cron'u (arq scheduled) + maliyet alarmı (eşik + log + `/stats` alanı) | BE-21 |
+| _(açık görev yok — proje tamamlandı)_ | | | |
 
 ### Sıralama notu (Faz 6)
 
@@ -311,6 +316,16 @@ _(başka ajanın dizininde sorun gördüğünde buraya yaz, kendin düzeltme)_
 ## Biten
 
 _(tek satır sonuç notuyla)_
+
+- **SEC-13** · Remote push + gerçek Actions doğrulaması (orkestra şefi, kullanıcı adına).
+  `origin=github.com/abdulkadirelaldi/adaphainstagram` eklendi, `git push -u origin master` (tüm
+  be:/fe:/sec:/docs: commit'leri). Tetiklenen CI koşusu (`actions/runs/30524793554`, 1m36s)
+  **yeşil**: ruff (12s) + mypy strict (37s) + pytest (1m25s) — `playwright install chromium`
+  ile **e2e (`test_pipeline_e2e.py`) ve PDF (`test_pdf.py`) testleri SKIP değil koştu**,
+  `184 passed, 1 skipped` (tek SKIP: `pdftotext` runner'da yok, PDF üretimi+HTML içerik testi
+  geçti). Faz 1 CI + Faz 6 e2e-CI daraltması kalktı — gerçek Actions yeşili alındı. Docker
+  kutusu daraltılmış kalıyor (Docker Desktop kurulmadı). Not: Node 20 deprecation uyarısı
+  (checkout@v4/setup-python@v5) — hata değil, ileride bir üst sürüme çekilebilir.
 
 - **SEC-12** · Faz 6 sertleştirme (BE-22/BE-23) bağımsız doğrulandı + **PROJE-SONU KAPANIŞ GÜVENLİK RAPORU** — 15 yeni test (185 toplam), 3 dosya. **Blok 1 180-silme** (`test_retention.py`, hukuki): eski dönüşmemiş→silinir(+PDF+CASCADE), **won korunur**, taze korunur, 180. gün off-by-one (tam cutoff korunur/1sn öncesi silinir); **karşı-kanıt** won filtresiz aday kümesi won'u içerir, filtreli dışlar → filtre kalksa dönüşen müşteri silinir. **Blok 2 rate-limit** (`test_ratelimit.py`): sınır altı geçer/aşım→429+Retry-After, bucket bağımsız, sayaç sıfırlanınca tekrar, istemci-IP başına, redis yoksa fail-open. **Blok 3 maliyet-alarm** (`test_cost_alarm.py`): eşik altı→false/aşım→true/yok→false/**maliyet==eşik→false** (off-by-one), audit yok→0. **Proje-sonu 6 madde PASS** (`docs/REVIEW.md` kapanış raporu): ① yasak metrik (kural 7) hiçbir şema/DB/API/PDF/prompt/kohort-ucunda yok; ② otomatik-mesaj-yok (AST muhafızı Faz 6 dosyaları dahil tüm api/'yi kapsıyor); ③ 180-silme cron var+çalışıyor (won korunur) — SEC-1'den beri Faz 6'ya devredilen madde kapandı; ④ maliyet disiplini (llm_cost>0, Haiku batch, opus yok); ⑤ sır (.env.example değersiz, gerçek anahtar yok, .env git'te hiç izlenmemiş); ⑥ kural 6 (185 test ağ muhafızı altında, canlı çağrı yok). ruff+mypy(86)+pytest(185) yeşil env'li+env'siz. **Açık güvenlik bulgusu kalmadı.** Detay: `docs/REVIEW.md` SEC-12 + kapanış raporu.
 - **FE-8** · Kohort ucu bağlama (FE-3-B1 kapandı) + maliyet alarmı göstergesi + panel smoke e2e. **Kohort rayı yeniden tasarlandı:** kaynak `/businesses?limit=200` istemci-türetiminden `GET /stats/categories`'e (BE-23) taşındı; `useKohortKaynagi`/`kategoriKohortu` söküldü (`git grep limit=200` yalnız yorum). Ray artık tek-tek çentik yerine **Q1–Q3 çeyrek bandı + medyan** çiziyor (`fill-ray-kohort` rect) — 200+ hesapta üç sayıyla ölçekleniyor, dağılımı nicel gösteriyor; o satırın skoru hâlâ dolu çentik (status renginde). Kohort<5→`score_median` null→bant yok + "—"+status (FE-2 deseni korundu). Kategoriler filtre listesi de kohort ucundan. **Maliyet alarmı:** `Stats.monthly_cost_alarm` true→üst şeritte maliyet hücresi oksit + "Eşik aşıldı" (renk tek taşıyıcı değil); DESIGN §1'de oksit ölçülü genişletildi (kritik bulgu + maliyet alarmı). **Panel smoke e2e:** `@playwright/test` (kalıcı dev dep), `web/e2e/panel-smoke.spec.ts` + `playwright.config.ts` + `npm run test:e2e`; keşif→tablo→denetim akışının kırılmadığını fixture-mode backend'e karşı doğrular. `gen:api`+build+`tsc`+lint sıfır; hex/yasak-metrik/gönder grep temiz; `test-results/` gitignore'a eklendi.
