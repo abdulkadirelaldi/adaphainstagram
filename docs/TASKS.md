@@ -70,6 +70,7 @@ SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
 
 | id | ajan | görev | bağımlı |
 |---|---|---|---|
+| SEC-13 | güvenlik | Remote'a push + GitHub Actions yeşilini doğrula (CI kutusu daraltmasını kaldırır) | kullanıcı remote kurmalı |
 | BE-22 | backend | 180 günlük silme cron'u (arq scheduled) + maliyet alarmı (eşik + log + `/stats` alanı) | BE-21 |
 
 ### Sıralama notu (Faz 6)
