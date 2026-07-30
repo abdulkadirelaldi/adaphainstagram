@@ -736,3 +736,90 @@ PDF indir düğmesi → outreach kopyala. `web/` sahipliği FE'de, e2e sürücü
 Uçtan uca akış fixture modunda offline yeşil; maliyet disiplini (llm_cost>0), hukuki sınır
 (outreach draft, gönderme yok — SEC-10 muhafızı korunuyor) ve kural 6 (canlı çağrı yok)
 uçtan uca doğrulandı.
+
+---
+
+## SEC-12 · Faz 6 — sertleştirme testleri + **PROJE-SONU KAPANIŞ GÜVENLİK RAPORU**
+
+**Tarih:** 2026-07-30
+**Denetlenen ağaç:** `24bd64f` + çalışma ağacındaki `tests/`
+**Araçlar:** ruff 0.12.0, mypy 2.3.0 (strict, 86 dosya), pytest — **185 test** (15 yeni), yerel pg16+redis+Chromium
+
+Faz 6 sertleştirme (BE-22 silme+alarm, BE-23 rate-limit+kohort) bağımsız doğrulandı; ardından
+**tüm projenin** güvenlik kapanış denetimi (altı madde) yapıldı.
+
+### Blok testleri
+
+| Blok | Durum | Kanıt |
+|---|---|---|
+| 1. 180 günlük silme (hukuki) | **PASS** | `test_retention.py` (5): eski dönüşmemiş→silinir(+PDF); **won korunur**; taze korunur; 180. gün off-by-one (tam cutoff korunur, 1sn öncesi silinir); CASCADE audit/outreach; **karşı-kanıt** won filtresiz aday kümesi won'u içerir, filtreli dışlar |
+| 2. Rate limit | **PASS** | `test_ratelimit.py` (5): sınır altı geçer, aşımda **429+Retry-After**; bucket bağımsız; sayaç sıfırlanınca tekrar; istemci-IP başına; redis yoksa fail-open |
+| 3. Maliyet alarmı | **PASS** | `test_cost_alarm.py` (5): eşik altı→false, aşım→true, eşik yok→false, **maliyet==eşik→false** (off-by-one, kesin büyük), audit yok→maliyet 0 |
+
+Silme + alarm karşı-kanıtla ölçülü; sayılar fixture/DB durumundan türetiliyor.
+
+---
+
+## 🔐 PROJE-SONU KAPANIŞ GÜVENLİK RAPORU — altı madde
+
+Radar sistemi baştan sona tarandı. `CLAUDE.md`'nin değişmez kurallarının tümü **PASS**.
+
+### 1. Yasak metrik (kural 7) — **PASS**
+
+Erişim/gösterim/kaydetme/profil-ziyareti/demografi hiçbir **şema/DB/API/PDF/prompt/kohort
+ucunda** yok. `api/` genelinde `impressions|reach|saves|profile_view|demographic|
+follower_age|gender` taraması (outreach alt-dizisi hariç) **boş**. Kohort ucu
+(`GET /stats/categories`) yalnız skor/etkileşim döndürüyor. Apify'ın yasak alanları ham
+`raw`'da kalıyor, normalize `extra="forbid"` ile düşürüyor. Makine kuralları:
+`test_normalize_contract`, `test_privacy_chain`, `test_pdf.test_html_yasak_metrik_icermiyor`,
+`test_llm_discipline.test_haiku_ciktisi_yalniz_izinli_dort_alan`.
+
+### 2. Otomatik mesaj yok (hukuki sınır) — **PASS**
+
+`api/` **hiçbir** dosyasında mesaj gönderen kod yolu yok. `tests/test_no_send_path.py` AST
+tarayıcısı (smtplib/twilio/sendgrid/requests, send_message/send_email, mesajlaşma-ucu URL'si)
+Faz 6 dosyaları dahil tüm `api/`'yi kapsıyor — retention.py, ratelimit.py, dashboard.py temiz.
+`outreach` `draft` doğuyor (BE-16); `PATCH /outreach/{id}` yalnız DB'ye durum yazıyor, hiçbir
+dış gönderim tetiklemiyor (SEC-10 + `test_outreach_patch`). Karşı-kanıtlı muhafız.
+
+### 3. 180 günlük saklama (hukuki) — **PASS**
+
+Silme bir **cron** (opsiyonel değil): `WorkerSettings.cron_jobs = [cron(purge_task, hour=3)]`
+(`api/worker.py:182`). Dönüşmeyen ve 180 günden eski aday + bağlı kayıtlar (CASCADE) + PDF
+siliniyor; **`won` dönüşen müşteri korunuyor**; referans zaman enjekte (deterministik).
+`test_retention.py` beş testle + won karşı-kanıtıyla doğruladı. (SEC-1'den Faz 6'ya kadar
+"eksik olması normal" denen bu madde artık **var ve çalışıyor**.)
+
+### 4. Maliyet disiplini — **PASS**
+
+- `audits.llm_cost_usd` LLM çağrılan denetimde **>0 ve Haiku+Sonnet toplamına eşit** (0.0113),
+  NOT NULL DB kısıtı (SEC-9 + e2e). Decimal (yuvarlama yasak).
+- **Gönderi başına LLM çağrısı yok:** Haiku tek çağrıda ≤30 gönderi (N=65→3 grup) — SEC-9 hâlâ
+  geçerli. Prompt caching `cache_control` gönderiliyor.
+- **Opus çağrısı yok** (`api/`'de `claude-opus` taraması boş); post-sınıflandırma Haiku, sentez
+  Sonnet — model id'ler doğrulandı.
+- 7 gün snapshot cache (SEC-5), maliyet alarmı (SEC-12) çalışıyor.
+
+### 5. Sır (kural 4) — **PASS**
+
+`.env.example` **tüm** kimlik anahtarları değersiz: `GOOGLE_PLACES_API_KEY=`,
+`IG_BUSINESS_DISCOVERY_TOKEN=`, `APIFY_TOKEN=`, `ANTHROPIC_API_KEY=`, `MONTHLY_COST_LIMIT_USD=`,
+`RATE_LIMIT_PER_MINUTE=` (dolu olanlar yalnız port/bool/yer-tutucu). `api/` içinde gerçek anahtar
+deseni (`sk-ant-`/`AIza`/`apify_api_`) **yok** — tüm kimlik `pydantic-settings` ile ortamdan.
+`.env` `.gitignore`'da ve git geçmişinde **hiç izlenmemiş** (`git log --all -- .env` boş). Üretilen
+PDF çıktı dizini `var/` ignore'da (SEC-10 BE-18-N1).
+
+### 6. Kural 6 (canlı çağrı yok) — **PASS**
+
+Hiçbir test canlı IG/Apify/Anthropic çağrısı yapmıyor. `conftest.py` ağ muhafızı
+localhost dışı her soketi düşürüyor; 185 test bunun altında yeşil. Dış kaynaklar MockTransport
+(HTTP) + FixtureLLMClient (Anthropic) ile karşılanıyor. DB/redis yalnız yerel (kural 6 dışı
+değil); erişilemezse dürüst SKIP. Playwright PDF render yerel (dış çağrı değil); chromium
+yoksa dürüst SKIP. Env'li ve env'siz 185 yeşil.
+
+### Sonuç
+
+**Radar altı fazın tamamında CLAUDE.md değişmez kurallarına uyuyor.** Gizlilik (kural 7),
+hukuki sınırlar (otomatik gönderim yok + 180 günlük silme), maliyet disiplini, sır yönetimi ve
+test izolasyonu (kural 6) uçtan uca — çoğu **karşı-kanıtlı makine muhafızıyla** — doğrulandı.
+Bu turda yeni bulgu yok. Açık güvenlik bulgusu kalmadı.
