@@ -7,33 +7,42 @@
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    color-scheme: light dark;
   }
 
   body {
-    background-color: var(--color-kagit);
-    color: var(--color-murekkep);
+    background-color: var(--color-zemin);
+    color: var(--color-metin);
     font-family: var(--font-arayuz);
     font-size: var(--text-govde);
     line-height: var(--text-govde--line-height);
   }
 
-  /* Bu uygulamada hiçbir sayı orantılı figürle dizilmez. Mono yüzün tabular
-   * figürleri sütun hizasını korur; sayılar satırdan satıra kaymaz. */
+  /* Sayılar tabular figürlerle dizilir; sütun hizası satırdan satıra korunur.
+   * (Kurumsal dilde sayı fontu arayüz fontuyla aynı, yalnızca tabular-nums.) */
   .sayi {
     font-family: var(--font-sayi);
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
   }
 
-  /* Klavye odağı daima görünür. Fare tıklamasında halka çıkmaz. */
+  /* Klavye odağı daima görünür — marka renginde halka. Fare tıklamasında çıkmaz. */
   :focus-visible {
     outline: 2px solid var(--color-odak);
     outline-offset: 2px;
   }
+
+  /* Tema geçişinde yüzey/metin yumuşak geçer (sert flaş yok). */
+  body,
+  .tema-gecis {
+    transition:
+      background-color var(--sure-hizli) ease,
+      color var(--sure-hizli) ease,
+      border-color var(--sure-hizli) ease;
+  }
 }
 
 @layer components {
-  /* Tek hareket: tarama bittiğinde listeye düşen satır. */
   @keyframes satir-girdi {
     from {
       opacity: 0;

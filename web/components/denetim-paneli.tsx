@@ -55,18 +55,25 @@ export function DenetimPaneli({
 
   return (
     <>
-      {/* Şeffaf tık-kapat alanı — karartma yok (DESIGN: gölge/karartma yok). */}
-      <div className="fixed inset-0 z-10" aria-hidden onClick={onKapat} />
+      {/* Tık-kapat alanı — kurumsal drawer için hafif karartma örtü. */}
+      <div
+        className="fixed inset-0 z-10 bg-orten"
+        aria-hidden
+        onClick={onKapat}
+      />
       <aside
         role="dialog"
         aria-label={`${isletme.name} denetimi`}
-        className="fixed inset-y-0 right-0 z-20 flex w-[520px] max-w-full flex-col border-l border-cizgi bg-kagit"
+        className="fixed inset-y-0 right-0 z-20 flex max-w-full flex-col bg-yuzey shadow-yuzen"
+        style={{ width: "var(--olcu-drawer)" }}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-cizgi px-6 py-4">
-          <div className="flex flex-col">
-            <span className="text-buyuk">{isletme.name}</span>
+        <header className="flex items-start justify-between gap-4 border-b border-ayrac px-7 py-5">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-baslik font-bold text-metin">
+              {isletme.name}
+            </span>
             {isletme.ig_handle && (
-              <span className="sayi text-kucuk text-kursun">
+              <span className="sayi text-kucuk text-metin-2">
                 @{isletme.ig_handle}
               </span>
             )}
@@ -74,13 +81,16 @@ export function DenetimPaneli({
           <button
             type="button"
             onClick={onKapat}
-            className="text-govde text-kursun underline underline-offset-2"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-buton text-metin-2 transition-colors hover:bg-yuzey-2 hover:text-metin"
+            aria-label="Kapat"
           >
-            Kapat
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-6 py-5">
+        <div className="flex-1 overflow-y-auto px-7 py-6">
           <Icerik
             nitelikli={nitelikli}
             mesgul={mesgul}
@@ -122,7 +132,7 @@ function Icerik({
   // Nitelikli değil — düğme yok, sebep açık (SPEC §1).
   if (!nitelikli) {
     return (
-      <p className="text-kursun">
+      <p className="text-metin-2">
         Derin denetim yalnızca nitelikli hesaplara üretilir. Bu hesap henüz
         nitelikli değil; triyaj skoru 70&apos;e ulaştığında denetlenebilir.
       </p>
@@ -163,7 +173,7 @@ function Icerik({
   // Çalışıyor.
   if (mesgul || hal === "queued" || hal === "running") {
     return (
-      <p className="text-kursun">
+      <p className="text-metin-2">
         Denetleniyor…
         {progress && progress.total !== null && (
           <span className="sayi ml-2 tabular-nums">
@@ -176,10 +186,10 @@ function Icerik({
 
   // İş bitti — denetim yükleniyor / geldi.
   if (hal === "done") {
-    if (denetim.isPending) return <p className="text-kursun">Rapor yükleniyor…</p>;
+    if (denetim.isPending) return <p className="text-metin-2">Rapor yükleniyor…</p>;
     if (denetim.isError)
       return (
-        <p className="text-kursun">
+        <p className="text-metin-2">
           Rapor yüklenemedi. {apiMesaj(denetim.error)}
         </p>
       );
@@ -189,14 +199,14 @@ function Icerik({
   // Henüz tetiklenmedi.
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-kursun">
+      <p className="text-metin-2">
         Bu hesap nitelikli. Derin denetim, deterministik bulguları çıkarır ve
         ajans kalitesinde bir rapor taslağı hazırlar.
       </p>
       <button
         type="button"
         onClick={onBaslat}
-        className="h-8 self-start border border-murekkep px-4 text-govde"
+        className="h-10 self-start rounded-buton bg-marka px-5 text-govde font-semibold text-marka-metin transition-opacity hover:opacity-90"
       >
         Derin denetim
       </button>
@@ -209,35 +219,37 @@ function Sonuc({ denetim }: { denetim: import("@/lib/api/tipler").Denetim }) {
     <div className="flex flex-col gap-6">
       {/* Görünürlük skoru — DİKKAT: triyaj skorunun TERSİ yönde. Düşük skor kötü.
           İki skor asla karıştırılmaz (DESIGN §5); yön burada metinle söylenir. */}
-      <section>
-        <span className="text-mikro text-kursun uppercase">
+      <section className="rounded-kart border border-ayrac bg-yuzey-2 px-5 py-4">
+        <span className="text-mikro font-semibold text-metin-2 uppercase">
           Görünürlük skoru
         </span>
         <div className="mt-1 flex items-baseline gap-3">
-          <span className="sayi text-rakam tabular-nums">
+          <span className="sayi text-rakam font-bold tabular-nums text-metin">
             {Math.floor(denetim.visibility_score)}
           </span>
-          <span className="text-kucuk text-kursun">/ 100</span>
+          <span className="text-kucuk text-metin-2">/ 100</span>
         </div>
-        <p className="mt-1 text-kucuk text-kursun">
+        <p className="mt-1 text-kucuk text-metin-2">
           Düşük skor, hesabın kötü yönetildiğini gösterir — fırsat bu.
           (Tablodaki triyaj skorunun tersi yönde okunur.)
         </p>
       </section>
 
       <section>
-        <span className="text-mikro text-kursun uppercase">Bulgular</span>
+        <span className="text-mikro font-semibold text-metin-2 uppercase">
+          Bulgular
+        </span>
         <div className="mt-2">
           <BulguListesi bulgular={denetim.findings} />
         </div>
       </section>
 
       <section>
-        <span className="text-mikro text-kursun uppercase">Rapor metni</span>
+        <span className="text-mikro font-semibold text-metin-2 uppercase">Rapor metni</span>
         {denetim.report_text !== null && denetim.report_text.trim() !== "" ? (
           <p className="mt-2 whitespace-pre-wrap">{denetim.report_text}</p>
         ) : (
-          <p className="mt-2 text-kursun">
+          <p className="mt-2 text-metin-2">
             Rapor metni yapay zekâ sentezi tamamlanınca burada görünür; henüz
             üretilmedi.
           </p>
@@ -252,10 +264,10 @@ function Sonuc({ denetim }: { denetim: import("@/lib/api/tipler").Denetim }) {
           <ErisimKaydi taslak={denetim.outreach} />
         ) : (
           <>
-            <span className="text-mikro text-kursun uppercase">
+            <span className="text-mikro font-semibold text-metin-2 uppercase">
               Erişim mesajı · taslak
             </span>
-            <p className="mt-2 text-kursun">
+            <p className="mt-2 text-metin-2">
               Erişim taslağı rapor senteziyle birlikte üretilir; henüz hazır
               değil. Üretildiğinde yalnızca kopyalanabilir olacak — gönderme
               kararı insanda.
@@ -264,7 +276,7 @@ function Sonuc({ denetim }: { denetim: import("@/lib/api/tipler").Denetim }) {
         )}
       </section>
 
-      <footer className="flex justify-between border-t border-cizgi pt-3 text-mikro text-kursun">
+      <footer className="flex justify-between border-t border-ayrac pt-3 text-mikro text-metin-2">
         <span>
           LLM maliyeti{" "}
           <span className="sayi tabular-nums">
@@ -290,7 +302,7 @@ function SatirHata({
       <button
         type="button"
         onClick={onTekrar}
-        className="h-8 self-start border border-cizgi px-3 text-govde"
+        className="h-10 self-start rounded-buton border border-ayrac px-4 text-govde font-medium text-metin transition-colors hover:bg-yuzey-2"
       >
         Tekrar dene
       </button>

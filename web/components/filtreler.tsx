@@ -46,13 +46,13 @@ export function Filtreler({
   const filtreVar = seciliStatus !== "" || seciliKategori !== "" || seciliSkor !== "";
 
   return (
-    <div className="flex flex-wrap items-end gap-6 border-b border-cizgi px-6 py-4">
+    <div className="flex flex-wrap items-end gap-5 border-b border-ayrac px-6 py-5">
       <Alan etiket="Durum" htmlFor={statusId}>
         <select
           id={statusId}
           value={seciliStatus}
           onChange={(e) => yaz("status", e.target.value)}
-          className="h-8 border border-cizgi bg-kagit px-2 text-govde"
+          className="h-10 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin"
         >
           <option value="">Tümü</option>
           {STATUS_SIRA.map((s) => (
@@ -68,7 +68,7 @@ export function Filtreler({
           id={kategoriId}
           value={seciliKategori}
           onChange={(e) => yaz("category", e.target.value)}
-          className="h-8 border border-cizgi bg-kagit px-2 text-govde"
+          className="h-10 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin"
         >
           <option value="">Tümü</option>
           {kategoriler.map((k) => (
@@ -90,7 +90,7 @@ export function Filtreler({
           value={seciliSkor}
           placeholder="0"
           onChange={(e) => yaz("min_score", e.target.value)}
-          className="sayi h-8 w-20 border border-cizgi bg-kagit px-2 text-govde tabular-nums"
+          className="sayi h-10 w-24 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin tabular-nums"
         />
       </Alan>
 
@@ -101,12 +101,12 @@ export function Filtreler({
             onClick={() =>
               router.replace(pathname as Route, { scroll: false })
             }
-            className="text-govde text-kursun underline underline-offset-2"
+            className="text-govde font-medium text-marka hover:underline"
           >
             Filtreleri temizle
           </button>
         )}
-        <span className="text-kucuk text-kursun">
+        <span className="text-kucuk text-metin-2">
           <span className="sayi tabular-nums">{toplam}</span> aday
         </span>
       </div>
@@ -125,7 +125,7 @@ function Alan({
 }) {
   return (
     <label htmlFor={htmlFor} className="flex flex-col gap-1">
-      <span className="text-mikro text-kursun uppercase">{etiket}</span>
+      <span className="text-mikro font-semibold text-metin-2 uppercase">{etiket}</span>
       {children}
     </label>
   );

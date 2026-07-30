@@ -45,7 +45,7 @@ export function SkorHucresi({
       <KohortRayi skor={skor} bant={bant} kohort={kohort} />
       {/* Skor yokken durum sözle söylenir; ray konumu olmadığından tek işaret budur. */}
       {skor === null && status !== null && (
-        <span className="text-kucuk text-kursun">{STATUS_ETIKET[status]}</span>
+        <span className="text-kucuk text-metin-2">{STATUS_ETIKET[status]}</span>
       )}
     </div>
   );

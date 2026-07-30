@@ -50,11 +50,11 @@ export function PdfIndir({
         <button
           type="button"
           disabled
-          className="h-8 self-start border border-cizgi px-4 text-govde text-kursun"
+          className="h-10 self-start rounded-buton border border-ayrac px-4 text-govde font-medium text-metin-2 opacity-60"
         >
           PDF indir
         </button>
-        <span className="text-kucuk text-kursun">
+        <span className="text-kucuk text-metin-2">
           PDF rapor üretiliyor; hazır olduğunda indirilebilir.
         </span>
       </div>
@@ -67,7 +67,7 @@ export function PdfIndir({
         type="button"
         onClick={indir}
         disabled={iniyor}
-        className="h-8 self-start border border-murekkep px-4 text-govde disabled:text-kursun"
+        className="h-10 self-start rounded-buton border border-marka px-4 text-govde font-semibold text-marka transition-colors hover:bg-marka-yumusak disabled:opacity-50"
       >
         {iniyor ? "İndiriliyor" : "PDF indir"}
       </button>

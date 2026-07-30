@@ -36,8 +36,8 @@ export function Sayfalama({
   }
 
   return (
-    <div className="flex items-center justify-between border-t border-cizgi px-6 py-3">
-      <span className="text-kucuk text-kursun">
+    <div className="flex items-center justify-between border-t border-ayrac px-6 py-4">
+      <span className="text-kucuk text-metin-2">
         <span className="sayi tabular-nums">{ilk}</span>–
         <span className="sayi tabular-nums">{son}</span> /{" "}
         <span className="sayi tabular-nums">{toplam}</span>
@@ -47,7 +47,7 @@ export function Sayfalama({
           type="button"
           disabled={!oncekiVar}
           onClick={() => git(offset - limit)}
-          className="h-8 border border-cizgi px-3 text-govde disabled:text-cizgi"
+          className="h-9 rounded-buton border border-ayrac px-4 text-govde font-medium text-metin transition-colors hover:bg-yuzey-2 disabled:opacity-40"
         >
           Önceki
         </button>
@@ -55,7 +55,7 @@ export function Sayfalama({
           type="button"
           disabled={!sonrakiVar}
           onClick={() => git(offset + limit)}
-          className="h-8 border border-cizgi px-3 text-govde disabled:text-cizgi"
+          className="h-9 rounded-buton border border-ayrac px-4 text-govde font-medium text-metin transition-colors hover:bg-yuzey-2 disabled:opacity-40"
         >
           Sonraki
         </button>

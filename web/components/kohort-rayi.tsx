@@ -117,7 +117,7 @@ export function KohortRayi({
           y1={TABAN - (bant ? RAY_YUKSEKLIK[bant] : 13)}
           x2={konum}
           y2={TABAN}
-          className={bant ? RAY_RENK[bant] : "stroke-murekkep"}
+          className={bant ? RAY_RENK[bant] : "stroke-metin"}
           strokeWidth={2}
           vectorEffect="non-scaling-stroke"
         />

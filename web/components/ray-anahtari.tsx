@@ -43,20 +43,20 @@ export function RayAnahtari() {
         ))}
       </svg>
       <div className="relative h-4">
-        <span className="sayi absolute left-0 text-mikro text-kursun">0</span>
+        <span className="sayi absolute left-0 text-mikro text-metin-2">0</span>
         <span
-          className="sayi absolute text-mikro text-kursun"
+          className="sayi absolute text-mikro text-metin-2"
           style={{ left: `${ESIK_IZLEMEDE}%`, transform: "translateX(-50%)" }}
         >
           {ESIK_IZLEMEDE}
         </span>
         <span
-          className="sayi absolute text-mikro text-kursun"
+          className="sayi absolute text-mikro text-metin-2"
           style={{ left: `${ESIK_NITELIKLI}%`, transform: "translateX(-50%)" }}
         >
           {ESIK_NITELIKLI}
         </span>
-        <span className="sayi absolute right-0 text-mikro text-kursun">
+        <span className="sayi absolute right-0 text-mikro text-metin-2">
           100
         </span>
       </div>

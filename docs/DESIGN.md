@@ -1,122 +1,85 @@
 # Radar — tasarım dili
 
 Panelin tek işi var: **hangi hesabın rapora gideceğine karar verdirmek.** Bu belgedeki her
-karar o işe hizmet ettiği için var. Estetik bu işlevden doğar, üstüne giydirilmez.
+karar o işe hizmet ettiği için var.
 
 Ham renk değerlerinin tek kaynağı `web/styles/tokens.css`. `web/app/` ve `web/components/`
 altında çıplak hex bulunmaz.
 
+> **Görsel yön (FE-9).** Panel önce editorial-minimal bir dille (kırık-beyaz kağıt, mürekkep/
+> patina, 13px sıkı tipografi, saç-teli ayraç) kuruldu. FE-9'da **kurumsal lacivert SaaS**
+> diline çevrildi: nötr zemin + beyaz kartlar + yumuşak gölge + ferah boşluk, lacivert vurgu,
+> açık **ve** koyu tema. İşlevsellik değişmedi — aşağıdaki korunan ilkeler (iki-skor, kohort
+> rayı, renk-dışı bant, kohort<5, gönderme-yok) FE-9'da bire bir sürdürüldü.
+
 ---
 
-## 1. Verilen token sistemine eleştiri
+## 1. Renk sistemi (açık + koyu)
 
-Başlangıç token sistemi sağlamdı; dört yerde eksikti. Üçünü kapattım, birini ölçtüm ve
-dokunmadım.
+Altı ham renk yerine **anlamlı yüzey/metin/vurgu katmanları** var; her token'ın açık **ve** koyu
+değeri `tokens.css`'te. Bileşen tek token kullanır (`bg-yuzey`, `text-metin`…), tema değişince
+`--tk-*` değeri değişir — bileşende `dark:` varyantı yok, renk mantığı tek yerde.
 
-**a) Palette dört ağırlık seviyesini karşılamıyordu.** SPEC §5 bulguları dört ağırlığa ayırıyor
-(kritik · yüksek · orta · düşük), elde iki sinyal rengi var — patina ve oksit. Dördü ikiye
-sıkıştırmak sahte eşitlik üretir. Karar: **ağırlık kromatik olarak kodlanmaz.** Oksit yalnızca
-kritikte görünür; kalan üç seviye sıralama ve tipografik ağırlıkla ayrışır. Renk bir ölçü
-birimi olarak kalır, kategori etiketine dönüşmez.
-
-*Oksit'in ölçülü genişletmesi (FE-8):* Oksit "kritik" sinyali, denetimdeki kritik bulguya ek
-olarak **maliyet alarmına** da açıldı (SPEC §8 — aylık maliyet eşiği aşımı). Gerekçe: maliyet
-disiplini bu ürünün rekabet avantajının merkezi (CLAUDE.md); eşik aşımı, bir denetim bulgusu
-kadar kritik bir sistem durumudur. Genişletme *ölçülü*dür — oksit hâlâ yalnızca iki yerde:
-kritik bulgu ve maliyet alarmı. Renk tek taşıyıcı değildir; alarmda "Eşik aşıldı" metni uyarıyı
-sözle de söyler.
-
-**b) Odak tokeni yoktu.** Vurgu rengi yasak, gölge yok, yarıçap ~0. Verilen altı değerin
-hiçbiri klavye odağını çizemiyordu, ama kapsam sınırları "klavye odağı görünür olacak" diyor.
-Eklendi: `--color-odak`, mürekkeple 2px halka + 2px kağıt ofseti. Yeni renk üretmedim.
-
-**c) Kohort rayı ile "iki skor" uyarısı çelişiyordu.** Bkz. §5 — ayrı başlık hak ediyor.
-
-**d) `kurşun` için ölçüm.** Sezgim zayıf olduğu yönündeydi; ölçtüm, **4.63:1** çıktı, AA'yı
-geçiyor. Değiştirmedim. Tek kısıt: 13px altında ve rakamlarda kullanılmaz.
-
-Ölçülen kontrastlar (kağıt `#FBFBF9` üstünde):
-
-| token | değer | oran | rol |
+| token | rol | açık | koyu |
 |---|---|---|---|
-| mürekkep | `#17191B` | 17.01:1 | ana metin, tüm rakamlar |
-| kurşun | `#6E7377` | 4.63:1 | ikincil metin — 13px ve üstü |
-| çizgi | `#E4E5E2` | 1.22:1 | ayraç; bilgi taşımaz, taşımamalı |
-| patina | `#1F6F63` | 5.77:1 | skor sinyali |
-| oksit | `#A6402E` | 5.97:1 | yalnızca kritik bulgu |
+| `zemin` | uygulama arka planı | `#eef2f7` | `#0b1220` |
+| `yuzey` | kart / panel / girdi | `#ffffff` | `#131c2e` |
+| `yuzey-2` | ikincil yüzey · satır hover · başlık | `#f5f8fc` | `#1c2740` |
+| `metin` | ana metin | `#0f172a` | `#eef2f7` |
+| `metin-2` | ikincil metin | `#56657a` | `#9aa8bd` |
+| `ayrac` | kenarlık / ayraç | `#e2e8f0` | `#273349` |
+| `marka` | lacivert · birincil eylem | `#1e3a5f` | `#4a78ac` |
+| `marka-yumusak` | aktif nav · hover zemin | `#e9f0f7` | `#1b2942` |
+| `uyari` | kritik bulgu + maliyet alarmı | `#b4341f` | `#f0796a` |
+
+**Kontrast ölçüldü, AA sağlandı** (kağıt/koyu yüzey üstünde): ana metin 17.9:1 / 15.2:1;
+ikincil metin 5.9:1 / 7.1:1; marka butonda beyaz 11.5:1 / 4.6:1; uyarı 6.1:1 / 6.2:1. Marka
+koyu tema değeri (`#4a78ac`) hem beyaz metni AA'da tutacak hem koyu zeminde görünür kalacak
+biçimde ölçülerek seçildi.
+
+**Vurgu ölçülüdür.** Lacivert yalnızca eylem (buton, aktif bölüm, odak halkası) ve
+kimliktedir. Skor rengi ve kritik uyarı ayrı hue'lardadır (aşağı) — marka onların yerini almaz.
 
 ---
 
-## 2. İleri taşınan eksen: renk bir skala oldu
+## 2. Skor bandı — renk ikincil, konum birincil
 
-**Değişiklik:** patina tek düz bir değerden, SPEC §1'in eşiklerine bağlanmış **üç duraklı
-ölçülmüş bir skalaya** dönüştü.
-
-```
---color-skor-elendi     #6E9A92   < 40    kağıda 3.03:1
---color-skor-izlemede   #3F857A   40–69   kağıda 4.18:1
---color-skor-nitelikli  #1F6F63   ≥ 70    kağıda 5.77:1
-```
-
-**Gerekçe.** Brief "renk bu projede marka öğesi değil, ölçü birimidir" diyor. Tek bir düz
-değer bunu ancak *söyleyebilir*: "bu bir skordur" der, "bu skor şu kadardır" diyemez. Ölçü
-birimi olmak demek büyüklüğü taşımak demektir. Tek hue içinde koyuluk skalası bunu yapar ve
-ikinci bir renk getirmez — disiplin bozulmaz, sadece hak ettiği işi yapar.
-
-Koyuluğun yönü kasıtlı: **koyuluk adaylıkla artar.** Nitelikli satırlar sayfada daha ağır
-basar, göz listede doğal olarak onlara akar. Elenmiş satır silinmez ama öne çıkmaz.
-
-**Kritik ölçüm ve sonucu.** Skalanın komşu durakları birbirine yalnızca **1.38:1**. Yani renk
-üç bandı **tek başına ayırt ettirmiyor.** Bunu iddia etmek yerine ölçtüm ve kodlamayı üçe
-çıkardım:
+Triyaj skoru üç banda ayrılır (SPEC §1: `< 40` elendi · `40–69` izlemede · `≥ 70` nitelikli).
+Bant üç eksende kodlanır ve **renk yalnızca üçüncü eksendir**:
 
 | eksen | ne kodlar | tipi |
 |---|---|---|
 | raydaki konum | skorun büyüklüğü | sürekli — **birincil** |
-| çentik yüksekliği | bant (8px · 13px · 18px) | ayrık |
-| renk durağı | bant | ayrık — **ikincil** |
+| çentik yüksekliği | bant (8 · 13 · 18 px) | ayrık — renk-dışı |
+| renk durağı | bant (`skor-elendi/izlemede/nitelikli`) | ayrık — ikincil |
 
-Üç eksenin ikisi kromatik değil; renk körlüğünde ve gri baskıda panel bilgi kaybetmez.
+İki eksen kromatik değildir; **renk körlüğünde ve gri baskıda bant yine ayrışır.** FE-9'da skor
+renkleri kurumsal palete taşındı (elendi nötr `#64748b`, izlemede teal `#0e7490`, nitelikli
+`#0f766e`; koyu temada açıldı) ama üç-eksen kodlaması korundu; her iki temada da 3:1 grafik
+eşiği aşıldı.
 
-**İkinci karar: rakam daima mürekkeptir.** Renk yalnızca raydaki dolu çentikte yaşar. Skoru
-banda göre renklendirmek elendi durağını 3.03:1'e düşürürdü — okunabilirliği bant kodlamasına
-feda etmek, ölçüm aletinde kabul edilemez. Rakam 17.01:1'de kalır, renk 3:1 grafik eşiğinin
-geçerli olduğu yere taşınır. "Renkli olan tek şey skordur" kuralı korunur: renk hâlâ yalnızca
-skor hücresinde, üstelik tam olarak ölçüm işaretinin üstünde.
-
-**Üçüncü karar: rakam `floor` ile yuvarlanır, `round` ile değil.** Skor bir eşik
-göstergesidir (SPEC §1: ≥70 nitelikli, ≥40 izlemede) ve bant otoriter olarak `status`'tan
-gelir (§5). `round` kullanılsa ham skoru 39.6 olan bir `rejected` satır "40" gösterir ve elendi
-bandıyla ters düşer — kullanıcı "40 neden elendi? 40 izlemede eşiği" diye okur. `floor` daima
-eşiğin doğru tarafında kalır: floor ile gösterilen "70" gerçekten ≥70'tir, "39" gerçekten
-<40'tır. Rakam ve bant hiçbir sınırda çelişmez. (FE-5'te 100 gerçek skorla eşik sınırında
-görülüp düzeltildi.)
+**Skor rakamı `floor` ile yuvarlanır, `round` ile değil.** Skor bir eşik göstergesidir (≥70,
+≥40); `round(39.6)="40"` bir `rejected` satırı izlemede eşiğinde gösterirdi. `floor` daima
+status bandıyla hizalı: gösterilen "70" gerçekten ≥70, "39" gerçekten <40'tır.
 
 ---
 
-## 3. Token'lar
+## 3. Tipografi ve ölçü
 
-Tam liste ve yorumları: `web/styles/tokens.css`. Özet:
+**Font: Manrope** (Google Fonts, latin-ext → Türkçe tam). Modern, ferah, humanist bir grotesk;
+jenerik system/Inter/Roboto/Arial klişesinden uzak, kurumsal ve okunaklı. Tek aile, ağırlıklarla
+hiyerarşi (400/500/600/700). Editorial dönemin "sayılar mono" disiplini bırakıldı; sayılar
+arayüz fontuyla ama **`tabular-nums`** ile dizilir — sütun hizası korunur, ferah durur.
 
-**Tipografi.** İki rol, tek katı kural: **bu uygulamada hiçbir sayı sans yüzle dizilmez.**
-Takipçi, skor, yüzde, tarih, para — hepsi `.sayi` (IBM Plex Mono, `tabular-nums`). Arayüz
-Archivo. Tabular figürler sütun hizasını korur; satırlar arasında rakamlar kaymaz. Arayüze
-alet hissini veren tek disiplin budur.
+Ölçek (13px sıkışıklığı bırakıldı): `mikro` 12 · `küçük` 13 · `gövde` 14 · `orta` 16 ·
+`büyük` 20 · `başlık` 24 · `rakam` 30. Satır yükseklikleri rahat.
 
-Ölçek: `mikro` 11 · `küçük` 12 · `gövde` 13 · `orta` 15 · `büyük` 20 · `rakam` 28.
-Altı boy yeter; ara boy üretilmez.
+**Yarıçap ve gölge kurumsal:** kart 12px, buton/girdi 8px; iki katmanlı yumuşak gölge
+(`shadow-kart` yüzeyler, `shadow-yuzen` drawer). Editorial "sıfır yarıçap, gölge yok" kuralı
+FE-9'da tersine döndü — yön kartlı, ferah, yumuşak.
 
-*Bağlama notu:* font aileleri (`--font-arayuz`, `--font-sayi`) `@theme`'de değil `:root`'ta
-durur (Tailwind v4 kullanılmayan `@theme` değişkenini tree-shake ediyordu) ve `next/font`
-değişkenleri `<html>`'e verilir; body'de olsalardı `:root` token'ları onları çözemez, tüm
-sayılar sessizce sans yüze düşerdi. Bu bir kez kırıldı, ölçülüp düzeltildi.
-
-**Boşluk.** 4px taban. Yalnızca `1 · 2 · 3 · 4 · 6 · 8 · 12 · 16` adımları kullanılır.
-Minimal yön hatasız aralık ister — ara değer üretmek ritmi bozar.
-
-**Yarıçap.** Varsayılan `0`. Tek istisna ray ucu `1px`.
-
-**Ölçü.** sol ray 208px · satır 44px · kohort rayı 132×20px.
+**Boşluk ferah.** İçerik 24–32px kenar boşluğu, kartlar arası 16–24px, satır 56px. Cömert
+whitespace kurumsal dilin belkemiği.
 
 ---
 
@@ -126,287 +89,156 @@ Skor hücresi çıplak bir sayı ya da rozet değil. Her hücrede **sabit bir 0�
 durur. O kategorinin skor **dağılımı** (çeyrekler) rayda soluk bir bant, o satırın skoru dolu
 çentik. Hiçbir skor tek başına okunmaz; daima kohortun içindeki yeriyle okunur.
 
-Bu süs değil, ürünün tezi. SPEC §4 açıkça diyor: *"Etkileşim oranı için mutlak eşik kullanma.
-Karşılaştırma daima aynı kategorideki taranmış hesapların medyanına göre yapılır."* Mutlak eşik
-yanıltıcıdır, anlamlı olan görece konumdur. Ray tam olarak bunu gösterir.
+Bu süs değil, ürünün tezi. SPEC §4: *mutlak eşik yanıltıcıdır, anlamlı olan görece konumdur.*
+Ray tam olarak bunu gösterir.
 
-**Çeyrek bandı (FE-8'de çentikten dağılıma).** İlk tasarımda kohortun her skoru ayrı bir soluk
-çentikti; kaynak `/businesses?limit=200`'ü istemcide türetmekti (FE-3-B1) ve 200+ hesapta eksik
-kalırdı. FE-8'de kaynak `GET /stats/categories`'e (BE-23) taşındı: kategori başına **medyan +
-Q1 + Q3** (`percentile_cont`). Ray artık Q1–Q3 arası soluk bir **bant** (dağılımın orta %50'si)
-+ medyan çizgisidir. Bu üç sayıyla 200+ hesapta da ölçeklenir, gürültüsüzdür ve dağılımı
-tek-tek-çentikten daha nicel gösterir — skorun üst çeyrekte mi orta yarıda mı alt çeyrekte mi
-olduğu doğrudan okunur. Görece konum tezi güçlendi.
+**Çeyrek bandı (FE-8).** Kaynak `GET /stats/categories` (BE-23): kategori başına **medyan +
+Q1 + Q3**. Ray Q1–Q3 arası soluk bir bant (dağılımın orta %50'si) + medyan çizgisidir; o satırın
+skoru dolu çentik. Üç sayıyla 200+ hesapta ölçeklenir, dağılımı nicel gösterir. `limit=200`
+istemci-türetimi söküldü (FE-3-B1).
 
-**Ray asla veriye göre ölçeklenmez.** 0–100 sabittir. Ölçeği veriye uydurmak, karşılaştırmayı
-imkânsız kılar — aletin taksimatı kaymaz.
-
-**Kohort 5'in altındaysa bant çizilmez.** SPEC §4 gereği bu durumda dağılım hesaplanmaz
-(`score_median` null gelir) ve hesap `watch` olur. Ray boş taşıyıcı olarak durur, erişilebilir
-etiketi "kohort 5 hesabın altında, karşılaştırma yapılmadı" der. Olmayan karşılaştırmayı
-çizmeyiz (CLAUDE.md kural 7'nin ruhu). *Canlı doğrulandı: florist/gift_shop/pet_store (3'er
-kayıt) → bant yok + "—" + "İzlemede"; dolu kategoriler (dental_clinic, jewelry_store…) çeyrek
-bandını tam gösteriyor.*
-
-**Kohort dağılımı filtreden bağımsızdır.** `/businesses` sayfalı ve filtreli gelir; ama kohort
-"aynı kategorideki taranmış tüm hesaplar" olmalı, yoksa `status=qualified` filtresi altında ray
-yanıltıcı olur. `GET /stats/categories` dağılımı **tüm skorlanmış hesaplardan** hesaplar —
-filtreden bağımsız, `limit=200` sınırı yok (FE-3-B1 kapandı).
-
-**Anahtar bir kez gösterilir.** Skor sütunu başlığının altında 0 · 40 · 70 · 100 taksimatı
-duran sabit bir ray anahtarı var. Böylece her satırda bant etiketi tekrar etmeye gerek kalmaz.
-
-Cesaret buraya harcandı. Gerisi sessiz.
+**Ray asla veriye göre ölçeklenmez** (0–100 sabit). **Kohort 5'in altındaysa bant çizilmez**
+(SPEC §4 → `score_median` null); hesap `watch`, ray boş, skor hücresi "—" + status etiketi
+gösterir. Olmayan karşılaştırmayı çizmeyiz.
 
 ---
 
 ## 5. İki skor — asla karıştırılmaz
 
-Panelde ters yönde çalışan iki skor var. Bu, arayüzün en kolay yapacağı hata.
+Panelde ters yönde çalışan iki skor var. Arayüzün en kolay yapacağı hata bu.
 
 | | yön | anlamı |
 |---|---|---|
 | **Triyaj skoru** | ↑ yüksekse **iyi** | güçlü aday, derin denetime gider |
 | **Görünürlük skoru** | ↓ düşükse **kötü** | hesap kötü yönetiliyor (SPEC §5 cezaları) |
 
-Kurallar:
+1. İkisine de **asla "skor" denmez** — her görünümde tam adıyla.
+2. **Kohort rayı yalnızca triyaj skoruna aittir.** Görünürlük skoru denetim panelinde ayrı bir
+   kartta, **yönü metinle** ("düşük skor kötü yönetim — tablodaki triyaj skorunun tersi") ve ray
+   OLMADAN sunulur. Aynı ray formunu ikisine vermek imza öğesinin uyardığı hatayı üretirdi.
+3. Eşikler tek yerde: `web/lib/skor.ts` (`ESIK_IZLEMEDE=40`, `ESIK_NITELIKLI=70`).
 
-1. İkisine de **asla "skor" denmez.** Her görünümde tam adıyla yazılır: "Triyaj skoru",
-   "Görünürlük skoru".
-2. **Kohort rayı yalnızca triyaj skoruna aittir.** Görünürlük skoruna aynı ray formunu vermek
-   ters yönlü iki ölçeği görsel olarak eşitler — imza öğesi tam da uyardığı hatayı üretirdi.
-   Görünürlük skoru denetim görünümünde ayrı bir form ve açık yön ifadesiyle sunulur.
-3. Aynı ekranda yan yana gösterilirlerse yön **metinle** belirtilir; okurun çıkarmasına
-   bırakılmaz.
-
-Eşikler tek yerde durur: `web/lib/skor.ts` (`ESIK_IZLEMEDE = 40`, `ESIK_NITELIKLI = 70`,
-`ASGARI_KOHORT = 5`). Bileşenlerde sabit sayı yazılmaz.
-
-**Bant `score`'dan değil `status`'tan gelir.** Sözleşmede (`openapi.yaml`) `score` ve `status`
-ayrı alanlardır. SPEC §4 gereği kohort 5 hesabın altındaysa potansiyel hesaplanmaz ve hesap
-skoru ne olursa olsun `watch` olur — yani mutlak skor eşiği (`skorBandi`) yanıltıcı olabilir.
-Bu yüzden hücrenin rengi ve çentik yüksekliği **daima `status`'tan** türetilir; `score` yalnızca
-raydaki konumu belirler. `status` yokken (henüz durum atanmamış) `skorBandi` yalnızca yedektir.
-Skor null ama status varsa (kohort<5) rakam yerine yarım tire durur, yanında status etiketi
-(“İzlemede”) sözle söylenir — ray konumu olmadığından tek işaret budur.
+**Bant `status`'tan, ray konumu `score`'dan gelir.** Kohort<5'te skor eşiği yanıltıcı (SPEC §4)
+olduğundan bant otoriter olarak backend `status`'undan türetilir; `score` yalnızca konumu verir.
 
 ---
 
 ## 6. Yerleşim
 
-**Satır başına kart yok.** Kenarlıklı yoğun satırlar, tam genişlik tablo, ince sol ray.
-Gölge yok. Ayrım tek saç teli çizgiyle yapılır.
+**Kurumsal dashboard.** Yüzey renginde ince sol gezinme + zemin renginde içerik. İçerik ferah
+padding'li, dikey kart yığını. Aktif bölüm `marka-yumusak` zemin + `marka` metin. Sol rayda
+**tema anahtarı** (güneş/ay ikonu — renk taşımaz, ikon + `aria-label` durumu söyler).
 
-**Sol ray (208px).** Ürün adı + bölümler. Faz 1'de tek gerçek bölüm var; **ölü bağlantı
-konmaz.** Bölümler inşa edildikçe eklenir.
+**Üst şerit — istatistik kartları.** SPEC §7 `/stats`: taranan · nitelikli · rapor · aylık
+maliyet. Dört **kart** (beyaz yüzey, yumuşak gölge, yuvarlak, büyük okunur sayı). Veri yokken
+yarım tire; kart yerini korur, düzen zıplamaz.
 
-**Keşif çubuğu (en üst).** Üst şeridin de üstünde ince bir eylem satırı: keşif sorgusu +
-bölge (varsayılan Samsun) + en fazla (opsiyonel) + **Tara** düğmesi. Kart değil, alttan tek saç
-teli çizgiyle ayrılır; filtre şeridiyle aynı alan/tipografi dilini paylaşır. Tarama sürerken
-form kilitlenir ve çubuğun sağ ucunda durum belirir (bkz. §7 job yoklama). Buton metni akış
-boyunca tek fiili korur: **Tara → Taranıyor → Tarama bitti.** İş bir eylemi tetikler ama sonucu
-insan okur; çubuk kendini kutlamaz.
+**Maliyet alarmı (SPEC §8).** `monthly_cost_alarm` true → maliyet kartı `uyari` kenarlığı +
+rakam `uyari` + "Eşik aşıldı" metni. **Renk tek taşıyıcı değildir** — metin uyarıyı sözle de
+söyler; renk körlüğünde de okunur. Alarm kapalıyken sessiz. Oksit/uyarı rengi §1'de ölçülü
+biçimde iki yere ayrılmıştır: kritik bulgu + maliyet alarmı; maliyet disiplini ürünün merkezi
+olduğundan eşik aşımı kritik bir sistem durumudur.
 
-**Üst şerit.** SPEC §7 `/stats`: taranan · nitelikli · rapor · aylık maliyet. Dört ölçü, tek
-satır, dikey çizgilerle ayrılmış. Rakam iri mono, etiket `mikro` versal kurşun. Şerit veri
-yokken de **yerini korur** — yükleme bittiğinde düzen zıplamaz.
+**Tablo.** Kart içinde: gri başlık şeridi, ferah satır (56px), **hover'da yüzey-2 zemin**,
+tıklanabilir (klavye: `tabIndex`+Enter). Sütunlar `openapi` `Business` alanları: İşletme
+(ad + `@handle`) · Kategori · Değerlendirme (`rating_count`) · Keşfedildi · Triyaj skoru.
+Takipçi/gösterim gibi ölçülmeyen alanlar sütun olamaz (CLAUDE.md kural 7).
 
-**Maliyet alarmı (SPEC §8).** Aylık maliyet yapılandırılmış eşiği aştıysa (`monthly_cost_alarm`)
-maliyet hücresi görünür bir uyarı taşır: rakam oksit + altında "Eşik aşıldı" (mikro, oksit).
-Renk **tek taşıyıcı değildir** — metin uyarıyı sözle de söyler, renk körlüğünde de okunur.
-Oksit'in buraya açılması §1'de ölçülü genişletme olarak gerekçeli; maliyet disiplini ürünün
-merkezi olduğundan eşik aşımı kritik bir sistem durumudur. Alarm kapalıyken hiçbir ek işaret
-yok — sessiz varsayılan.
+**Denetim paneli (drawer).** Satır seçilince sağdan gölgeli drawer (`shadow-yuzen`, 560px),
+arkada hafif karartma örtü (`orten`), Esc/Kapat/tık-kapat. **Denetim yalnız nitelikli hesaba**
+üretilir; değilse "Derin denetim" düğmesi yok, sebep açık. Görünürlük skoru kartı + bulgular +
+rapor metni + PDF indir + erişim taslağı.
 
-**Tablo.** Sütunlar: İşletme (ad + `@handle`) · Kategori · Değerlendirme · Keşfedildi · Triyaj
-skoru. Genişlikler sabit (`colgroup`); veri gelince başlık kaymaz. Satır 44px — yoğun ama
-rahat. Değerlendirme sağa dayalı mono (Places yorum sayısı, `rating_count`); Keşfedildi mono
-tarih.
+**Bulgu önem hiyerarşisi.** Bulgular öneme sıralı (kritik üstte, SPEC §5). **Yalnızca kritik
+`uyari` (oksit) alır**; kalan üç seviye sıralama + önem etiketiyle ayrışır — kromatik kodlama
+yok. Her bulgu iki katman taşır ve ayrı gösterilir: `detail` (deterministik tetik, daima dolu)
+ve `message` (LLM ajans-dili, null olabilir). LLM bulgu icat etmez.
 
-Bu sütunların **hepsi `openapi.yaml` `Business` şemasının gerçek alanlarıdır.** FE-1'de
-konmuş "Takipçi" ve "Son gönderi" sütunları sözleşmeye aykırıydı: takipçi `snapshots`,
-gönderi tarihi `posts` tablosunda; `Business`'ta ikisi de yok. FE-2'de sözleşmeye uyduruldu.
-
-**Ölçmediğimiz hiçbir şey sütun olamaz.** Erişim, gösterim, kaydetme, profil ziyareti,
-demografi bu sistemde yok ve arayüze giremez (CLAUDE.md kural 7). Takipçi/gösterim gibi
-metrikler mock veriye bile eklenmez.
-
-**Filtreler.** `status` · `category` · `min_score` — adları ve değer kümeleri `openapi.yaml`
-`/businesses` query parametreleriyle birebir. **Filtre durumu URL query string'inde yaşar**
-(tek gerçek kaynak): sayfa yenilenince kaybolmaz, paylaşılabilir, geri tuşuyla gezinilir.
-Bileşen yerel filtre state'i tutmaz; `router.replace` ile URL'i yazar (geçmişi kirletmez).
-Filtre değişince sayfa başa döner (`offset` sıfırlanır). Şeridin sağında canlı “N aday” sayacı
-ve filtre varsa “Filtreleri temizle”.
-
-**Sayfalama.** `limit` / `offset`, yanıttaki `total` ile. Tek sayfa varsa hiç çizilmez.
-“ilk–son / toplam” mono; Önceki/Sonraki uçlarda pasifleşir.
-
-İki skorun ters yönü metinle uyarılır: filtre etiketi “En düşük **triyaj** skoru” — hangi skor
-olduğu ve yönü (yüksek = iyi aday) baştan bellidir.
-
-### Denetim paneli (drawer)
-
-Bir satır seçilince sağdan bir **denetim paneli** açılır: gölge/karartma yok (§6 disiplini),
-sol kenarında saç teli çizgi, kağıt zemin, üstte Kapat (Esc de kapatır). Tablo arkada görünür
-kalır — panel onu karartmaz, yalnızca üstüne biner. Ayrı sayfa/route değil; denetim akışı
-seçili işletmenin yanında, bağlamı kaybetmeden yaşar.
-
-**Denetim yalnız nitelikli hesaba üretilir** (SPEC §1). Nitelikli olmayan satırda panel yine
-açılır ama "Derin denetim" düğmesi **yoktur**; yerine sebep durur ("henüz nitelikli değil;
-triyaj skoru 70'e ulaştığında"). Düğmeyi gizleyip sebebi yazmak, pasif bir düğme bırakıp
-kullanıcıyı tıklatıp reddetmekten dürüsttür.
-
-**Görünürlük skoru ≠ triyaj skoru.** Panelde büyük mono bir "Görünürlük skoru N/100" durur ve
-hemen altında **yönü metinle** söylenir: "düşük skor hesabın kötü yönetildiğini gösterir — fırsat
-bu; tablodaki triyaj skorunun tersi yönde okunur." İki skor asla aynı isimle anılmaz (§5) ve
-görünürlük skoruna **kohort rayı verilmez** — o form triyaj skoruna aittir, ters yönlü iki
-ölçeği aynı görsele koymak imza öğesinin uyardığı hatadır.
-
-### Bulgu önem hiyerarşisi
-
-Bulgular **öneme göre sıralı**, kritik üstte (SPEC §5). Önem dört seviye: kritik · yüksek ·
-orta · düşük. Renk kararı §1'de sabitlendi ve burada uygulanır: **yalnızca kritik oksit alır**
-(tek kritik sinyal); kalan üç seviye sıralama + önem etiketiyle ayrışır, kromatik kodlama yok.
-Dört önemi dört renge dağıtmak "renkli olan tek şey skordur"u bozardı.
-
-Her bulgu **iki katman** taşır ve bunlar ayrı gösterilir (sözleşme `Finding`): `detail`
-deterministik tetiktir (ölçülen değer + eşik, ör. "Reels oranı %0, eşik <%10") ve **daima
-doludur**; `message` LLM'in ajans-dili çevirisidir ve **null olabilir** (sentez öncesi). LLM
-bulgu icat etmez — ölçülen ile yazıya dökülen karışmasın diye iki alan hiç birleştirilmez.
-
-### Erişim kaydı — kopyalanır ve durumu izlenir, gönderilmez
-
-Erişim mesajının **iki eylemi** vardır, ikisi de insan kararı: **kopyala** (metni al) ve
-**durumu güncelle** (nerede kaldığını kaydet). "Gönder / DM at / e-posta yolla" **bilinçle
-yoktur** — CLAUDE.md hukuki sınırı, sistem hiçbir koşulda otomatik mesaj göndermez, kayıt
-`draft` doğar, gönderme kararı insandadır. "Taslak" etiketi ve "Kopyala → Kopyalandı" fiili bunu
-her bakışta hatırlatır.
-
-**Durum takibi bir gönderim değildir.** `draft → sent → opened → replied → meeting → won → lost`
-(SPEC §3) bir select ile insan tarafından güncellenir → `PATCH /outreach/{id}`. "Gönderildi"yi
-işaretlemek, bir insanın mesajı **elle gönderip** kaydetmesidir; arayüz göndermez, kaydeder.
-Sözleşme bunu yapısal olarak sabitler: `OutreachUpdate` yalnız `status` taşır, gönderme alanı
-imkânsızdır. Durum **tek bakışta okunur ve renk tek taşıyıcı değildir** — her durum tam Türkçe
-adıyla yazılır (renk zaten skora ayrılmış, §1). `sent_at`/`replied_at` sunucuda damgalanır ve
-ilgili duruma geçilince mono tarih olarak görünür. Geçersiz bir geçiş uçtan `422` dönerse ("bu
-geçiş geçerli değil") select eski değerinde kalır — yarım bir durum yazılmaz.
-
-### PDF indir
-
-Rapor metninin altında **PDF indir** düğmesi. PDF ayrı bir fazda üretilir (Playwright, Faz 5);
-`Audit.pdf_path` null iken düğme **pasiftir** ve sebep açıktır ("PDF rapor üretiliyor; hazır
-olduğunda indirilebilir") — pasif bir düğmeye tıklatıp `409` ile reddetmekten dürüsttür.
-`pdf_path` dolunca düğme raporu binary çeker (`application/pdf`) ve tarayıcıya indirtir. Bu, boş
-alanı hata gibi göstermeme ilkesinin (§7) çıktı tarafındaki karşılığı: PDF'in yokluğu bir arıza
-değil, henüz-gelmemiş bir aşamadır.
-
-### Gazete tuzağı
-
-Verilen yön (saç teli ayraç, sıfır yarıçap, gölgesiz) kaçınılacaklar listesindeki "hairline
-kurallı gazete düzeni"ne tehlikeli biçimde yakın. Ayrım şurada: gazetede çizgi **dekoratif**,
-tipografi editöryel, hiyerarşi serif ağırlıklı. Burada çizgi **yalnızca veri satırlarını
-ayırdığı yerde** var, hiyerarşiyi mono rakamlar taşıyor ve hizayı ray kuruyor. Serif yok,
-editöryel ölçü yok, süs kural yok. Çizgi bir şey ayırmıyorsa silinir.
+**PDF indir.** `pdf_path` null → düğme pasif + sebep ("hazır olduğunda"); dolu → binary indirir.
+Boş alan hata gibi gösterilmez.
 
 ---
 
-## 7. Durumlar
+## 7. Erişim kaydı — kopyalanır ve izlenir, gönderilmez
 
-Tablo üç durumu birinci sınıf çizer; hiçbiri baştan savma değildir. Durum tek bir tipli
-birleşimle (`yukleniyor | hata | hazir`) verilir ve TanStack Query'nin `isPending` / `isError`
-bayraklarından türer. Üçü de gerçek: ağ/CORS hatası hata durumunu, `items: []` boş durumu
-tetikler. Sayfa değişiminde tablo boşalmasın diye önceki sayfa yeni gelene dek durur
-(`placeholderData`).
+Erişim mesajının iki eylemi vardır, ikisi de insan kararı: **kopyala** (metni al) ve **durumu
+güncelle** (nerede kaldığını kaydet). "Gönder / DM at / e-posta yolla" **bilinçle yoktur** —
+CLAUDE.md hukuki sınırı: sistem hiçbir koşulda otomatik mesaj göndermez, kayıt `draft` doğar.
 
-**Boş.** Özür dilemez, davet eder. Dönen çark ya da illüstrasyon yok. Filtre boş sonuç
-verdiğinde:
-> Bu filtreye uyan aday yok.
-> Filtreleri gevşetin ya da temizleyin. Keşif çalıştığında Samsun'daki işletmeler taranır ve
-> skorlarıyla buraya düşer; nitelikli olanlar rayın sağ ucunda toplanır.
-
-Faz 1'in çıkış kriteri budur: mock kaynağı boş diziye çevrildiğinde (`MOCK_ISLETMELER = []`)
-panel çökmez, bu durumu çizer.
-
-**Yükleniyor.** Dönen çark yok. Tablo başlığını ve satır yerlerini korur, skor hücrelerinde
-çentiksiz boş raylar durur. Alet yüklenirken de aletin biçimindedir.
-
-**Veri yok ≠ sıfır.** Bilinmeyen değer daima yarım tire (`—`), asla `0`. `web/lib/bicim.ts`
-bunu tek yerden garanti eder.
-
-**Hata.** Ne olduğunu ve ne yapılacağını söyler (“Liste yüklenemedi. Sunucuya ulaşılamadı.
-Bağlantıyı kontrol edip yeniden deneyin.”). Hata kodu tek başına gösterilmez; bir yeniden-dene
-eylemi verilebilir.
-
-### Job yoklama durum makinesi (keşif işi)
-
-Keşif taraması uzun bir iştir; uç anında `job_id` döner (senkron scraping yok, SPEC §7) ve
-arayüz `GET /jobs/{id}`'i yoklar. `JobState` enum'unun **her değerinin görünür bir karşılığı
-var** — kullanıcı işin nerede olduğunu tahmin etmez:
-
-| durum | görünen | poll |
-|---|---|---|
-| `queued` | “Kuyrukta…” | sürer |
-| `running` | “Taranıyor” + ilerleme çubuğu (`processed/total`) | sürer |
-| `done` | “Tarama bitti · N işletme, M snapshot” + Kapat | **durur** |
-| `error` | “Tarama başarısız. {mesaj}” + Tekrar dene | **durur** |
-
-**Poll disiplini.** Yoklama aralığı yalnızca `queued`/`running` iken çalışır; `done` ya da
-`error`'a düşünce **durur** — süresiz istek yok. Bu, maliyet disiplininin arayüz tarafındaki
-karşılığıdır (`CLAUDE.md`): boşa dönen bir poll bile israftır.
-
-**İş bitince tablo tazelenir.** `done` olduğunda aday listesi, üst şerit ve kohort kaynağı
-sorguları geçersizleştirilir; tablo yeni DB verisini kendiliğinden çeker. Kullanıcı elle
-yenilemez.
-
-**İlerleme dürüsttür.** `total` bilinmiyorsa (null) sahte bir yüzde çizilmez — yalnızca işlenen
-sayı gösterilir. Ölçmediğini iddia etme kuralının (CLAUDE.md kural 7) ilerleme çubuğundaki
-karşılığı budur.
-
-**Hata rengi yok.** Keşif/yoklama hataları mürekkeple yazılır, oksitle değil — oksit yalnızca
-kritik denetim bulgusuna ayrılmıştır (§1). Operasyon hatası bir bulgu değildir; renkli olan tek
-şey skordur.
-
-### Denetim işi ve yarım-üretilmiş rapor
-
-Denetim de aynı job desenini yoklar (`POST /businesses/{id}/audit` → `queued/running/done/error`,
-poll `done`'da durur); done'da `result.audit_id` ile `GET /audits/{id}` çekilir. Denetim
-**iki fazda** üretilir: önce deterministik bulgular + görünürlük skoru (LLM'siz), sonra LLM
-sentezi (rapor metni + erişim taslağı). Panel yarım-üretilmiş denetimi **hata gibi göstermez**:
-`report_text`/`outreach`/bulgu `message`'ı null geldiğinde "yapay zekâ sentezi tamamlanınca
-burada görünür; henüz üretilmedi" der. Deterministik kısım (skor + bulgu `detail`'leri) zaten
-tam ve gösterilir. Null bir alan eksik değil, henüz-gelmemiş bir aşamadır — ton bunu yansıtır.
-
-**Olmayan bulgu = hata değil.** Faz 4'te yalnızca üretilebilir 5 kural çalışır; iki kural
-(yorum yanıtsız, görsel tutarsızlık) veri gerçeği gereği üretilmez (SPEC §5 ↔ kural 7). Panel
-tetiklenmeyen bir kuralı "eksik" diye işaretlemez; boş bulgu listesi bile "ölçülen bir eksik
-bulunmadı" diye olumlu okunur.
+**Durum takibi bir gönderim değildir.** `draft → sent → … → won/lost` (SPEC §3) bir select ile
+insan tarafından güncellenir → `PATCH /outreach/{id}`. "Gönderildi"yi işaretlemek, bir insanın
+mesajı **elle gönderip** kaydetmesidir. Sözleşme bunu yapısal sabitler (`OutreachUpdate` yalnız
+`status`). Durum tam Türkçe adıyla okunur (renk tek taşıyıcı değil); `sent_at`/`replied_at`
+sunucu damgaları gösterilir; geçersiz geçiş `422` → net hata, select eski değerinde kalır.
 
 ---
 
-## 8. Metin
+## 8. Durumlar
 
-Türkçe, cümle düzeni, kısa. Butonlar fiille başlar ve akış boyunca **aynı kelimeyi korur**:
-"Rapor üret" diyen düğme "Rapor üretildi" bildirimi doğurur, "Rapor oluşturuldu" değil.
+Üç durum birinci sınıf; hiçbiri baştan savma değil. Durum tipli birleşimle
+(`yukleniyor | hata | hazir`) ve TanStack Query'nin `isPending`/`isError`'ından türer.
 
-Yasak: emoji, gradient, yuvarlak rozet yığınları, "AI destekli" tarzı pazarlama cümleleri.
-Bu panel üç kişilik bir ajansın her gün içinde yaşadığı bir alet; kendini satmasına gerek yok.
+**Boş.** Özür dilemez, davet eder: "Bu filtreye uyan aday yok. Filtreleri gevşetin…". Dönen
+çark/illüstrasyon yok.
+
+**Yükleniyor.** Tablo başlığını ve satır yerlerini korur; skor hücrelerinde çentiksiz boş ray.
+
+**Hata.** Ne olduğunu ve ne yapılacağını söyler; kod tek başına gösterilmez; yeniden-dene verilir.
+Hata metinleri `uyari` değil `metin`/`metin-2` ile — uyari yalnızca kritik bulgu + maliyet
+alarmına ayrıldı.
+
+**Job yoklama durum makinesi.** Keşif/denetim işi uzun; uç anında `job_id`, arayüz
+`GET /jobs/{id}` yoklar. `JobState`'in her değeri görünür: `queued` (Kuyrukta) · `running`
+(Taranıyor + ilerleme) · `done` (sonuç + Kapat) · `error` (mesaj + Tekrar dene). **Poll
+`done`/`error`'da durur** — süresiz istek yok (maliyet disiplini). İş `done` olunca liste +
+üst şerit + kohort sorguları tazelenir. `total` null ise sahte yüzde çizilmez (kural 7).
+
+**Denetim iki fazlı; yarım rapor hata değil.** Önce deterministik bulgular + skor, sonra LLM
+sentezi (rapor + taslak + bulgu `message`). Null gelen alan "yapay zekâ sentezi tamamlanınca…"
+der; deterministik kısım zaten tam gösterilir.
 
 ---
 
-## 9. Hareket
+## 9. Metin
 
-Neredeyse yok. Tek geçiş: tarama bittiğinde listeye düşen satır — 260ms, 2px yukarıdan,
-opaklıkla. Başka hiçbir yerde animasyon yok. `prefers-reduced-motion: reduce` tüm süreleri
-0.01ms'e indirir.
+Türkçe, cümle düzeni, kısa. Butonlar fiille başlar ve **aynı kelimeyi korur**: "Kopyala →
+Kopyalandı", "Tara → Taranıyor → Tarama bitti". Yasak: emoji, gradient, "AI destekli" pazarlama
+cümleleri. Bu panel üç kişilik bir ajansın her gün yaşadığı bir alet; kendini satmaz.
 
 ---
 
-## 10. Kapsam
+## 10. Hareket
 
-Hedef **1440px** masaüstü, **1024px**'e kadar zarifçe bozulur. Mobil v1 kapsamı dışında.
+Ölçülü. Tema geçişi 120ms yumuşak (sert flaş yok). Satır hover renk geçişi, buton opaklık
+geçişi. Tarama bittiğinde listeye düşen satır için tek giriş geçişi. `prefers-reduced-motion`
+tüm süreleri 0.01ms'e indirir.
 
-Yalnızca açık tema. Ama **tüm renkler CSS değişkeni** olarak tanımlı — koyu tema sonradan
-`web/styles/tokens.css` üstünde tek dosyalık iş.
+---
 
-Klavye odağı her etkileşimli öğede görünür (`:focus-visible`, 2px mürekkep halka + 2px ofset).
-Fare tıklamasında halka çıkmaz.
+## 11. Tema (açık + koyu)
+
+Her token'ın açık ve koyu değeri var. Tema üç kaynaktan gelir, öncelik sırasıyla:
+
+1. **Kullanıcı seçimi** — sol raydaki anahtar; `<html>`'e `tema-acik`/`tema-koyu` sınıfı,
+   `localStorage`'da kalıcı.
+2. **Sistem tercihi** — kullanıcı seçmediyse `@media (prefers-color-scheme: dark)`.
+3. **Varsayılan** — açık.
+
+**FOUC yok:** tema, ilk boyadan önce `<head>`'deki küçük bir script ile `<html>`'e uygulanır.
+Her iki temada da metin kontrastı AA; skor bantları renk-dışı işaretle (konum + çentik) ayrışır.
+
+---
+
+## 12. Kapsam ve korunan ilkeler
+
+Hedef **1440px** masaüstü, **1024px**'e zarifçe bozulur. Mobil v1 dışı. Klavye odağı her
+etkileşimli öğede görünür (`:focus-visible`, marka halkası).
+
+FE-9 görsel yenilemesinde **değişmeden korunan** işlevsel ilkeler:
+
+- **İki skor asla karışmaz** (§5) — triyaj (yüksek=iyi) ↔ görünürlük (düşük=kötü), yön metinle.
+- **Skor bantları renk-dışı ikinci işaretle** kodlanır (§2) — renk körlüğü; her iki temada.
+- **Kohort<5 → skor "—" + status** (§4) — yanıltıcı skor gösterilmez.
+- **Erişim taslağı yalnız kopyalanır** (§7) — "gönder" eylemi hiçbir yerde yok (hukuki sınır).
+- **Ölçülmeyen alan yok** — erişim/gösterim/kaydetme/demografi hiçbir yerde (kural 7).
+- **Renk tek taşıyıcı değil** — maliyet alarmı, önem, durum: renk + metin/ikon birlikte.

@@ -1,32 +1,37 @@
 import Link from "next/link";
+import { TemaToggle } from "@/components/tema-toggle";
 
 /**
- * Uygulama kabuğu: ince sol ray + tam genişlik içerik alanı.
- * Kart yok, gölge yok. Ayrım tek bir saç teli çizgiyle yapılır.
+ * Uygulama kabuğu: yüzey renginde sol gezinme + zemin renginde içerik alanı.
+ * Kurumsal dashboard düzeni — ferah boşluk, yumuşak ayraç, tema anahtarı.
  */
 export function Kabuk({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <nav
         aria-label="Bölümler"
-        className="flex shrink-0 flex-col border-r border-cizgi"
+        className="flex shrink-0 flex-col border-r border-ayrac bg-yuzey"
         style={{ width: "var(--olcu-sol-ray)" }}
       >
-        <div className="border-b border-cizgi px-6 py-4">
-          <span className="text-orta font-medium tracking-tight">Radar</span>
-          <span className="ml-2 text-mikro text-kursun uppercase">
-            Kıyı Medya
-          </span>
+        <div className="flex items-center justify-between px-5 py-5">
+          <div className="flex flex-col">
+            <span className="text-orta font-bold tracking-tight text-metin">
+              Radar
+            </span>
+            <span className="text-mikro font-medium text-metin-2 uppercase">
+              Kıyı Medya
+            </span>
+          </div>
+          <TemaToggle />
         </div>
 
-        {/* Faz 1'de tek bölüm var. Ölü bağlantı koymuyoruz; bölümler
-            gerçekten inşa edildikçe buraya eklenir. */}
-        <ul className="flex flex-col py-2">
+        {/* Faz 1'de tek gerçek bölüm var; ölü bağlantı konmaz. */}
+        <ul className="flex flex-col gap-1 px-3 py-2">
           <li>
             <Link
               href="/"
               aria-current="page"
-              className="block px-6 py-2 text-govde font-medium"
+              className="block rounded-buton bg-marka-yumusak px-3 py-2 text-govde font-semibold text-marka"
             >
               Adaylar
             </Link>
@@ -34,7 +39,7 @@ export function Kabuk({ children }: { children: React.ReactNode }) {
         </ul>
       </nav>
 
-      <main className="min-w-0 flex-1">{children}</main>
+      <main className="min-w-0 flex-1 bg-zemin">{children}</main>
     </div>
   );
 }

@@ -49,13 +49,13 @@ export function AdayTablosu({
         ))}
       </colgroup>
       <thead>
-        <tr className="border-b border-cizgi">
+        <tr className="border-y border-ayrac bg-yuzey-2">
           {SUTUNLAR.map((sutun) => (
             <th
               key={sutun.anahtar}
               scope="col"
               className={
-                "px-6 py-3 align-bottom text-mikro font-medium text-kursun uppercase " +
+                "px-6 py-3 align-bottom text-mikro font-semibold text-metin-2 uppercase " +
                 (sutun.anahtar === "rating" ? "text-right" : "text-left")
               }
             >
@@ -117,8 +117,8 @@ function Satir({
   return (
     <tr
       className={
-        "border-b border-cizgi align-middle " +
-        (secilebilir ? "cursor-pointer" : "")
+        "border-b border-ayrac align-middle transition-colors " +
+        (secilebilir ? "cursor-pointer hover:bg-yuzey-2" : "")
       }
       style={{ height: "var(--olcu-satir)" }}
       tabIndex={secilebilir ? 0 : undefined}
@@ -136,19 +136,21 @@ function Satir({
     >
       <td className="px-6">
         <div className="flex flex-col">
-          <span className="truncate">{isletme.name}</span>
+          <span className="truncate font-semibold text-metin">
+            {isletme.name}
+          </span>
           {isletme.ig_handle ? (
-            <span className="sayi text-kucuk text-kursun">@{isletme.ig_handle}</span>
+            <span className="sayi text-kucuk text-metin-2">@{isletme.ig_handle}</span>
           ) : (
-            <span className="text-kucuk text-kursun">handle eşlenmedi</span>
+            <span className="text-kucuk text-metin-2">handle eşlenmedi</span>
           )}
         </div>
       </td>
-      <td className="px-6 text-kursun">{isletme.category ?? YOK}</td>
+      <td className="px-6 text-metin-2">{isletme.category ?? YOK}</td>
       <td className="sayi px-6 text-right tabular-nums">
         {sayi(isletme.rating_count)}
       </td>
-      <td className="sayi px-6 tabular-nums text-kursun">
+      <td className="sayi px-6 tabular-nums text-metin-2">
         {tarih(isletme.discovered_at)}
       </td>
       <td className="px-6">
@@ -166,7 +168,7 @@ function YukleniyorSatirlari() {
   return (
     <>
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <tr key={i} className="border-b border-cizgi" style={{ height: "var(--olcu-satir)" }}>
+        <tr key={i} className="border-b border-ayrac" style={{ height: "var(--olcu-satir)" }}>
           <td colSpan={4} className="px-6">
             <span className="sr-only">Yükleniyor</span>
           </td>
@@ -202,7 +204,7 @@ function BosDurum() {
   return (
     <div className="flex max-w-md flex-col gap-2">
       <p className="text-orta">Bu filtreye uyan aday yok.</p>
-      <p className="text-kursun">
+      <p className="text-metin-2">
         Filtreleri gevşetin ya da temizleyin. Keşif çalıştığında Samsun&apos;daki
         işletmeler taranır ve skorlarıyla buraya düşer; nitelikli olanlar rayın sağ
         ucunda toplanır.
@@ -222,14 +224,14 @@ function HataDurumu({
   return (
     <div className="flex max-w-md flex-col gap-2">
       <p className="text-orta">Liste yüklenemedi.</p>
-      <p className="text-kursun">
+      <p className="text-metin-2">
         {mesaj ?? "Sunucuya ulaşılamadı. Bağlantıyı kontrol edip yeniden deneyin."}
       </p>
       {yeniden && (
         <button
           type="button"
           onClick={yeniden}
-          className="mt-2 self-start border border-cizgi px-3 py-1 text-govde"
+          className="mt-2 self-start border border-ayrac px-3 py-1 text-govde"
         >
           Yeniden dene
         </button>

@@ -15,7 +15,7 @@ import { kritikMi, ONEM_ETIKET, onemeSirali } from "@/lib/onem";
 export function BulguListesi({ bulgular }: { bulgular: readonly Bulgu[] }) {
   if (bulgular.length === 0) {
     return (
-      <p className="text-kursun">
+      <p className="text-metin-2">
         Hiçbir kural tetiklenmedi — bu hesapta ölçülen bir eksik bulunmadı.
       </p>
     );
@@ -26,11 +26,11 @@ export function BulguListesi({ bulgular }: { bulgular: readonly Bulgu[] }) {
   return (
     <ul className="flex flex-col">
       {sirali.map((b) => (
-        <li key={b.rule} className="border-t border-cizgi py-3 first:border-t-0">
+        <li key={b.rule} className="border-t border-ayrac py-3 first:border-t-0">
           <div className="flex items-baseline justify-between gap-4">
             <span
               className={
-                "text-orta " + (kritikMi(b.severity) ? "text-oksit" : "")
+                "text-orta " + (kritikMi(b.severity) ? "text-uyari" : "")
               }
             >
               {b.title}
@@ -38,14 +38,14 @@ export function BulguListesi({ bulgular }: { bulgular: readonly Bulgu[] }) {
             <span
               className={
                 "shrink-0 text-mikro uppercase " +
-                (kritikMi(b.severity) ? "text-oksit" : "text-kursun")
+                (kritikMi(b.severity) ? "text-uyari" : "text-metin-2")
               }
             >
               {ONEM_ETIKET[b.severity]}
             </span>
           </div>
           {/* Deterministik tetik — daima dolu. */}
-          <p className="mt-1 text-kursun">{b.detail}</p>
+          <p className="mt-1 text-metin-2">{b.detail}</p>
           {/* LLM ajans-dili metni — yalnız üretildiyse; yokluğu hata değildir. */}
           {b.message !== null && b.message.trim() !== "" && (
             <p className="mt-2">{b.message}</p>

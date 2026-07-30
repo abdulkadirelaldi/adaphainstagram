@@ -1,95 +1,156 @@
-/* Radar — tasarım token'ları.
+/* Radar — tasarım token'ları (kurumsal lacivert, açık + koyu tema).
  *
  * Bu dosya projedeki TEK ham renk kaynağıdır. `app/` ve `components/` altında
  * çıplak hex bulunmaz; oradaki her renk bir token'a referans verir.
  * Gerekçeler: docs/DESIGN.md
  *
- * Tüm renkler CSS değişkeni olarak durur ki koyu tema sonradan tek dosyalık iş olsun.
+ * Tema mekanizması: @theme'deki `--color-*` utility'leri `--tk-*` değişkenlerine
+ * bağlıdır; `--tk-*` değerleri temaya göre değişir (aşağıda :root + koyu tema).
+ * Böylece bileşenler tek bir token kullanır, tema değişince değer değişir.
  */
 
 @theme {
-  /* ---- Yüzey ve metin ---------------------------------------------------- */
-  --color-kagit: #fbfbf9; /* zemin */
-  --color-murekkep: #17191b; /* ana metin — kağıt üstünde 17.01:1 */
-  --color-kursun: #6e7377; /* ikincil metin — 4.63:1, AA geçer; 13px altında kullanma */
-  --color-cizgi: #e4e5e2; /* saç teli ayraç — 1.22:1, ayraç bilgi taşımaz */
+  /* ---- Renk (tema-bağlı; değerler aşağıdaki :root bloklarında) ------------ */
+  --color-zemin: var(--tk-zemin); /* uygulama arka planı (nötr) */
+  --color-yuzey: var(--tk-yuzey); /* kart / panel / girdi yüzeyi */
+  --color-yuzey-2: var(--tk-yuzey-2); /* ikincil yüzey · satır hover */
+  --color-metin: var(--tk-metin); /* ana metin */
+  --color-metin-2: var(--tk-metin-2); /* ikincil metin */
+  --color-ayrac: var(--tk-ayrac); /* kenarlık / ayraç */
+  --color-marka: var(--tk-marka); /* lacivert · birincil eylem */
+  --color-marka-metin: var(--tk-marka-metin); /* marka üstünde metin */
+  --color-marka-yumusak: var(--tk-marka-yumusak); /* marka açık zemin (aktif/hover) */
+  --color-uyari: var(--tk-uyari); /* kritik bulgu + maliyet alarmı */
+  --color-orten: var(--tk-orten); /* drawer arkası hafif karartma */
 
-  /* ---- Sinyal ------------------------------------------------------------
-   * Patina buton, link, logo veya vurgu için KULLANILMAZ. Renkli olan tek şey skordur.
-   * Oksit yalnızca kritik bulguda görünür (SPEC §5).
-   */
-  --color-patina: #1f6f63; /* 5.77:1 */
-  --color-oksit: #a6402e; /* 5.97:1 */
+  /* Triyaj skoru bandı (SPEC §1 eşikleri: 40 / 70). Renk İKİNCİL kodlamadır;
+     birincil kodlama raydaki konum, üçüncül çentik yüksekliğidir (renk körlüğü). */
+  --color-skor-elendi: var(--tk-skor-elendi); /* < 40 */
+  --color-skor-izlemede: var(--tk-skor-izlemede); /* 40–69 */
+  --color-skor-nitelikli: var(--tk-skor-nitelikli); /* ≥ 70 */
 
-  /* ---- Triyaj skoru bandı (SPEC §1 eşikleri: 40 / 70) --------------------
-   * Tek hue, üç ölçülmüş durak. Koyuluk adaylıkla birlikte artar; göz listede
-   * aşağı doğru nitelikli satırlara çekilir. Renk bandın İKİNCİL kodlamasıdır —
-   * birincil kodlama raydaki konum, üçüncül kodlama çentik yüksekliğidir.
-   */
-  --color-skor-elendi: #6e9a92; /* < 40  · kağıda 3.03:1 */
-  --color-skor-izlemede: #3f857a; /* 40–69 · kağıda 4.18:1 */
-  --color-skor-nitelikli: #1f6f63; /* ≥ 70  · kağıda 5.77:1 */
+  /* Kohort rayı */
+  --color-ray-yol: var(--tk-ray-yol); /* 0–100 taşıyıcı */
+  --color-ray-kohort: var(--tk-ray-kohort); /* Q1–Q3 çeyrek bandı + medyan */
 
-  /* ---- Kohort rayı ------------------------------------------------------- */
-  --color-ray-yol: #e4e5e2; /* 0–100 taşıyıcı */
-  --color-ray-kohort: #bcc0bb; /* taranmış kohortun soluk çentikleri — küme halinde okunur */
+  /* Odak halkası — marka rengiyle. */
+  --color-odak: var(--tk-marka);
 
-  /* ---- Odak --------------------------------------------------------------
-   * Vurgu rengi yasak, gölge yok. Odak halkası mürekkeple çizilir; kağıt renginde
-   * bir ofset onu satır kenarlığından ayırır.
-   */
-  --color-odak: #17191b;
-
-  /* ---- Tipografi ---------------------------------------------------------
-   * İki rol, katı kural: bu uygulamada hiçbir sayı sans yüzle dizilmez.
-   * Takipçi, skor, yüzde, tarih, para — hepsi --font-sayi.
-   *
-   * Font AİLELERİ @theme'de değil aşağıdaki :root'ta durur: Tailwind v4 yalnızca
-   * bir utility olarak kullanılan @theme değişkenini emit eder; bu aileleri
-   * `.sayi`/body içinde doğrudan var() ile tükettiğimiz için @theme'de tanımlanınca
-   * tree-shake ediliyorlardı. Boyutlar (--text-*) utility olarak kullanıldığından
-   * @theme'de kalır.
-   */
-  --text-mikro: 11px; /* sütun başlıkları, versal, geniş harf aralığı */
+  /* ---- Tipografi boyutları (utility) ------------------------------------- */
+  --text-mikro: 12px; /* etiketler, versal */
   --text-mikro--line-height: 16px;
-  --text-mikro--letter-spacing: 0.08em;
-  --text-kucuk: 12px;
-  --text-kucuk--line-height: 16px;
-  --text-govde: 13px; /* tablo gövdesi */
-  --text-govde--line-height: 20px;
-  --text-orta: 15px;
-  --text-orta--line-height: 20px;
+  --text-mikro--letter-spacing: 0.04em;
+  --text-kucuk: 13px;
+  --text-kucuk--line-height: 18px;
+  --text-govde: 14px; /* tablo gövdesi, genel */
+  --text-govde--line-height: 22px;
+  --text-orta: 16px;
+  --text-orta--line-height: 24px;
   --text-buyuk: 20px;
-  --text-buyuk--line-height: 24px;
-  --text-rakam: 28px; /* üst şerit rakamları */
-  --text-rakam--line-height: 32px;
+  --text-buyuk--line-height: 28px;
+  --text-baslik: 24px; /* panel başlıkları */
+  --text-baslik--line-height: 32px;
+  --text-rakam: 30px; /* istatistik kartı rakamları */
+  --text-rakam--line-height: 36px;
 
-  /* ---- Yarıçap -----------------------------------------------------------
-   * Minimum. Varsayılan 0; yalnızca ray uçları 1px yumuşar ki çentiklerden ayrışsın.
-   */
-  --radius-yok: 0px;
-  --radius-ray: 1px;
+  /* ---- Yarıçap ------------------------------------------------------------ */
+  --radius-kart: 12px;
+  --radius-buton: 8px;
+  --radius-girdi: 8px;
+  --radius-ray: 2px;
+  --radius-tam: 9999px;
 
-  /* ---- Ölçü --------------------------------------------------------------
-   * Boşluk ritmi 4px tabanlıdır (Tailwind varsayılanı). Yalnızca
-   * 1 · 2 · 3 · 4 · 6 · 8 · 12 · 16 adımları kullanılır; ara değer üretilmez.
-   */
-  --olcu-sol-ray: 208px; /* sol gezinme */
-  --olcu-satir: 44px; /* tablo satır yüksekliği — yoğun ama tıklanabilir */
-  --olcu-ray-genislik: 132px; /* kohort rayı taşıyıcısı */
-  --olcu-ray-yukseklik: 20px;
+  /* ---- Gölge (yumuşak; değerler tema-bağlı) ------------------------------ */
+  --shadow-kart: var(--tk-golge-kart);
+  --shadow-yuzen: var(--tk-golge-yuzen);
 
-  /* ---- Hareket -----------------------------------------------------------
-   * Neredeyse yok. Tek geçiş: tarama bittiğinde listeye düşen satır.
-   */
+  /* ---- Ölçü -------------------------------------------------------------- */
+  --olcu-sol-ray: 240px; /* sol gezinme */
+  --olcu-satir: 56px; /* tablo satır yüksekliği — ferah */
+  --olcu-ray-genislik: 148px; /* kohort rayı taşıyıcısı */
+  --olcu-ray-yukseklik: 22px;
+  --olcu-drawer: 560px; /* denetim paneli genişliği */
+
+  /* ---- Hareket ----------------------------------------------------------- */
+  --sure-hizli: 120ms;
   --sure-satir-girdi: 260ms;
   --egri-satir-girdi: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-/* Font aileleri — next/font (`--font-*-src`) body className'inde tanımlıdır ve
- * buradaki referanslar tüketildikleri elemanda (body / .sayi) çözülür. @theme
- * dışında tutulur ki Tailwind tree-shake etmesin. */
+/* ---- AÇIK TEMA (varsayılan) ---------------------------------------------- */
 :root {
+  --tk-zemin: #eef2f7;
+  --tk-yuzey: #ffffff;
+  --tk-yuzey-2: #f5f8fc;
+  --tk-metin: #0f172a;
+  --tk-metin-2: #56657a;
+  --tk-ayrac: #e2e8f0;
+  --tk-marka: #1e3a5f;
+  --tk-marka-metin: #ffffff;
+  --tk-marka-yumusak: #e9f0f7;
+  --tk-uyari: #b4341f;
+  --tk-orten: rgba(15, 23, 42, 0.35);
+
+  --tk-skor-elendi: #64748b;
+  --tk-skor-izlemede: #0e7490;
+  --tk-skor-nitelikli: #0f766e;
+  --tk-ray-yol: #e2e8f0;
+  --tk-ray-kohort: #cbd5e1;
+
+  --tk-golge-kart: 0 1px 2px rgba(15, 23, 42, 0.04), 0 2px 8px rgba(15, 23, 42, 0.06);
+  --tk-golge-yuzen: 0 8px 30px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.08);
+
+  /* Font aileleri — next/font (`--font-*-src`) <html>'de tanımlıdır. */
   --font-arayuz: var(--font-arayuz-src), ui-sans-serif, system-ui, sans-serif;
-  --font-sayi: var(--font-sayi-src), ui-monospace, "SFMono-Regular", monospace;
+  --font-sayi: var(--font-arayuz-src), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Koyu tema — sistem tercihi (kullanıcı açık'a sabitlemediyse). */
+@media (prefers-color-scheme: dark) {
+  :root:not(.tema-acik) {
+    --tk-zemin: #0b1220;
+    --tk-yuzey: #131c2e;
+    --tk-yuzey-2: #1c2740;
+    --tk-metin: #eef2f7;
+    --tk-metin-2: #9aa8bd;
+    --tk-ayrac: #273349;
+    --tk-marka: #4a78ac;
+    --tk-marka-metin: #ffffff;
+    --tk-marka-yumusak: #1b2942;
+    --tk-uyari: #f0796a;
+    --tk-orten: rgba(0, 0, 0, 0.6);
+
+    --tk-skor-elendi: #94a3b8;
+    --tk-skor-izlemede: #22c3d6;
+    --tk-skor-nitelikli: #2dd4a7;
+    --tk-ray-yol: #273349;
+    --tk-ray-kohort: #3b4a63;
+
+    --tk-golge-kart: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.35);
+    --tk-golge-yuzen: 0 10px 34px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Koyu tema — kullanıcı toggle'ı (sistem tercihinden bağımsız). */
+:root.tema-koyu {
+  --tk-zemin: #0b1220;
+  --tk-yuzey: #131c2e;
+  --tk-yuzey-2: #1c2740;
+  --tk-metin: #eef2f7;
+  --tk-metin-2: #9aa8bd;
+  --tk-ayrac: #273349;
+  --tk-marka: #4a78ac;
+  --tk-marka-metin: #ffffff;
+  --tk-marka-yumusak: #1b2942;
+  --tk-uyari: #f0796a;
+    --tk-orten: rgba(0, 0, 0, 0.6);
+
+  --tk-skor-elendi: #94a3b8;
+  --tk-skor-izlemede: #22c3d6;
+  --tk-skor-nitelikli: #2dd4a7;
+  --tk-ray-yol: #273349;
+  --tk-ray-kohort: #3b4a63;
+
+  --tk-golge-kart: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --tk-golge-yuzen: 0 10px 34px rgba(0, 0, 0, 0.5);
 }

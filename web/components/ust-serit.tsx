@@ -4,14 +4,14 @@ import type { Istatistik } from "@/lib/api/tipler";
 /**
  * Üst şerit — SPEC §7 `/stats`: taranan, nitelikli, rapor, aylık maliyet.
  *
- * Dört ölçü, tek satır, kart yok. Rakamlar mono ve iri; etiketler küçük ve
- * kurşun. Veri gelmediğinde rakam yerine yarım tire durur — şerit asla kaybolmaz,
- * yeri korunur ki yükleme sırasında düzen zıplamasın.
+ * Dört istatistik **kartı**: beyaz yüzey, yumuşak gölge, yuvarlak köşe, büyük
+ * okunur sayı. Veri gelmediğinde rakam yerine yarım tire durur — kart asla
+ * kaybolmaz, yeri korunur ki yükleme sırasında düzen zıplamasın.
  *
  * Maliyet alarmı (SPEC §8): aylık maliyet yapılandırılmış eşiği aştıysa
- * `monthly_cost_alarm` true olur ve maliyet hücresi görünür bir uyarı taşır.
+ * `monthly_cost_alarm` true olur ve maliyet kartı görünür bir uyarı taşır.
  * Renk TEK taşıyıcı değildir — "Eşik aşıldı" metni uyarıyı sözle de söyler
- * (bkz. docs/DESIGN.md § maliyet alarmı; oksit burada ölçülü genişletildi).
+ * (bkz. docs/DESIGN.md § maliyet alarmı).
  */
 export function UstSerit({ istatistik }: { istatistik?: Istatistik }) {
   const alarm = istatistik?.monthly_cost_alarm === true;
@@ -28,23 +28,30 @@ export function UstSerit({ istatistik }: { istatistik?: Istatistik }) {
   ];
 
   return (
-    <div className="flex border-b border-cizgi">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {olculer.map((olcu) => (
         <div
           key={olcu.etiket}
-          className="flex flex-col gap-1 border-r border-cizgi px-6 py-4 last:border-r-0"
-          style={{ minWidth: "180px" }}
+          className={
+            "flex flex-col gap-2 rounded-kart border bg-yuzey px-5 py-4 shadow-kart " +
+            (olcu.alarm ? "border-uyari" : "border-ayrac")
+          }
         >
-          <span className="text-mikro text-kursun uppercase">{olcu.etiket}</span>
+          <span className="text-mikro font-semibold text-metin-2 uppercase">
+            {olcu.etiket}
+          </span>
           <span
             className={
-              "sayi text-rakam tabular-nums " + (olcu.alarm ? "text-oksit" : "")
+              "sayi text-rakam font-bold tabular-nums " +
+              (olcu.alarm ? "text-uyari" : "text-metin")
             }
           >
             {olcu.deger}
           </span>
           {olcu.alarm && (
-            <span className="text-mikro text-oksit uppercase">Eşik aşıldı</span>
+            <span className="text-kucuk font-semibold text-uyari">
+              Eşik aşıldı
+            </span>
           )}
         </div>
       ))}

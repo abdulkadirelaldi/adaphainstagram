@@ -55,27 +55,27 @@ export function ErisimKaydi({ taslak }: { taslak: Taslak }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-baseline justify-between gap-4">
-        <span className="text-mikro text-kursun uppercase">
+        <span className="text-mikro text-metin-2 uppercase">
           Erişim mesajı · taslak
         </span>
-        <span className="sayi text-mikro text-kursun">{taslak.channel}</span>
+        <span className="sayi text-mikro text-metin-2">{taslak.channel}</span>
       </div>
 
-      <p className="border border-cizgi p-3 whitespace-pre-wrap">
+      <p className="rounded-girdi border border-ayrac bg-yuzey-2 p-3 whitespace-pre-wrap text-metin">
         {taslak.draft}
       </p>
 
       <button
         type="button"
         onClick={kopyala}
-        className="h-8 self-start border border-murekkep px-4 text-govde"
+        className="h-10 self-start rounded-buton bg-marka px-5 text-govde font-semibold text-marka-metin transition-opacity hover:opacity-90"
       >
         {kopyalandi ? "Kopyalandı" : "Kopyala"}
       </button>
 
       {/* Durum takibi — insan kararını kaydeder, mesaj göndermez. */}
       <div className="mt-1 flex flex-col gap-1">
-        <label htmlFor={durumId} className="text-mikro text-kursun uppercase">
+        <label htmlFor={durumId} className="text-mikro text-metin-2 uppercase">
           Erişim durumu
         </label>
         <div className="flex items-center gap-3">
@@ -84,7 +84,7 @@ export function ErisimKaydi({ taslak }: { taslak: Taslak }) {
             value={durum}
             disabled={guncelle.isPending}
             onChange={(e) => durumDegistir(e.target.value as ErisimDurumu)}
-            className="h-8 border border-cizgi bg-kagit px-2 text-govde disabled:text-kursun"
+            className="h-10 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin disabled:opacity-60"
           >
             {ERISIM_SIRA.map((d) => (
               <option key={d} value={d}>
@@ -93,7 +93,7 @@ export function ErisimKaydi({ taslak }: { taslak: Taslak }) {
             ))}
           </select>
           {guncelle.isPending && (
-            <span className="text-kucuk text-kursun">Kaydediliyor…</span>
+            <span className="text-kucuk text-metin-2">Kaydediliyor…</span>
           )}
         </div>
 
@@ -108,7 +108,7 @@ export function ErisimKaydi({ taslak }: { taslak: Taslak }) {
 
         {/* Sunucu damgaları — yalnız ilgili duruma geçilmişse dolu. */}
         {kayit && (kayit.sent_at !== null || kayit.replied_at !== null) && (
-          <div className="mt-1 flex gap-4 text-kucuk text-kursun">
+          <div className="mt-1 flex gap-4 text-kucuk text-metin-2">
             {kayit.sent_at !== null && (
               <span>
                 Gönderildi:{" "}

@@ -57,7 +57,7 @@ export function KesifCubugu() {
   return (
     <section
       aria-label="Keşif taraması"
-      className="flex flex-wrap items-end gap-6 border-b border-cizgi px-6 py-4"
+      className="flex flex-wrap items-end gap-5 rounded-kart border border-ayrac bg-yuzey px-6 py-5 shadow-kart"
     >
       <form onSubmit={baslat} className="flex flex-wrap items-end gap-4">
         <Alan etiket="Keşif sorgusu" htmlFor={sorguId}>
@@ -67,7 +67,7 @@ export function KesifCubugu() {
             onChange={(e) => setSorgu(e.target.value)}
             disabled={mesgul}
             placeholder="kuyumcu, diş kliniği…"
-            className="h-8 w-56 border border-cizgi bg-kagit px-2 text-govde disabled:text-kursun"
+            className="h-10 w-60 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin placeholder:text-metin-2 disabled:opacity-60"
           />
         </Alan>
         <Alan etiket="Bölge" htmlFor={bolgeId}>
@@ -76,7 +76,7 @@ export function KesifCubugu() {
             value={bolge}
             onChange={(e) => setBolge(e.target.value)}
             disabled={mesgul}
-            className="h-8 w-36 border border-cizgi bg-kagit px-2 text-govde disabled:text-kursun"
+            className="h-10 w-40 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin disabled:opacity-60"
           />
         </Alan>
         <Alan etiket="En fazla" htmlFor={limitId}>
@@ -90,13 +90,13 @@ export function KesifCubugu() {
             onChange={(e) => setLimit(e.target.value)}
             disabled={mesgul}
             placeholder="varsayılan"
-            className="sayi h-8 w-28 border border-cizgi bg-kagit px-2 text-govde tabular-nums disabled:text-kursun"
+            className="sayi h-10 w-32 rounded-girdi border border-ayrac bg-yuzey px-3 text-govde text-metin tabular-nums placeholder:text-metin-2 disabled:opacity-60"
           />
         </Alan>
         <button
           type="submit"
           disabled={mesgul || sorgu.trim() === ""}
-          className="h-8 border border-murekkep px-4 text-govde disabled:border-cizgi disabled:text-kursun"
+          className="h-10 rounded-buton bg-marka px-5 text-govde font-semibold text-marka-metin transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {mesgul ? "Taranıyor" : "Tara"}
         </button>
@@ -129,7 +129,7 @@ function Alan({
 }) {
   return (
     <label htmlFor={htmlFor} className="flex flex-col gap-1">
-      <span className="text-mikro text-kursun uppercase">{etiket}</span>
+      <span className="text-mikro text-metin-2 uppercase">{etiket}</span>
       {children}
     </label>
   );
@@ -222,7 +222,7 @@ function Ilerleme({
   // total bilinmiyorsa sadece işlenen sayıyı göster; sahte bir oran çizme.
   if (total === null || total === 0) {
     return (
-      <span className="sayi text-kucuk text-kursun tabular-nums">
+      <span className="sayi text-kucuk text-metin-2 tabular-nums">
         {sayi(processed)}
       </span>
     );
@@ -232,15 +232,15 @@ function Ilerleme({
   return (
     <span className="flex items-center gap-2">
       <span
-        className="h-1 w-24 bg-cizgi"
+        className="h-1 w-24 bg-ayrac"
         role="progressbar"
         aria-valuenow={processed}
         aria-valuemin={0}
         aria-valuemax={total}
       >
-        <span className="block h-1 bg-murekkep" style={{ width: `${oran}%` }} />
+        <span className="block h-1 bg-marka" style={{ width: `${oran}%` }} />
       </span>
-      <span className="sayi text-kucuk text-kursun tabular-nums">
+      <span className="sayi text-kucuk text-metin-2 tabular-nums">
         {sayi(processed)}/{sayi(total)}
       </span>
     </span>

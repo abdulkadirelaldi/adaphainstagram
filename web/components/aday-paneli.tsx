@@ -58,16 +58,18 @@ export function AdayPaneli() {
       : ({ tip: "hazir", kayitlar: liste.data.items } as const);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-6 p-6 lg:p-8">
       <KesifCubugu />
       <UstSerit istatistik={stats.data} />
-      <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
-      <AdayTablosu durum={durum} kohortlar={kohortlar} onSec={setSecili} />
-      <Sayfalama
-        offset={sorgu.offset}
-        limit={sorgu.limit}
-        toplam={liste.data?.total ?? 0}
-      />
+      <section className="overflow-hidden rounded-kart border border-ayrac bg-yuzey shadow-kart">
+        <Filtreler kategoriler={kategoriler} toplam={liste.data?.total ?? 0} />
+        <AdayTablosu durum={durum} kohortlar={kohortlar} onSec={setSecili} />
+        <Sayfalama
+          offset={sorgu.offset}
+          limit={sorgu.limit}
+          toplam={liste.data?.total ?? 0}
+        />
+      </section>
       {secili && (
         <DenetimPaneli isletme={secili} onKapat={() => setSecili(null)} />
       )}
