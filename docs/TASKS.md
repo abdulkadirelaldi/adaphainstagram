@@ -9,8 +9,14 @@ Görev id formatı: `BE-1`, `FE-1`, `SEC-1`. Numara asla geri kullanılmaz.
 
 ## Aktif faz
 
-**Faz 1 ✅** · **Faz 2 ✅** · **Faz 3 ✅** · **Faz 4 ✅** · **Faz 5 — çıktı ✅ TAMAMLANDI** ·
-**Faz 6 — sertleştirme açık** (SPEC §8, son faz).
+**Faz 1 ✅ · Faz 2 ✅ · Faz 3 ✅ · Faz 4 ✅ · Faz 5 ✅ · Faz 6 ✅ — 🎉 PROJE TAMAMLANDI**
+(SPEC §8'in altı fazı da bitti).
+
+**Kalan tek makine-kısıtı (kullanıcı kararıyla daraltıldı, eksik iş değil):** repoda git remote
+ve Docker yok. Karar: **yerel + belgeli daraltma.** `ci.yml` yazıldı+lokal doğrulandı (185 test
+yeşil, chromium'la e2e+PDF dahil), `docker-compose.yml` repoda; gerçek GitHub Actions koşusu ve
+`docker compose up` doğrulaması **remote/Docker bağlanınca ilk push'ta** olacak. Faz atlanmadı,
+her kriter makine kısıtına göre dürüstçe daraltıldı — gevşetilmedi.
 
 Faz 5 kutuları (4/4): rapor PDF indiriliyor (Playwright, yerelde gerçek), erişim taslağı
 kopyalanabiliyor, `PATCH /outreach/{id}` durum güncelliyor, **sistem otomatik mesaj göndermiyor**
@@ -52,8 +58,11 @@ SPEC §8 Faz 6 için açık bitiş kriteri vermiyor; orkestra şefi tanımladı:
       bu API yüzeyi koruması).
       — BE-23 ile kapandı. Redis sabit-pencere sayacı, istemci+bucket başına dakikalık sınır;
       `RATE_LIMIT_PER_MINUTE`; redis yoksa fail-open. İlk 3→202, sonra 429+Retry-After doğrulandı.
-- [ ] **E2E testler** — keşif→skor→denetim→PDF/outreach uçtan uca (Playwright), CI'da koşuyor;
-      **CI'da chromium kurulu** (SEC-10-N1 kapanır).
+- [x] **E2E testler** — keşif→skor→denetim→PDF/outreach uçtan uca; **CI'da chromium kurulu**
+      (SEC-10-N1 kapandı) — SEC-11 API-e2e iskeleti (`tests/e2e/test_pipeline_e2e.py`, fixture
+      modu) + SEC-12 retention/rate/alarm testleri + FE-8 panel smoke; `ci.yml`'de
+      `playwright install chromium`. **Lokal yeşil (185 test); GitHub Actions koşusu remote
+      bağlanınca** — Docker/CI kutularıyla aynı dürüst daraltma (remote yok, kullanıcı kararı).
 - [x] **Maliyet alarmı** — aylık LLM maliyeti (`audits.llm_cost_usd` toplamı) eşiği aşınca alarm
       (log + `/stats` göstergesi). Eşik ayarlanabilir.
       — BE-22 ile kapandı. `MONTHLY_COST_LIMIT_USD` eşiği; `Stats.monthly_cost_alarm` + net log;
@@ -76,7 +85,12 @@ backend oturumu seri. SEC-12 ve FE-8 canlı doğrulama BE-22/BE-23'ü bekler.
   **kullanıcı kararı bekliyor:** remote/Docker bu makinede yok. Faz 6 sonunda orkestra şefi
   kullanıcıya soracak: remote kurulup CI/Actions gerçekten koşturulsun mu, Docker Desktop kurulup
   compose doğrulansın mı, yoksa ikisi de "yerel + belgeli daraltma" olarak mı kabul edilsin.
-- **FE-3-B1** (kohort ucu) → BE-21 sözleşme + BE-23 impl + FE-8 bağlama ile kapanır.
+- **FE-3-B1** (kohort ucu) → BE-21 sözleşme + BE-23 impl + FE-8 bağlama ile kapandı.
+- **Remote/CI + Docker (proje sonu, kullanıcı kararı 2026-07-30)** → *ikisi de yerel + belgeli
+  daraltma.* Remote kurulmayacak, Docker Desktop kurulmayacak; tüm doğrulama yerel servisler +
+  CI servis konteyneri + lokal chromium ile yapıldı. Gerçek GitHub Actions yeşili ve gerçek
+  `docker compose up`, remote/Docker bağlanınca ilk push'ta alınacak — açık iş değil, makine
+  kısıtı. Faz 1 CI/Docker kutuları ve Faz 6 e2e-CI kutusu bu kararla kapandı.
 - **SEC-11-N1** (frontend Playwright panel-tıklama e2e) → *FE-8 kapsamına küçük bir smoke
   olarak eklendi.* Backend akışı API-e2e ile (`tests/e2e/test_pipeline_e2e.py`) zaten tam
   kapsandı ve her FE adımı (FE-5/6/7) headless doğrulandı; SPEC §8 "e2e testler" kutusu bununla
